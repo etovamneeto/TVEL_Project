@@ -1,0 +1,9 @@
+c:\users\lovachev\documents\visual studio 2010\Projects\TVELtest\TVELtest\bin\Debug\TVELtest.exe
+c:\users\lovachev\documents\visual studio 2010\Projects\TVELtest\TVELtest\bin\Debug\TVELtest.pdb
+c:\users\lovachev\documents\visual studio 2010\Projects\TVELtest\TVELtest\obj\x86\Debug\TVELtest.Form1.resources
+c:\users\lovachev\documents\visual studio 2010\Projects\TVELtest\TVELtest\obj\x86\Debug\TVELtest.Properties.Resources.resources
+c:\users\lovachev\documents\visual studio 2010\Projects\TVELtest\TVELtest\obj\x86\Debug\TVELtest.csproj.GenerateResource.Cache
+c:\users\lovachev\documents\visual studio 2010\Projects\TVELtest\TVELtest\obj\x86\Debug\TVELtest.exe
+c:\users\lovachev\documents\visual studio 2010\Projects\TVELtest\TVELtest\obj\x86\Debug\TVELtest.pdb
+c:\users\lovachev\documents\visual studio 2010\Projects\TVELtest\TVELtest\bin\Debug\RiskCalculatorLib.dll
+c:\users\lovachev\documents\visual studio 2010\Projects\TVELtest\TVELtest\obj\x86\Debug\TVELtest.csprojResolveAssemblyReference.cache
