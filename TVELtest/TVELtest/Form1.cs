@@ -86,20 +86,12 @@ namespace TVELtest
 
         String libPath = Path.GetDirectoryName(Application.ExecutablePath) + "\\DataRus2012";
 
-        private void Form1_Load(object sender, EventArgs e)
-        {
-            RiskCalculatorLib.RiskCalculator.FillData(ref libPath);
-            this.Width = 300;
-            this.Height = 300;
-            this.CenterToScreen();
-        }
-
         /*-----Функции для расчета LAR, необходимых для расчета ОРПО*-----*/
         public double getManExtLar(double meanAge)
         {
             double lar = 0;
             double secondPowerElement = (2 / Math.Pow(10, 6)) * Math.Pow(meanAge, 2);
-            double firstPowerElement = (-13 / Math.Pow(10,4)) * meanAge;
+            double firstPowerElement = (-13 / Math.Pow(10, 4)) * meanAge;
             double constant = 9.36 / Math.Pow(10, 2);
             return lar = secondPowerElement + firstPowerElement + constant;
         }
@@ -111,6 +103,32 @@ namespace TVELtest
             double firstPowerElement = (-31 / Math.Pow(10, 4)) * meanAge;
             double constant = 17.42 / Math.Pow(10, 2);
             return lar = secondPowerElement + firstPowerElement + constant;
+        }
+
+        public double getManIntLar(double meanAge)
+        {
+            double lar = 0;
+            double secondPowerElement = (-3 / Math.Pow(10, 5)) * Math.Pow(meanAge, 2);
+            double firstPowerElement = (23 / Math.Pow(10, 4)) * meanAge;
+            double constant = 1.15 / Math.Pow(10, 2);
+            return lar = secondPowerElement + firstPowerElement + constant;
+        }
+
+        public double getWomanIntLar(double meanAge)
+        {
+            double lar = 0;
+            double secondPowerElement = (-4 / Math.Pow(10, 5)) * Math.Pow(meanAge, 2);
+            double firstPowerElement = (27 / Math.Pow(10, 4)) * meanAge;
+            double constant = 5.02 / Math.Pow(10, 2);
+            return lar = secondPowerElement + firstPowerElement + constant;
+        }
+
+        private void Form1_Load(object sender, EventArgs e)
+        {
+            RiskCalculatorLib.RiskCalculator.FillData(ref libPath);
+            this.Width = 300;
+            this.Height = 300;
+            this.CenterToScreen();
         }
 
         private void getOrpoButton_Click(object sender, EventArgs e)
@@ -184,12 +202,54 @@ namespace TVELtest
             {
                 manList.Add(new Man(uniqueIdList[i], manRecordsList[i][0].getSex(), manRecordsList[i][0].getAgeAtExp(), doseHistoryList[i]));
             }
-            
-            /*-----Закладываем формулы для расчета LAR-----*/
-            double meanDoseInGroup = 0;//средняя доза за 5 лет в группе
-            double meanAgeInGroup = 0;//средний возраст группы
 
-            resultTextBox.Text = getWomanExtLar(2).ToString();
+            /*-----Здесь будет рассчитан LAR для половозростных групп
+             * Группа, № Возраст, лет
+                    1	18-24
+                    2	25-29
+                    3	30-34
+                    4	35-39
+                    5	40-44
+                    6	45-49
+                    7	50-54
+                    8	55-59
+                    9	60-64
+                    10	65-69
+                    11	70+
+            -----*/
+            Dictionary<String, List<double>> manAgeGrouped = new Dictionary<String, List<double>>();//По ключу формата "18-24" будет выдан список возрастов облучения людей, AgeAtExp которых в диапазоне 18-24 - для мужчин
+            Dictionary<String, List<double>> womanAgeGrouped = new Dictionary<String, List<double>>();//для женщин
+            //List<double> getMan_18_24 = new List<double>();
+            List<double> getMan = new List<double>();
+            //List<double> getWoman_18_24 = new List<double>();
+            List<double> getWoman = new List<double>();
+            for (int i = 0; i < manList.Count; i++)
+            {
+                if (manList[i].getAgeAtExp() >= Convert.ToDouble(18) && manList[i].getAgeAtExp() <= Convert.ToDouble(24))
+                {
+                    if (manList[i].getSex() == 1)
+                    {
+                        getMan.Add(manList[i].getAgeAtExp());
+                    }
+                        //getMan_18_24.Add(manList[i].getAgeAtExp());
+                    if (manList[i].getSex() == 2)
+                    {
+                        getWoman.Add(manList[i].getAgeAtExp());
+                    }
+                        //getWoman_18_24.Add(manList[i].getAgeAtExp());
+                }
+            }
+            manAgeGrouped.Add("18-24", getMan);
+            //double larManExt_18_24 = getManExtLar(getMan_18_24.Average());
+            //double larWomanExt_18_24 = getWomanExtLar(getWoman_18_24.Average());
+            //testTextBox.Text = larManExt_18_24.ToString();
+            testTextBox.Text = manAgeGrouped["18-24"].Average().ToString();
+            //resultTextBox.Text = larWomanExt_18_24.ToString();           
+        }
+
+        private void testTextBox_TextChanged(object sender, EventArgs e)
+        {
+
         }
 
         private void resultTextBox_TextChanged(object sender, EventArgs e)
@@ -197,7 +257,12 @@ namespace TVELtest
 
         }
 
-        private void testTextBox_TextChanged(object sender, EventArgs e)
+        private void testLabel_Click(object sender, EventArgs e)
+        {
+
+        }
+
+        private void resultLabel_Click(object sender, EventArgs e)
         {
 
         }

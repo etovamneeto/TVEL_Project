@@ -31,6 +31,8 @@
             this.getOrpoButton = new System.Windows.Forms.Button();
             this.resultTextBox = new System.Windows.Forms.TextBox();
             this.testTextBox = new System.Windows.Forms.TextBox();
+            this.testLabel = new System.Windows.Forms.Label();
+            this.resultLabel = new System.Windows.Forms.Label();
             this.SuspendLayout();
             // 
             // getOrpoButton
@@ -59,11 +61,33 @@
             this.testTextBox.TabIndex = 2;
             this.testTextBox.TextChanged += new System.EventHandler(this.testTextBox_TextChanged);
             // 
+            // testLabel
+            // 
+            this.testLabel.AutoSize = true;
+            this.testLabel.Location = new System.Drawing.Point(65, 91);
+            this.testLabel.Name = "testLabel";
+            this.testLabel.Size = new System.Drawing.Size(24, 13);
+            this.testLabel.TabIndex = 3;
+            this.testLabel.Text = "test";
+            this.testLabel.Click += new System.EventHandler(this.testLabel_Click);
+            // 
+            // resultLabel
+            // 
+            this.resultLabel.AutoSize = true;
+            this.resultLabel.Location = new System.Drawing.Point(65, 117);
+            this.resultLabel.Name = "resultLabel";
+            this.resultLabel.Size = new System.Drawing.Size(32, 13);
+            this.resultLabel.TabIndex = 4;
+            this.resultLabel.Text = "result";
+            this.resultLabel.Click += new System.EventHandler(this.resultLabel_Click);
+            // 
             // Form1
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(292, 273);
+            this.Controls.Add(this.resultLabel);
+            this.Controls.Add(this.testLabel);
             this.Controls.Add(this.testTextBox);
             this.Controls.Add(this.resultTextBox);
             this.Controls.Add(this.getOrpoButton);
@@ -80,6 +104,8 @@
         private System.Windows.Forms.Button getOrpoButton;
         private System.Windows.Forms.TextBox resultTextBox;
         private System.Windows.Forms.TextBox testTextBox;
+        private System.Windows.Forms.Label testLabel;
+        private System.Windows.Forms.Label resultLabel;
 
 
     }
