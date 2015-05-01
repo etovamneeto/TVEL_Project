@@ -54,6 +54,7 @@ namespace TVELtest
             private double dose = 0;
             private double doseInt = 0;
             private byte sex = 0;
+            private int label = 0;
 
             public dbObject(int id, byte sex, short ageAtExp, double dose, double doseInt)
             {
@@ -61,7 +62,8 @@ namespace TVELtest
                 this.sex = sex;
                 this.ageAtExp = ageAtExp;
                 this.dose = dose;
-                this.doseInt = doseInt;               
+                this.doseInt = doseInt;
+                this.label = label;
             }
 
             public void setId(int id) { this.id = id; }
@@ -69,12 +71,14 @@ namespace TVELtest
             public void setDose(double dose) { this.dose = dose; }
             public void setDoseInt(double doseInt) { this.doseInt = doseInt; }
             public void setSex(byte sex) { this.sex = sex; }
+            public void setLabel(int label) { this.id = label; }
 
             public int getId() { return this.id; }
             public short getAgeAtExp() { return this.ageAtExp; }
             public double getDose() { return this.dose; }
             public double getDoseInt() { return this.doseInt; }
             public byte getSex() { return this.sex; }
+            public int getLabel() { return this.label; }
         }
 
         /*-----Описание форм инициализации и инициализация библиотеки с рейтами 2012 года-----*/
@@ -193,8 +197,12 @@ namespace TVELtest
                 {
                     doseHistoryList[i][k].AgeAtExposure = manRecordsList[i][k].getAgeAtExp();
                     doseHistoryList[i][k].AllSolidDoseInmGy = manRecordsList[i][k].getDose() - manRecordsList[i][k].getDoseInt();
+                    doseHistoryList[i][k].LeukaemiaDoseInmGy = manRecordsList[i][k].getDose() - manRecordsList[i][k].getDoseInt();
                     doseHistoryList[i][k].LungDoseInmGy = manRecordsList[i][k].getDoseInt();
                 }
+            RiskCalculator.DoseHistoryRecord[] rec = doseHistoryList[0];
+            RiskCalculatorLib.RiskCalculator calc = new RiskCalculator(1, 1, ref rec, true);
+            calc.getYLLBounds();
 
             /*-----Заполнение списка людей, где каждый определяется уникальным id, полом, у него есть дозовая история и тд и тп-----*/ 
             List<Man> manList = new List<Man>();
@@ -414,10 +422,18 @@ namespace TVELtest
              *  в которых хранятся года облучения:
              *  manAgesInGroup и womanAgesInGroup.
              */
+            List<double> blabla = new List<double>();
+            for (int i = 0; i < doseHistoryList.Count; i++)
+                for (int k = 0; k < doseHistoryList[i].Length; k++){
+                    if (doseHistoryList[i][k].AgeAtExposure >= 18 && doseHistoryList[i][k].AgeAtExposure <= 24)
+                    {
+                        blabla.Add(doseHistoryList[i][k].AgeAtExposure);
+                    }
 
+                }
 
-            testTextBox.Text = manExtLarInGroup["55-59"].ToString();
-            resultTextBox.Text = womanExtLarInGroup["55-59"].ToString();          
+            testTextBox.Text = blabla.Count.ToString();//число = 318, это соответствует тому, что в таблице
+            //resultTextBox.Text = womanExtLarInGroup["55-59"].ToString();          
         }
 
         private void testTextBox_TextChanged(object sender, EventArgs e)
