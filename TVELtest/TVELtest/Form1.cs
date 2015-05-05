@@ -15,13 +15,10 @@ using RiskCalculatorLib;
 namespace TVELtest
 {
     public partial class Form1 : Form
-    {
-
-        
+    { 
         /*-----Описание класса Человек, в котором хранится информация: id, пол, возраст при облучении, дозовая история-----*/
         public class Man
-        {
-            
+        { 
             private int id = 0;
             private byte sex = 0;
             private short ageAtExp = 0;
@@ -195,7 +192,7 @@ namespace TVELtest
                 womanAgesGroupedArray[i] = new List<dbObject>();
 
             /*-----Словари для мужчин и для женщин, где ключ - возраст облучения, а значение - список объектов с этим годом облучения-----*/
-            Dictionary<int, List<dbObject>> manDict = new Dictionary<int, List<dbObject>>();      
+            Dictionary<int, List<dbObject>> manDictionary = new Dictionary<int, List<dbObject>>();      
             for (int i = manMinAge - manMinAge; i <= manMaxAge - manMinAge; i++)
             {
                 for (int k = 0; k < dbRecords.Count; k++)
@@ -206,10 +203,10 @@ namespace TVELtest
                             manAgesGroupedArray[i].Add(dbRecords[k]);
                         }
                 }
-                manDict.Add(i + manMinAge, manAgesGroupedArray[i]);
+                manDictionary.Add(i + manMinAge, manAgesGroupedArray[i]);
             }
 
-            Dictionary<int, List<dbObject>> womanDict = new Dictionary<int, List<dbObject>>();
+            Dictionary<int, List<dbObject>> womanDictionary = new Dictionary<int, List<dbObject>>();
             for (int i = womanMinAge - womanMinAge; i <= womanMaxAge - womanMinAge; i++)
             {
                 for (int k = 0; k < dbRecords.Count; k++)
@@ -220,292 +217,502 @@ namespace TVELtest
                             womanAgesGroupedArray[i].Add(dbRecords[k]);
                         }
                 }
-                womanDict.Add(i + womanMinAge, womanAgesGroupedArray[i]);
+                womanDictionary.Add(i + womanMinAge, womanAgesGroupedArray[i]);
+            }
+            
+            /*-----Заполнение списка годов-ключей для мужчин; Это делается для удобства-----*/
+            List<int> manDictKeys = new List<int>(manDictionary.Keys);
+
+            /*-----Создание массива дозовых списков по возрасам облучения для мужчин (внеш и внутр)-----*/ 
+            List<double>[] manArrayOfExtDoses = new List<double>[manMaxAge - manMinAge + 1];
+            for (int i = 0; i < manArrayOfExtDoses.Length; i++)
+                manArrayOfExtDoses[i] = new List<double>();
+            List<double>[] manArrayOfIntDoses = new List<double>[manMaxAge - manMinAge + 1];
+            for (int i = 0; i < manArrayOfIntDoses.Length; i++)
+                manArrayOfIntDoses[i] = new List<double>();
+
+            /*-----Создание словарей, где ключ - возраст облучения, а значение - список доз облучения (внеш и внутр) по этим возрастам-----*/
+            Dictionary<int, List<double>> manExtDosesDictionary = new Dictionary<int, List<double>>();
+            Dictionary<int, List<double>> manIntDosesDictionary = new Dictionary<int, List<double>>();
+
+            for (int i = 0; i < manDictKeys.Count; i++)
+            {
+                for (int k = 0; k < manDictionary[manDictKeys[i]].Count; k++)
+                {
+                    if (manDictKeys[i] >= 18 && manDictKeys[i] <= 24)
+                    {
+                        manArrayOfExtDoses[i].Add(manDictionary[manDictKeys[i]][k].getDose() - manDictionary[manDictKeys[i]][k].getDoseInt());
+                        manArrayOfIntDoses[i].Add(manDictionary[manDictKeys[i]][k].getDoseInt());
+                    }
+                    if (manDictKeys[i] >= 25 && manDictKeys[i] <= 29)
+                    {
+                        manArrayOfExtDoses[i].Add(manDictionary[manDictKeys[i]][k].getDose() - manDictionary[manDictKeys[i]][k].getDoseInt());
+                        manArrayOfIntDoses[i].Add(manDictionary[manDictKeys[i]][k].getDoseInt());
+                    }
+                    if (manDictKeys[i] >= 30 && manDictKeys[i] <= 34)
+                    {
+                        manArrayOfExtDoses[i].Add(manDictionary[manDictKeys[i]][k].getDose() - manDictionary[manDictKeys[i]][k].getDoseInt());
+                        manArrayOfIntDoses[i].Add(manDictionary[manDictKeys[i]][k].getDoseInt());
+                    }
+                    if (manDictKeys[i] >= 35 && manDictKeys[i] <= 39)
+                    {
+                        manArrayOfExtDoses[i].Add(manDictionary[manDictKeys[i]][k].getDose() - manDictionary[manDictKeys[i]][k].getDoseInt());
+                        manArrayOfIntDoses[i].Add(manDictionary[manDictKeys[i]][k].getDoseInt());
+                    }
+                    if (manDictKeys[i] >= 40 && manDictKeys[i] <= 44)
+                    {
+                        manArrayOfExtDoses[i].Add(manDictionary[manDictKeys[i]][k].getDose() - manDictionary[manDictKeys[i]][k].getDoseInt());
+                        manArrayOfIntDoses[i].Add(manDictionary[manDictKeys[i]][k].getDoseInt());
+                    }
+                    if (manDictKeys[i] >= 45 && manDictKeys[i] <= 49)
+                    {
+                        manArrayOfExtDoses[i].Add(manDictionary[manDictKeys[i]][k].getDose() - manDictionary[manDictKeys[i]][k].getDoseInt());
+                        manArrayOfIntDoses[i].Add(manDictionary[manDictKeys[i]][k].getDoseInt());
+                    }
+                    if (manDictKeys[i] >= 50 && manDictKeys[i] <= 54)
+                    {
+                        manArrayOfExtDoses[i].Add(manDictionary[manDictKeys[i]][k].getDose() - manDictionary[manDictKeys[i]][k].getDoseInt());
+                        manArrayOfIntDoses[i].Add(manDictionary[manDictKeys[i]][k].getDoseInt());
+                    }
+                    if (manDictKeys[i] >= 55 && manDictKeys[i] <= 59)
+                    {
+                        manArrayOfExtDoses[i].Add(manDictionary[manDictKeys[i]][k].getDose() - manDictionary[manDictKeys[i]][k].getDoseInt());
+                        manArrayOfIntDoses[i].Add(manDictionary[manDictKeys[i]][k].getDoseInt());
+                    }
+                    if (manDictKeys[i] >= 60 && manDictKeys[i] <= 64)
+                    {
+                        manArrayOfExtDoses[i].Add(manDictionary[manDictKeys[i]][k].getDose() - manDictionary[manDictKeys[i]][k].getDoseInt());
+                        manArrayOfIntDoses[i].Add(manDictionary[manDictKeys[i]][k].getDoseInt());
+                    }
+                    if (manDictKeys[i] >= 65 && manDictKeys[i] <= 69)
+                    {
+                        manArrayOfExtDoses[i].Add(manDictionary[manDictKeys[i]][k].getDose() - manDictionary[manDictKeys[i]][k].getDoseInt());
+                        manArrayOfIntDoses[i].Add(manDictionary[manDictKeys[i]][k].getDoseInt());
+                    }
+                    if (manDictKeys[i] >= 70)
+                    {
+                        manArrayOfExtDoses[i].Add(manDictionary[manDictKeys[i]][k].getDose() - manDictionary[manDictKeys[i]][k].getDoseInt());
+                        manArrayOfIntDoses[i].Add(manDictionary[manDictKeys[i]][k].getDoseInt());
+                    }
+                }
+                manExtDosesDictionary.Add(manDictKeys[i], manArrayOfExtDoses[i]);
+                manIntDosesDictionary.Add(manDictKeys[i], manArrayOfIntDoses[i]);
             }
 
+            /*-----Заполнение списка годов-ключей для мужчин; Это делается для удобства-----*/
+            List<int> womanDictKeys = new List<int>(womanDictionary.Keys);
+
+            /*-----Создание массива дозовых списков по возрасам облучения для мужчин (внеш и внутр)-----*/
+            List<double>[] womanArrayOfExtDoses = new List<double>[womanMaxAge - womanMinAge + 1];
+            for (int i = 0; i < womanArrayOfExtDoses.Length; i++)
+                womanArrayOfExtDoses[i] = new List<double>();
+            List<double>[] womanArrayOfIntDoses = new List<double>[womanMaxAge - womanMinAge + 1];
+            for (int i = 0; i < womanArrayOfIntDoses.Length; i++)
+                womanArrayOfIntDoses[i] = new List<double>();
+
+            /*-----Создание словарей, где ключ - возраст облучения, а значение - список доз облучения (внеш и внутр) по этим возрастам-----*/
+            Dictionary<int, List<double>> womanExtDosesDictionary = new Dictionary<int, List<double>>();
+            Dictionary<int, List<double>> womanIntDosesDictionary = new Dictionary<int, List<double>>();
+
+            for (int i = 0; i < womanDictKeys.Count; i++)
+            {
+                for (int k = 0; k < womanDictionary[womanDictKeys[i]].Count; k++)
+                {
+                    if (womanDictKeys[i] >= 18 && womanDictKeys[i] <= 24)
+                    {
+                        womanArrayOfExtDoses[i].Add(womanDictionary[womanDictKeys[i]][k].getDose() - womanDictionary[womanDictKeys[i]][k].getDoseInt());
+                        womanArrayOfIntDoses[i].Add(womanDictionary[womanDictKeys[i]][k].getDoseInt());
+                    }
+                    if (womanDictKeys[i] >= 25 && womanDictKeys[i] <= 29)
+                    {
+                        womanArrayOfExtDoses[i].Add(womanDictionary[womanDictKeys[i]][k].getDose() - womanDictionary[womanDictKeys[i]][k].getDoseInt());
+                        womanArrayOfIntDoses[i].Add(womanDictionary[womanDictKeys[i]][k].getDoseInt());
+                    }
+                    if (womanDictKeys[i] >= 30 && womanDictKeys[i] <= 34)
+                    {
+                        womanArrayOfExtDoses[i].Add(womanDictionary[womanDictKeys[i]][k].getDose() - womanDictionary[womanDictKeys[i]][k].getDoseInt());
+                        womanArrayOfIntDoses[i].Add(womanDictionary[womanDictKeys[i]][k].getDoseInt());
+                    }
+                    if (womanDictKeys[i] >= 35 && womanDictKeys[i] <= 39)
+                    {
+                        womanArrayOfExtDoses[i].Add(womanDictionary[womanDictKeys[i]][k].getDose() - womanDictionary[womanDictKeys[i]][k].getDoseInt());
+                        womanArrayOfIntDoses[i].Add(womanDictionary[womanDictKeys[i]][k].getDoseInt());
+                    }
+                    if (womanDictKeys[i] >= 40 && womanDictKeys[i] <= 44)
+                    {
+                        womanArrayOfExtDoses[i].Add(womanDictionary[womanDictKeys[i]][k].getDose() - womanDictionary[womanDictKeys[i]][k].getDoseInt());
+                        womanArrayOfIntDoses[i].Add(womanDictionary[womanDictKeys[i]][k].getDoseInt());
+                    }
+                    if (womanDictKeys[i] >= 45 && womanDictKeys[i] <= 49)
+                    {
+                        womanArrayOfExtDoses[i].Add(womanDictionary[womanDictKeys[i]][k].getDose() - womanDictionary[womanDictKeys[i]][k].getDoseInt());
+                        womanArrayOfIntDoses[i].Add(womanDictionary[womanDictKeys[i]][k].getDoseInt());
+                    }
+                    if (womanDictKeys[i] >= 50 && womanDictKeys[i] <= 54)
+                    {
+                        womanArrayOfExtDoses[i].Add(womanDictionary[womanDictKeys[i]][k].getDose() - womanDictionary[womanDictKeys[i]][k].getDoseInt());
+                        womanArrayOfIntDoses[i].Add(womanDictionary[womanDictKeys[i]][k].getDoseInt());
+                    }
+                    if (womanDictKeys[i] >= 55 && womanDictKeys[i] <= 59)
+                    {
+                        womanArrayOfExtDoses[i].Add(womanDictionary[womanDictKeys[i]][k].getDose() - womanDictionary[womanDictKeys[i]][k].getDoseInt());
+                        womanArrayOfIntDoses[i].Add(womanDictionary[womanDictKeys[i]][k].getDoseInt());
+                    }
+                    if (womanDictKeys[i] >= 60 && womanDictKeys[i] <= 64)
+                    {
+                        womanArrayOfExtDoses[i].Add(womanDictionary[womanDictKeys[i]][k].getDose() - womanDictionary[womanDictKeys[i]][k].getDoseInt());
+                        womanArrayOfIntDoses[i].Add(womanDictionary[womanDictKeys[i]][k].getDoseInt());
+                    }
+                    if (womanDictKeys[i] >= 65 && womanDictKeys[i] <= 69)
+                    {
+                        womanArrayOfExtDoses[i].Add(womanDictionary[womanDictKeys[i]][k].getDose() - womanDictionary[womanDictKeys[i]][k].getDoseInt());
+                        womanArrayOfIntDoses[i].Add(womanDictionary[womanDictKeys[i]][k].getDoseInt());
+                    }
+                    if (womanDictKeys[i] >= 70)
+                    {
+                        womanArrayOfExtDoses[i].Add(womanDictionary[womanDictKeys[i]][k].getDose() - womanDictionary[womanDictKeys[i]][k].getDoseInt());
+                        womanArrayOfIntDoses[i].Add(womanDictionary[womanDictKeys[i]][k].getDoseInt());
+                    }
+                }
+                womanExtDosesDictionary.Add(womanDictKeys[i], womanArrayOfExtDoses[i]);
+                womanIntDosesDictionary.Add(womanDictKeys[i], womanArrayOfIntDoses[i]);
+            }
+
+            /*
+             * !!!!!
+             * ОСТАНОВИЛСЯ ВОТ ЗДЕСЬ
+             * !!!!!
+             */
+            int counter = 0;
+            double avarExt = 0;
+            double averInt = 0;
+            double result = 0;
+            for (int i = 0; i < manDictKeys.Count; i++)
+            {
+                if (manDictKeys[i] >= 18 && manDictKeys[i] <= 24)
+                {
+                    avarExt += manArrayOfExtDoses[manDictKeys[i]].Average();//Считает среднюю (внешнюю) дозу в каждой возрастной подгруппе
+                    averInt += manArrayOfIntDoses[manDictKeys[i]].Average();//Считает среднюю (внутреннюю) дозу в каждой возрастной подгруппе
+                    counter++;
+                    result = avarExt / counter;//?????
+                    //Надо эти средние суммировать и делить на число сумм, усреднить среднее
+                }
+            }        
+                //double dose = 0;//Доза отдельной возрастной подгруппы
+                //double age = 0;//Суммарный возраст отдельной возрастной подгруппы
+                //double meanDose = 0;//Средняя доза половозрастной группы
+                //double amountMeanDose = 0;
+                //double meanGroupDose = 0;
+                //double meanAge = 0;//Средний возраст половозрастной группы
+                //double amountAge = 0;//Суммарный возраст половозрастной группы
+                //double countOfRecords = 0;//Число записей для данной половозрастной группы
+                //int countOfSubgroups = 0;//Число подгрупп в половозрастной группе
+
+                //double[] stupid = new double[manDictKeys.Count];
+                //for (int i = 0; i < manDictKeys.Count; i++)
+                //{
+                //    meanDose = 0;
+                //    countOfRecords = 0;
+                //    //countOfSubgroups = 0;
+                //    amountAge = 0;
+                //    for (int k = 0; k < manDictionary[manDictKeys[i]].Count; k++)
+                //        if (manDictKeys[i] >= 18 && manDictKeys[i] <= 24)
+                //        {
+                //            dose += manDictionary[manDictKeys[i]][k].getDose() - manDictionary[manDictKeys[i]][k].getDoseInt();
+                //            meanDose = dose / manDictionary[manDictKeys[i]].Count;
+                //            amountMeanDose += meanDose;
+                //            meanGroupDose = amountMeanDose / (24 - 18 + 1);
+                //            stupid[i] = amountMeanDose;
+                //            age += manDictionary[manDictKeys[i]][k].getAgeAtExp();
+                //            amountAge += age;
+                //            countOfRecords += manDictionary[manDictKeys[i]].Count;
+                //            meanAge = amountAge / countOfRecords;
+                //        }
+                //}//Может быть, идея достойна жизни, но очень нечитабельно получается, запутался в логике сам
 
 
-
-                    /* ПОЛНОСТЬЮ МЕНЯЕМ ЛОГИКУ ПРОГРАММЫ!
-                     * ТО, ЧТО НАПИСАНО НИЖЕ, БУДЕТ ЗАКОММЕНТИРОВАННО,
-                     * Т.К. ЭТО НЕПРАВИЛЬНАЯ ЛОГИКА, НО ТАМ МОЖНО ПОДСМОТРЕТЬ РЕШЕНИЯ.
-                     * ВСЯ ПРАВИЛЬНАЯ ЛОГИКА ПРОГРАММЫ БУДЕТ НАПИСАНА НАД ЭТОЙ ЗАПИСЬЮ.
-                     * РАБОТА ПРОДОЛЖАЕТСЯ . . .
-                     */
+                testTextBox.Text = manExtDosesDictionary.Count.ToString();//manDictionary[manMaxAge][0].getId().ToString();
+            resultTextBox.Text = womanExtDosesDictionary.Count.ToString();//manDictKeys[Convert.ToInt32(textBox1.Text)] + " + Записей " + manDictionary[manDictKeys[Convert.ToInt32(textBox1.Text)]].Count.ToString();//womanDictionary[womanMaxAge][0].getId().ToString();   
 
 
-                    ///*-----Создания массива списков, где каждый элемент массива - это список объектов, id которых совпадают с уникальными id;
-                    // * ----например, если уникальный id = 1, то в элемент массива списков записываются все объекты с id = 1.
-                    // */
-                    //List<dbObject>[] manRecordsList = new List<dbObject>[uniqueIdList.Count];
-                    //for (int i = 0; i < uniqueIdList.Count; i++)
-                    //{
-                    //    List<dbObject> buffer = new List<dbObject>();
-                    //    for (int k = 0; k < dbObjectList.Count; k++)
-                    //    {
-                    //        if (Equals(uniqueIdList[i], dbObjectList[k].getId()))
-                    //        {
-                    //            buffer.Add(dbObjectList[k]);
-                    //        }
-                    //        manRecordsList[i] = buffer;
-                    //    }
-                    //}
+                /* ПОЛНОСТЬЮ МЕНЯЕМ ЛОГИКУ ПРОГРАММЫ!
+                 * ТО, ЧТО НАПИСАНО НИЖЕ, БУДЕТ ЗАКОММЕНТИРОВАННО,
+                 * Т.К. ЭТО НЕПРАВИЛЬНАЯ ЛОГИКА, НО ТАМ МОЖНО ПОДСМОТРЕТЬ РЕШЕНИЯ.
+                 * ВСЯ ПРАВИЛЬНАЯ ЛОГИКА ПРОГРАММЫ БУДЕТ НАПИСАНА НАД ЭТОЙ ЗАПИСЬЮ.
+                 * РАБОТА ПРОДОЛЖАЕТСЯ . . .
+                 */
 
-                    ///*-----Создание пустого списка дозовых историй; для каждого уникального ID своя дозовая история (по сути, это ячейки, которые надо заполнить)-----*/
-                    //List<RiskCalculator.DoseHistoryRecord[]> doseHistoryList = new List<RiskCalculator.DoseHistoryRecord[]>();
-                    //for (int i = 0; i < uniqueIdList.Count; i++)
-                    //{
-                    //    doseHistoryList.Add(new RiskCalculator.DoseHistoryRecord[manRecordsList[i].Count]);
-                    //}
-                    //foreach (RiskCalculator.DoseHistoryRecord[] note in doseHistoryList)
-                    //{
-                    //    for (int i = 0; i < note.Length; i++)
-                    //        note[i] = new RiskCalculator.DoseHistoryRecord();
-                    //}
 
-                    ///*-----Заполнение дозовых историй-----*/
-                    //for (int i = 0; i < uniqueIdList.Count; i++)
-                    //    for (int k = 0; k < manRecordsList[i].Count; k++)
-                    //    {
-                    //        doseHistoryList[i][k].AgeAtExposure = manRecordsList[i][k].getAgeAtExp();
-                    //        doseHistoryList[i][k].AllSolidDoseInmGy = manRecordsList[i][k].getDose() - manRecordsList[i][k].getDoseInt();
-                    //        doseHistoryList[i][k].LeukaemiaDoseInmGy = manRecordsList[i][k].getDose() - manRecordsList[i][k].getDoseInt();
-                    //        doseHistoryList[i][k].LungDoseInmGy = manRecordsList[i][k].getDoseInt();
-                    //    }
-                    //RiskCalculator.DoseHistoryRecord[] rec = doseHistoryList[0];
-                    //RiskCalculatorLib.RiskCalculator calc = new RiskCalculator(1, 1, ref rec, true);
-                    //calc.getYLLBounds();
+                ///*-----Создания массива списков, где каждый элемент массива - это список объектов, id которых совпадают с уникальными id;
+                // * ----например, если уникальный id = 1, то в элемент массива списков записываются все объекты с id = 1.
+                // */
+                //List<dbObject>[] manRecordsList = new List<dbObject>[uniqueIdList.Count];
+                //for (int i = 0; i < uniqueIdList.Count; i++)
+                //{
+                //    List<dbObject> buffer = new List<dbObject>();
+                //    for (int k = 0; k < dbObjectList.Count; k++)
+                //    {
+                //        if (Equals(uniqueIdList[i], dbObjectList[k].getId()))
+                //        {
+                //            buffer.Add(dbObjectList[k]);
+                //        }
+                //        manRecordsList[i] = buffer;
+                //    }
+                //}
 
-                    ///*-----Заполнение списка людей, где каждый определяется уникальным id, полом, у него есть дозовая история и тд и тп-----*/ 
-                    //List<Man> manList = new List<Man>();
-                    //for (int i = 0; i < uniqueIdList.Count; i++)
-                    //{
-                    //    manList.Add(new Man(uniqueIdList[i], manRecordsList[i][0].getSex(), manRecordsList[i][0].getAgeAtExp(), doseHistoryList[i]));
-                    //}
+                ///*-----Создание пустого списка дозовых историй; для каждого уникального ID своя дозовая история (по сути, это ячейки, которые надо заполнить)-----*/
+                //List<RiskCalculator.DoseHistoryRecord[]> doseHistoryList = new List<RiskCalculator.DoseHistoryRecord[]>();
+                //for (int i = 0; i < uniqueIdList.Count; i++)
+                //{
+                //    doseHistoryList.Add(new RiskCalculator.DoseHistoryRecord[manRecordsList[i].Count]);
+                //}
+                //foreach (RiskCalculator.DoseHistoryRecord[] note in doseHistoryList)
+                //{
+                //    for (int i = 0; i < note.Length; i++)
+                //        note[i] = new RiskCalculator.DoseHistoryRecord();
+                //}
 
-                    ///*-----Разбиение списка людей на половозрастные группы
-                    // * Группа, № Возраст, лет
-                    //        1	18-24
-                    //        2	25-29
-                    //        3	30-34
-                    //        4	35-39
-                    //        5	40-44
-                    //        6	45-49
-                    //        7	50-54
-                    //        8	55-59
-                    //        9	60-64
-                    //        10	65-69
-                    //        11	70+
-                    //-----*/
-                    //List<String> ageGroups = new List<string>();//Строки, в которых указаны возростные группы. Это ключи для дальнейшей связи через словари.
-                    //ageGroups.Add("18-24");
-                    //ageGroups.Add("25-29");
-                    //ageGroups.Add("30-34");
-                    //ageGroups.Add("35-39");
-                    //ageGroups.Add("40-44");
-                    //ageGroups.Add("45-49");
-                    //ageGroups.Add("50-54");
-                    //ageGroups.Add("55-59");
-                    //ageGroups.Add("60-64");
-                    //ageGroups.Add("65-69");
-                    //ageGroups.Add("70+");
+                ///*-----Заполнение дозовых историй-----*/
+                //for (int i = 0; i < uniqueIdList.Count; i++)
+                //    for (int k = 0; k < manRecordsList[i].Count; k++)
+                //    {
+                //        doseHistoryList[i][k].AgeAtExposure = manRecordsList[i][k].getAgeAtExp();
+                //        doseHistoryList[i][k].AllSolidDoseInmGy = manRecordsList[i][k].getDose() - manRecordsList[i][k].getDoseInt();
+                //        doseHistoryList[i][k].LeukaemiaDoseInmGy = manRecordsList[i][k].getDose() - manRecordsList[i][k].getDoseInt();
+                //        doseHistoryList[i][k].LungDoseInmGy = manRecordsList[i][k].getDoseInt();
+                //    }
+                //RiskCalculator.DoseHistoryRecord[] rec = doseHistoryList[0];
+                //RiskCalculatorLib.RiskCalculator calc = new RiskCalculator(1, 1, ref rec, true);
+                //calc.getYLLBounds();
 
-                    ////List<double>[] manAmountAgeInGroup = new List<double>[ageGroups.Count-1];
-                    ////for (int i = 0; i < manAmountAgeInGroup.Length; i++)
-                    ////    manAmountAgeInGroup[i] = new List<double>();
+                ///*-----Заполнение списка людей, где каждый определяется уникальным id, полом, у него есть дозовая история и тд и тп-----*/ 
+                //List<Man> manList = new List<Man>();
+                //for (int i = 0; i < uniqueIdList.Count; i++)
+                //{
+                //    manList.Add(new Man(uniqueIdList[i], manRecordsList[i][0].getSex(), manRecordsList[i][0].getAgeAtExp(), doseHistoryList[i]));
+                //}
 
-                    ////List<double>[] womanAmountAgeInGroup = new List<double>[ageGroups.Count-1];
-                    ////for (int i = 0; i < womanAmountAgeInGroup.Length; i++)
-                    ////    womanAmountAgeInGroup[i] = new List<double>();
+                ///*-----Разбиение списка людей на половозрастные группы
+                // * Группа, № Возраст, лет
+                //        1	18-24
+                //        2	25-29
+                //        3	30-34
+                //        4	35-39
+                //        5	40-44
+                //        6	45-49
+                //        7	50-54
+                //        8	55-59
+                //        9	60-64
+                //        10	65-69
+                //        11	70+
+                //-----*/
+                //List<String> ageGroups = new List<string>();//Строки, в которых указаны возростные группы. Это ключи для дальнейшей связи через словари.
+                //ageGroups.Add("18-24");
+                //ageGroups.Add("25-29");
+                //ageGroups.Add("30-34");
+                //ageGroups.Add("35-39");
+                //ageGroups.Add("40-44");
+                //ageGroups.Add("45-49");
+                //ageGroups.Add("50-54");
+                //ageGroups.Add("55-59");
+                //ageGroups.Add("60-64");
+                //ageGroups.Add("65-69");
+                //ageGroups.Add("70+");
 
-                    ////Переписать все это в адекватную функцию
-                    ////for (int i = 0; i < manList.Count; i++)
-                    ////{
-                    ////    if (manList[i].getSex() == 1)
-                    ////    {
-                    ////        if (manList[i].getAgeAtExp() >= 18 && manList[i].getAgeAtExp() <= 24)
-                    ////            manAmountAgeInGroup[0].Add(manList[i].getAgeAtExp());
-                    ////        if (manList[i].getAgeAtExp() >= 25 && manList[i].getAgeAtExp() <= 29)
-                    ////            manAmountAgeInGroup[1].Add(manList[i].getAgeAtExp());
-                    ////        if (manList[i].getAgeAtExp() >= 30 && manList[i].getAgeAtExp() <= 34)
-                    ////            manAmountAgeInGroup[2].Add(manList[i].getAgeAtExp());
-                    ////        if (manList[i].getAgeAtExp() >= 35 && manList[i].getAgeAtExp() <= 39)
-                    ////            manAmountAgeInGroup[3].Add(manList[i].getAgeAtExp());
-                    ////        if (manList[i].getAgeAtExp() >= 40 && manList[i].getAgeAtExp() <= 44)
-                    ////            manAmountAgeInGroup[4].Add(manList[i].getAgeAtExp());
-                    ////        if (manList[i].getAgeAtExp() >= 45 && manList[i].getAgeAtExp() <= 49)
-                    ////            manAmountAgeInGroup[5].Add(manList[i].getAgeAtExp());
-                    ////        if (manList[i].getAgeAtExp() >= 50 && manList[i].getAgeAtExp() <= 54)
-                    ////            manAmountAgeInGroup[6].Add(manList[i].getAgeAtExp());
-                    ////        if (manList[i].getAgeAtExp() >= 55 && manList[i].getAgeAtExp() <= 59)
-                    ////            manAmountAgeInGroup[7].Add(manList[i].getAgeAtExp());
-                    ////        if (manList[i].getAgeAtExp() >= 60 && manList[i].getAgeAtExp() <= 64)
-                    ////            manAmountAgeInGroup[8].Add(manList[i].getAgeAtExp());
-                    ////        if (manList[i].getAgeAtExp() >= 65 && manList[i].getAgeAtExp() <= 69)
-                    ////            manAmountAgeInGroup[9].Add(manList[i].getAgeAtExp());
-                    ////        if (manList[i].getAgeAtExp() >= 70)
-                    ////            manAmountAgeInGroup[10].Add(manList[i].getAgeAtExp());
-                    ////    }
-                    ////    if (manList[i].getSex() == 2)
-                    ////    {
-                    ////        if (manList[i].getAgeAtExp() >= 18 && manList[i].getAgeAtExp() <= 24)
-                    ////            womanAmountAgeInGroup[0].Add(manList[i].getAgeAtExp());
-                    ////        if (manList[i].getAgeAtExp() >= 25 && manList[i].getAgeAtExp() <= 29)
-                    ////            womanAmountAgeInGroup[1].Add(manList[i].getAgeAtExp());
-                    ////        if (manList[i].getAgeAtExp() >= 30 && manList[i].getAgeAtExp() <= 34)
-                    ////            womanAmountAgeInGroup[2].Add(manList[i].getAgeAtExp());
-                    ////        if (manList[i].getAgeAtExp() >= 35 && manList[i].getAgeAtExp() <= 39)
-                    ////            womanAmountAgeInGroup[3].Add(manList[i].getAgeAtExp());
-                    ////        if (manList[i].getAgeAtExp() >= 40 && manList[i].getAgeAtExp() <= 44)
-                    ////            womanAmountAgeInGroup[4].Add(manList[i].getAgeAtExp());
-                    ////        if (manList[i].getAgeAtExp() >= 45 && manList[i].getAgeAtExp() <= 49)
-                    ////            womanAmountAgeInGroup[5].Add(manList[i].getAgeAtExp());
-                    ////        if (manList[i].getAgeAtExp() >= 50 && manList[i].getAgeAtExp() <= 54)
-                    ////            womanAmountAgeInGroup[6].Add(manList[i].getAgeAtExp());
-                    ////        if (manList[i].getAgeAtExp() >= 55 && manList[i].getAgeAtExp() <= 59)
-                    ////            womanAmountAgeInGroup[7].Add(manList[i].getAgeAtExp());
-                    ////        if (manList[i].getAgeAtExp() >= 60 && manList[i].getAgeAtExp() <= 64)
-                    ////            womanAmountAgeInGroup[8].Add(manList[i].getAgeAtExp());
-                    ////        if (manList[i].getAgeAtExp() >= 65 && manList[i].getAgeAtExp() <= 69)
-                    ////            womanAmountAgeInGroup[9].Add(manList[i].getAgeAtExp());
-                    ////        if (manList[i].getAgeAtExp() >= 70)
-                    ////            womanAmountAgeInGroup[10].Add(manList[i].getAgeAtExp());
-                    ////    }
-                    ////}
-                    ///*-----Разбиение списка людей, по половозрастным группам-----*/
-                    //List<Man>[] manAgeGroups = new List<Man>[ageGroups.Count - 1];
-                    //for (int i = 0; i < manAgeGroups.Length; i++)
-                    //    manAgeGroups[i] = new List<Man>();
+                ////List<double>[] manAmountAgeInGroup = new List<double>[ageGroups.Count-1];
+                ////for (int i = 0; i < manAmountAgeInGroup.Length; i++)
+                ////    manAmountAgeInGroup[i] = new List<double>();
 
-                    //List<Man>[] womanAgeGroups = new List<Man>[ageGroups.Count - 1];
-                    //for (int i = 0; i < womanAgeGroups.Length; i++)
-                    //    womanAgeGroups[i] = new List<Man>();
+                ////List<double>[] womanAmountAgeInGroup = new List<double>[ageGroups.Count-1];
+                ////for (int i = 0; i < womanAmountAgeInGroup.Length; i++)
+                ////    womanAmountAgeInGroup[i] = new List<double>();
 
-                    //for (int i = 0; i < manList.Count; i++)
-                    //{
-                    //    if (manList[i].getSex() == 1)
-                    //    {
-                    //        if (manList[i].getAgeAtExp() >= 18 && manList[i].getAgeAtExp() <= 24)
-                    //            manAgeGroups[0].Add(manList[i]);
-                    //        if (manList[i].getAgeAtExp() >= 25 && manList[i].getAgeAtExp() <= 29)
-                    //            manAgeGroups[1].Add(manList[i]);
-                    //        if (manList[i].getAgeAtExp() >= 30 && manList[i].getAgeAtExp() <= 34)
-                    //            manAgeGroups[2].Add(manList[i]);
-                    //        if (manList[i].getAgeAtExp() >= 35 && manList[i].getAgeAtExp() <= 39)
-                    //            manAgeGroups[3].Add(manList[i]);
-                    //        if (manList[i].getAgeAtExp() >= 40 && manList[i].getAgeAtExp() <= 44)
-                    //            manAgeGroups[4].Add(manList[i]);
-                    //        if (manList[i].getAgeAtExp() >= 45 && manList[i].getAgeAtExp() <= 49)
-                    //            manAgeGroups[5].Add(manList[i]);
-                    //        if (manList[i].getAgeAtExp() >= 50 && manList[i].getAgeAtExp() <= 54)
-                    //            manAgeGroups[6].Add(manList[i]);
-                    //        if (manList[i].getAgeAtExp() >= 55 && manList[i].getAgeAtExp() <= 59)
-                    //            manAgeGroups[7].Add(manList[i]);
-                    //        if (manList[i].getAgeAtExp() >= 60 && manList[i].getAgeAtExp() <= 64)
-                    //            manAgeGroups[8].Add(manList[i]);
-                    //        if (manList[i].getAgeAtExp() >= 65 && manList[i].getAgeAtExp() <= 69)
-                    //            manAgeGroups[9].Add(manList[i]);
-                    //        if (manList[i].getAgeAtExp() >= 70)
-                    //            manAgeGroups[10].Add(manList[i]);
-                    //    }
-                    //    if (manList[i].getSex() == 2)
-                    //    {
-                    //        if (manList[i].getAgeAtExp() >= 18 && manList[i].getAgeAtExp() <= 24)
-                    //            womanAgeGroups[0].Add(manList[i]);
-                    //        if (manList[i].getAgeAtExp() >= 25 && manList[i].getAgeAtExp() <= 29)
-                    //            womanAgeGroups[1].Add(manList[i]);
-                    //        if (manList[i].getAgeAtExp() >= 30 && manList[i].getAgeAtExp() <= 34)
-                    //            womanAgeGroups[2].Add(manList[i]);
-                    //        if (manList[i].getAgeAtExp() >= 35 && manList[i].getAgeAtExp() <= 39)
-                    //            womanAgeGroups[3].Add(manList[i]);
-                    //        if (manList[i].getAgeAtExp() >= 40 && manList[i].getAgeAtExp() <= 44)
-                    //            womanAgeGroups[4].Add(manList[i]);
-                    //        if (manList[i].getAgeAtExp() >= 45 && manList[i].getAgeAtExp() <= 49)
-                    //            womanAgeGroups[5].Add(manList[i]);
-                    //        if (manList[i].getAgeAtExp() >= 50 && manList[i].getAgeAtExp() <= 54)
-                    //            womanAgeGroups[6].Add(manList[i]);
-                    //        if (manList[i].getAgeAtExp() >= 55 && manList[i].getAgeAtExp() <= 59)
-                    //            womanAgeGroups[7].Add(manList[i]);
-                    //        if (manList[i].getAgeAtExp() >= 60 && manList[i].getAgeAtExp() <= 64)
-                    //            womanAgeGroups[8].Add(manList[i]);
-                    //        if (manList[i].getAgeAtExp() >= 65 && manList[i].getAgeAtExp() <= 69)
-                    //            womanAgeGroups[9].Add(manList[i]);
-                    //        if (manList[i].getAgeAtExp() >= 70)
-                    //            womanAgeGroups[10].Add(manList[i]);
-                    //    }
-                    //}
+                ////Переписать все это в адекватную функцию
+                ////for (int i = 0; i < manList.Count; i++)
+                ////{
+                ////    if (manList[i].getSex() == 1)
+                ////    {
+                ////        if (manList[i].getAgeAtExp() >= 18 && manList[i].getAgeAtExp() <= 24)
+                ////            manAmountAgeInGroup[0].Add(manList[i].getAgeAtExp());
+                ////        if (manList[i].getAgeAtExp() >= 25 && manList[i].getAgeAtExp() <= 29)
+                ////            manAmountAgeInGroup[1].Add(manList[i].getAgeAtExp());
+                ////        if (manList[i].getAgeAtExp() >= 30 && manList[i].getAgeAtExp() <= 34)
+                ////            manAmountAgeInGroup[2].Add(manList[i].getAgeAtExp());
+                ////        if (manList[i].getAgeAtExp() >= 35 && manList[i].getAgeAtExp() <= 39)
+                ////            manAmountAgeInGroup[3].Add(manList[i].getAgeAtExp());
+                ////        if (manList[i].getAgeAtExp() >= 40 && manList[i].getAgeAtExp() <= 44)
+                ////            manAmountAgeInGroup[4].Add(manList[i].getAgeAtExp());
+                ////        if (manList[i].getAgeAtExp() >= 45 && manList[i].getAgeAtExp() <= 49)
+                ////            manAmountAgeInGroup[5].Add(manList[i].getAgeAtExp());
+                ////        if (manList[i].getAgeAtExp() >= 50 && manList[i].getAgeAtExp() <= 54)
+                ////            manAmountAgeInGroup[6].Add(manList[i].getAgeAtExp());
+                ////        if (manList[i].getAgeAtExp() >= 55 && manList[i].getAgeAtExp() <= 59)
+                ////            manAmountAgeInGroup[7].Add(manList[i].getAgeAtExp());
+                ////        if (manList[i].getAgeAtExp() >= 60 && manList[i].getAgeAtExp() <= 64)
+                ////            manAmountAgeInGroup[8].Add(manList[i].getAgeAtExp());
+                ////        if (manList[i].getAgeAtExp() >= 65 && manList[i].getAgeAtExp() <= 69)
+                ////            manAmountAgeInGroup[9].Add(manList[i].getAgeAtExp());
+                ////        if (manList[i].getAgeAtExp() >= 70)
+                ////            manAmountAgeInGroup[10].Add(manList[i].getAgeAtExp());
+                ////    }
+                ////    if (manList[i].getSex() == 2)
+                ////    {
+                ////        if (manList[i].getAgeAtExp() >= 18 && manList[i].getAgeAtExp() <= 24)
+                ////            womanAmountAgeInGroup[0].Add(manList[i].getAgeAtExp());
+                ////        if (manList[i].getAgeAtExp() >= 25 && manList[i].getAgeAtExp() <= 29)
+                ////            womanAmountAgeInGroup[1].Add(manList[i].getAgeAtExp());
+                ////        if (manList[i].getAgeAtExp() >= 30 && manList[i].getAgeAtExp() <= 34)
+                ////            womanAmountAgeInGroup[2].Add(manList[i].getAgeAtExp());
+                ////        if (manList[i].getAgeAtExp() >= 35 && manList[i].getAgeAtExp() <= 39)
+                ////            womanAmountAgeInGroup[3].Add(manList[i].getAgeAtExp());
+                ////        if (manList[i].getAgeAtExp() >= 40 && manList[i].getAgeAtExp() <= 44)
+                ////            womanAmountAgeInGroup[4].Add(manList[i].getAgeAtExp());
+                ////        if (manList[i].getAgeAtExp() >= 45 && manList[i].getAgeAtExp() <= 49)
+                ////            womanAmountAgeInGroup[5].Add(manList[i].getAgeAtExp());
+                ////        if (manList[i].getAgeAtExp() >= 50 && manList[i].getAgeAtExp() <= 54)
+                ////            womanAmountAgeInGroup[6].Add(manList[i].getAgeAtExp());
+                ////        if (manList[i].getAgeAtExp() >= 55 && manList[i].getAgeAtExp() <= 59)
+                ////            womanAmountAgeInGroup[7].Add(manList[i].getAgeAtExp());
+                ////        if (manList[i].getAgeAtExp() >= 60 && manList[i].getAgeAtExp() <= 64)
+                ////            womanAmountAgeInGroup[8].Add(manList[i].getAgeAtExp());
+                ////        if (manList[i].getAgeAtExp() >= 65 && manList[i].getAgeAtExp() <= 69)
+                ////            womanAmountAgeInGroup[9].Add(manList[i].getAgeAtExp());
+                ////        if (manList[i].getAgeAtExp() >= 70)
+                ////            womanAmountAgeInGroup[10].Add(manList[i].getAgeAtExp());
+                ////    }
+                ////}
+                ///*-----Разбиение списка людей, по половозрастным группам-----*/
+                //List<Man>[] manAgeGroups = new List<Man>[ageGroups.Count - 1];
+                //for (int i = 0; i < manAgeGroups.Length; i++)
+                //    manAgeGroups[i] = new List<Man>();
 
-                    ///*-----Заполнение массивов списков (для М и Ж раздельно), в которых хранятся года облучения для каждой возрастной группы (для М и Ж раздельно)-----*/
-                    //List<double>[] manAgesInGroup = new List<double>[ageGroups.Count - 1];
-                    //for (int i = 0; i < manAgesInGroup.Length; i++)
-                    //    manAgesInGroup[i] = new List<double>();
+                //List<Man>[] womanAgeGroups = new List<Man>[ageGroups.Count - 1];
+                //for (int i = 0; i < womanAgeGroups.Length; i++)
+                //    womanAgeGroups[i] = new List<Man>();
 
-                    //for (int i = 0; i < manAgeGroups.Length; i++)
-                    //{
-                    //    if (manAgeGroups[i].Count > 0)
-                    //        for (int k = 0; k < manAgeGroups[i].Count; k++)
-                    //        {
-                    //            manAgesInGroup[i].Add(manAgeGroups[i][k].getAgeAtExp());
-                    //        }
-                    //}
+                //for (int i = 0; i < manList.Count; i++)
+                //{
+                //    if (manList[i].getSex() == 1)
+                //    {
+                //        if (manList[i].getAgeAtExp() >= 18 && manList[i].getAgeAtExp() <= 24)
+                //            manAgeGroups[0].Add(manList[i]);
+                //        if (manList[i].getAgeAtExp() >= 25 && manList[i].getAgeAtExp() <= 29)
+                //            manAgeGroups[1].Add(manList[i]);
+                //        if (manList[i].getAgeAtExp() >= 30 && manList[i].getAgeAtExp() <= 34)
+                //            manAgeGroups[2].Add(manList[i]);
+                //        if (manList[i].getAgeAtExp() >= 35 && manList[i].getAgeAtExp() <= 39)
+                //            manAgeGroups[3].Add(manList[i]);
+                //        if (manList[i].getAgeAtExp() >= 40 && manList[i].getAgeAtExp() <= 44)
+                //            manAgeGroups[4].Add(manList[i]);
+                //        if (manList[i].getAgeAtExp() >= 45 && manList[i].getAgeAtExp() <= 49)
+                //            manAgeGroups[5].Add(manList[i]);
+                //        if (manList[i].getAgeAtExp() >= 50 && manList[i].getAgeAtExp() <= 54)
+                //            manAgeGroups[6].Add(manList[i]);
+                //        if (manList[i].getAgeAtExp() >= 55 && manList[i].getAgeAtExp() <= 59)
+                //            manAgeGroups[7].Add(manList[i]);
+                //        if (manList[i].getAgeAtExp() >= 60 && manList[i].getAgeAtExp() <= 64)
+                //            manAgeGroups[8].Add(manList[i]);
+                //        if (manList[i].getAgeAtExp() >= 65 && manList[i].getAgeAtExp() <= 69)
+                //            manAgeGroups[9].Add(manList[i]);
+                //        if (manList[i].getAgeAtExp() >= 70)
+                //            manAgeGroups[10].Add(manList[i]);
+                //    }
+                //    if (manList[i].getSex() == 2)
+                //    {
+                //        if (manList[i].getAgeAtExp() >= 18 && manList[i].getAgeAtExp() <= 24)
+                //            womanAgeGroups[0].Add(manList[i]);
+                //        if (manList[i].getAgeAtExp() >= 25 && manList[i].getAgeAtExp() <= 29)
+                //            womanAgeGroups[1].Add(manList[i]);
+                //        if (manList[i].getAgeAtExp() >= 30 && manList[i].getAgeAtExp() <= 34)
+                //            womanAgeGroups[2].Add(manList[i]);
+                //        if (manList[i].getAgeAtExp() >= 35 && manList[i].getAgeAtExp() <= 39)
+                //            womanAgeGroups[3].Add(manList[i]);
+                //        if (manList[i].getAgeAtExp() >= 40 && manList[i].getAgeAtExp() <= 44)
+                //            womanAgeGroups[4].Add(manList[i]);
+                //        if (manList[i].getAgeAtExp() >= 45 && manList[i].getAgeAtExp() <= 49)
+                //            womanAgeGroups[5].Add(manList[i]);
+                //        if (manList[i].getAgeAtExp() >= 50 && manList[i].getAgeAtExp() <= 54)
+                //            womanAgeGroups[6].Add(manList[i]);
+                //        if (manList[i].getAgeAtExp() >= 55 && manList[i].getAgeAtExp() <= 59)
+                //            womanAgeGroups[7].Add(manList[i]);
+                //        if (manList[i].getAgeAtExp() >= 60 && manList[i].getAgeAtExp() <= 64)
+                //            womanAgeGroups[8].Add(manList[i]);
+                //        if (manList[i].getAgeAtExp() >= 65 && manList[i].getAgeAtExp() <= 69)
+                //            womanAgeGroups[9].Add(manList[i]);
+                //        if (manList[i].getAgeAtExp() >= 70)
+                //            womanAgeGroups[10].Add(manList[i]);
+                //    }
+                //}
 
-                    //List<double>[] womanAgesInGroup = new List<double>[ageGroups.Count - 1];
-                    //for (int i = 0; i < womanAgesInGroup.Length; i++)
-                    //    womanAgesInGroup[i] = new List<double>();
+                ///*-----Заполнение массивов списков (для М и Ж раздельно), в которых хранятся года облучения для каждой возрастной группы (для М и Ж раздельно)-----*/
+                //List<double>[] manAgesInGroup = new List<double>[ageGroups.Count - 1];
+                //for (int i = 0; i < manAgesInGroup.Length; i++)
+                //    manAgesInGroup[i] = new List<double>();
 
-                    //for (int i = 0; i < womanAgeGroups.Length; i++)
-                    //{
-                    //    if (womanAgeGroups[i].Count > 0)
-                    //        for (int k = 0; k < womanAgeGroups[i].Count; k++)
-                    //        {
-                    //            womanAgesInGroup[i].Add(womanAgeGroups[i][k].getAgeAtExp());
-                    //        }
-                    //}
+                //for (int i = 0; i < manAgeGroups.Length; i++)
+                //{
+                //    if (manAgeGroups[i].Count > 0)
+                //        for (int k = 0; k < manAgeGroups[i].Count; k++)
+                //        {
+                //            manAgesInGroup[i].Add(manAgeGroups[i][k].getAgeAtExp());
+                //        }
+                //}
 
-                    ///*-----Заполнение словарей (для М и Ж [внутреннее и внешнее] раздельно), в которых по ключам вида "18-24" хранятся LAR[внутренний и внешний] группы (для М и Ж раздельно)-----*/
-                    //Dictionary<String, double> manIntLarInGroup = new Dictionary<String, double>();
-                    //Dictionary<String, double> manExtLarInGroup = new Dictionary<String, double>();
-                    //Dictionary<String, double> womanIntLarInGroup = new Dictionary<String, double>();
-                    //Dictionary<String, double> womanExtLarInGroup = new Dictionary<String, double>();
-                    ///*  Здесь должны быть также выделены словари с ключами такого же типа,
-                    // *  но не для LAR, а для DET.
-                    // *  Заполнение осуществить в этих же циклах.
-                    // */
-                    //for (int i = 0; i < manAgesInGroup.Length; i++)
-                    //{
-                    //    if (manAgesInGroup[i].Count > 0)
-                    //    {
-                    //        manIntLarInGroup.Add(ageGroups[i], getManIntLar(manAgesInGroup[i].Average()));
-                    //        manExtLarInGroup.Add(ageGroups[i], getManExtLar(manAgesInGroup[i].Average()));
-                    //    }
-                    //}
-                    //for (int i = 0; i < womanAgesInGroup.Length; i++)
-                    //{
-                    //    if (womanAgesInGroup[i].Count > 0)
-                    //    {
-                    //        womanIntLarInGroup.Add(ageGroups[i], getWomanIntLar(womanAgesInGroup[i].Average()));
-                    //        womanExtLarInGroup.Add(ageGroups[i], getWomanExtLar(womanAgesInGroup[i].Average()));
-                    //    }
-                    //}
+                //List<double>[] womanAgesInGroup = new List<double>[ageGroups.Count - 1];
+                //for (int i = 0; i < womanAgesInGroup.Length; i++)
+                //    womanAgesInGroup[i] = new List<double>();
 
-                    ///*-----Заполнение коллекций, в которых будут храниться дозы облучения по годам, чтобы вычислять среднюю дозу облучения за 5 лет в группе-----*/
-                    ///*  Может быть, следует это сделать аналогично тому,
-                    // *  как это было сделано при заполнении массивов списков,
-                    // *  в которых хранятся года облучения:
-                    // *  manAgesInGroup и womanAgesInGroup.
-                    // */
-                    //List<double> blabla = new List<double>();
-                    //for (int i = 0; i < doseHistoryList.Count; i++)
-                    //    for (int k = 0; k < doseHistoryList[i].Length; k++){
-                    //        if (doseHistoryList[i][k].AgeAtExposure >= 18 && doseHistoryList[i][k].AgeAtExposure <= 24)
-                    //        {
-                    //            blabla.Add(doseHistoryList[i][k].AgeAtExposure);
-                    //        }
+                //for (int i = 0; i < womanAgeGroups.Length; i++)
+                //{
+                //    if (womanAgeGroups[i].Count > 0)
+                //        for (int k = 0; k < womanAgeGroups[i].Count; k++)
+                //        {
+                //            womanAgesInGroup[i].Add(womanAgeGroups[i][k].getAgeAtExp());
+                //        }
+                //}
 
-                    //    }
+                ///*-----Заполнение словарей (для М и Ж [внутреннее и внешнее] раздельно), в которых по ключам вида "18-24" хранятся LAR[внутренний и внешний] группы (для М и Ж раздельно)-----*/
+                //Dictionary<String, double> manIntLarInGroup = new Dictionary<String, double>();
+                //Dictionary<String, double> manExtLarInGroup = new Dictionary<String, double>();
+                //Dictionary<String, double> womanIntLarInGroup = new Dictionary<String, double>();
+                //Dictionary<String, double> womanExtLarInGroup = new Dictionary<String, double>();
+                ///*  Здесь должны быть также выделены словари с ключами такого же типа,
+                // *  но не для LAR, а для DET.
+                // *  Заполнение осуществить в этих же циклах.
+                // */
+                //for (int i = 0; i < manAgesInGroup.Length; i++)
+                //{
+                //    if (manAgesInGroup[i].Count > 0)
+                //    {
+                //        manIntLarInGroup.Add(ageGroups[i], getManIntLar(manAgesInGroup[i].Average()));
+                //        manExtLarInGroup.Add(ageGroups[i], getManExtLar(manAgesInGroup[i].Average()));
+                //    }
+                //}
+                //for (int i = 0; i < womanAgesInGroup.Length; i++)
+                //{
+                //    if (womanAgesInGroup[i].Count > 0)
+                //    {
+                //        womanIntLarInGroup.Add(ageGroups[i], getWomanIntLar(womanAgesInGroup[i].Average()));
+                //        womanExtLarInGroup.Add(ageGroups[i], getWomanExtLar(womanAgesInGroup[i].Average()));
+                //    }
+                //}
 
-            testTextBox.Text = manDict[manMaxAge][0].getId().ToString();
-            resultTextBox.Text = womanDict[womanMaxAge][0].getId().ToString();        
+                ///*-----Заполнение коллекций, в которых будут храниться дозы облучения по годам, чтобы вычислять среднюю дозу облучения за 5 лет в группе-----*/
+                ///*  Может быть, следует это сделать аналогично тому,
+                // *  как это было сделано при заполнении массивов списков,
+                // *  в которых хранятся года облучения:
+                // *  manAgesInGroup и womanAgesInGroup.
+                // */
+                //List<double> blabla = new List<double>();
+                //for (int i = 0; i < doseHistoryList.Count; i++)
+                //    for (int k = 0; k < doseHistoryList[i].Length; k++){
+                //        if (doseHistoryList[i][k].AgeAtExposure >= 18 && doseHistoryList[i][k].AgeAtExposure <= 24)
+                //        {
+                //            blabla.Add(doseHistoryList[i][k].AgeAtExposure);
+                //        }
+
+                //    }
+
         }
 
         private void testTextBox_TextChanged(object sender, EventArgs e)
@@ -524,6 +731,11 @@ namespace TVELtest
         }
 
         private void resultLabel_Click(object sender, EventArgs e)
+        {
+
+        }
+
+        private void textBox1_TextChanged(object sender, EventArgs e)
         {
 
         }

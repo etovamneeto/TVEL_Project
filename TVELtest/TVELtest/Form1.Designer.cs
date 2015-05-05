@@ -33,6 +33,7 @@
             this.testTextBox = new System.Windows.Forms.TextBox();
             this.testLabel = new System.Windows.Forms.Label();
             this.resultLabel = new System.Windows.Forms.Label();
+            this.textBox1 = new System.Windows.Forms.TextBox();
             this.SuspendLayout();
             // 
             // getOrpoButton
@@ -81,11 +82,20 @@
             this.resultLabel.Text = "result";
             this.resultLabel.Click += new System.EventHandler(this.resultLabel_Click);
             // 
+            // textBox1
+            // 
+            this.textBox1.Location = new System.Drawing.Point(103, 53);
+            this.textBox1.Name = "textBox1";
+            this.textBox1.Size = new System.Drawing.Size(100, 20);
+            this.textBox1.TabIndex = 5;
+            this.textBox1.TextChanged += new System.EventHandler(this.textBox1_TextChanged);
+            // 
             // Form1
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(292, 273);
+            this.Controls.Add(this.textBox1);
             this.Controls.Add(this.resultLabel);
             this.Controls.Add(this.testLabel);
             this.Controls.Add(this.testTextBox);
@@ -106,6 +116,7 @@
         private System.Windows.Forms.TextBox testTextBox;
         private System.Windows.Forms.Label testLabel;
         private System.Windows.Forms.Label resultLabel;
+        private System.Windows.Forms.TextBox textBox1;
 
 
     }
