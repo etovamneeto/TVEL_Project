@@ -161,6 +161,32 @@ namespace TVELtest
             ageGroups.Add("65-69");
             ageGroups.Add("70+");
 
+            List<int> ageLowerBound = new List<int>();
+            ageLowerBound.Add(18);
+            ageLowerBound.Add(25);
+            ageLowerBound.Add(30);
+            ageLowerBound.Add(35);
+            ageLowerBound.Add(40);
+            ageLowerBound.Add(45);
+            ageLowerBound.Add(50);
+            ageLowerBound.Add(55);
+            ageLowerBound.Add(60);
+            ageLowerBound.Add(65);
+            ageLowerBound.Add(70);
+
+            List<int> ageUpperBound = new List<int>();
+            ageUpperBound.Add(24);
+            ageUpperBound.Add(29);
+            ageUpperBound.Add(34);
+            ageUpperBound.Add(39);
+            ageUpperBound.Add(44);
+            ageUpperBound.Add(49);
+            ageUpperBound.Add(54);
+            ageUpperBound.Add(59);
+            ageUpperBound.Add(64);
+            ageUpperBound.Add(69);
+            ageUpperBound.Add(100);
+
             /*-----Список объектов; достаем все необходимое для расчетов: id, dose, doseInt, ageAtExp, gender-----*/
             List<dbObject> dbRecords = new List<dbObject>();
             for (int i = 0; i < table.Rows.Count; i++)
@@ -236,78 +262,90 @@ namespace TVELtest
             double[] manAverDosesExt = new double[manAgesGroupedArray.Length];
             double[] manAverDosesInt = new double[manAgesGroupedArray.Length];
             double[] ages = new double[manAgesGroupedArray.Length];
+            //Здесь доработать на то, чтобы возраста менялись по upper & lowerBounds
             for (int i = 0; i < manAgesGroupedArray.Length; i++)
             {
-                for (int k = 0; k < manAgesGroupedArray[i].Count; k++)
-                {
-                    if (manAgesGroupedArray[i][0].getAgeAtExp() >= 18 && manAgesGroupedArray[i][0].getAgeAtExp() <= 24)
+                    for (int k = 0; k < manAgesGroupedArray[i].Count; k++)
                     {
-                        manAverDosesExt[i] += manAgesGroupedArray[i][k].getDose() - manAgesGroupedArray[i][k].getDoseInt();
-                        manAverDosesInt[i] += manAgesGroupedArray[i][k].getDoseInt();
-                        ages[i] += manAgesGroupedArray[i][k].getAgeAtExp();
-                    }
-                    if (manAgesGroupedArray[i][0].getAgeAtExp() >= 25 && manAgesGroupedArray[i][0].getAgeAtExp() <= 29)
-                    {
-                        manAverDosesExt[i] += manAgesGroupedArray[i][k].getDose() - manAgesGroupedArray[i][k].getDoseInt();
-                        manAverDosesInt[i] += manAgesGroupedArray[i][k].getDoseInt();
-                        ages[i] += manAgesGroupedArray[i][k].getAgeAtExp();
-                    }
-                    if (manAgesGroupedArray[i][0].getAgeAtExp() >= 30 && manAgesGroupedArray[i][0].getAgeAtExp() <= 34)
-                    {
-                        manAverDosesExt[i] += manAgesGroupedArray[i][k].getDose() - manAgesGroupedArray[i][k].getDoseInt();
-                        manAverDosesInt[i] += manAgesGroupedArray[i][k].getDoseInt();
-                        ages[i] += manAgesGroupedArray[i][k].getAgeAtExp();
-                    }
-                    if (manAgesGroupedArray[i][0].getAgeAtExp() >= 35 && manAgesGroupedArray[i][0].getAgeAtExp() <= 39)
-                    {
-                        manAverDosesExt[i] += manAgesGroupedArray[i][k].getDose() - manAgesGroupedArray[i][k].getDoseInt();
-                        manAverDosesInt[i] += manAgesGroupedArray[i][k].getDoseInt();
-                        ages[i] += manAgesGroupedArray[i][k].getAgeAtExp();
-                    }
-                    if (manAgesGroupedArray[i][0].getAgeAtExp() >= 40 && manAgesGroupedArray[i][0].getAgeAtExp() <= 44)
-                    {
-                        manAverDosesExt[i] += manAgesGroupedArray[i][k].getDose() - manAgesGroupedArray[i][k].getDoseInt();
-                        manAverDosesInt[i] += manAgesGroupedArray[i][k].getDoseInt();
-                        ages[i] += manAgesGroupedArray[i][k].getAgeAtExp();
-                    }
-                    if (manAgesGroupedArray[i][0].getAgeAtExp() >= 45 && manAgesGroupedArray[i][0].getAgeAtExp() <= 49)
-                    {
-                        manAverDosesExt[i] += manAgesGroupedArray[i][k].getDose() - manAgesGroupedArray[i][k].getDoseInt();
-                        manAverDosesInt[i] += manAgesGroupedArray[i][k].getDoseInt();
-                        ages[i] += manAgesGroupedArray[i][k].getAgeAtExp();
-                    }
-                    if (manAgesGroupedArray[i][0].getAgeAtExp() >= 50 && manAgesGroupedArray[i][0].getAgeAtExp() <= 54)
-                    {
-                        manAverDosesExt[i] += manAgesGroupedArray[i][k].getDose() - manAgesGroupedArray[i][k].getDoseInt();
-                        manAverDosesInt[i] += manAgesGroupedArray[i][k].getDoseInt();
-                        ages[i] += manAgesGroupedArray[i][k].getAgeAtExp();
-                    }
-                    if (manAgesGroupedArray[i][0].getAgeAtExp() >= 55 && manAgesGroupedArray[i][0].getAgeAtExp() <= 59)
-                    {
-                        manAverDosesExt[i] += manAgesGroupedArray[i][k].getDose() - manAgesGroupedArray[i][k].getDoseInt();
-                        manAverDosesInt[i] += manAgesGroupedArray[i][k].getDoseInt();
-                        ages[i] += manAgesGroupedArray[i][k].getAgeAtExp();
-                    }
-                    if (manAgesGroupedArray[i][0].getAgeAtExp() >= 60 && manAgesGroupedArray[i][0].getAgeAtExp() <= 64)
-                    {
-                        manAverDosesExt[i] += manAgesGroupedArray[i][k].getDose() - manAgesGroupedArray[i][k].getDoseInt();
-                        manAverDosesInt[i] += manAgesGroupedArray[i][k].getDoseInt();
-                        ages[i] += manAgesGroupedArray[i][k].getAgeAtExp();
-                    }
-                    if (manAgesGroupedArray[i][0].getAgeAtExp() >= 65 && manAgesGroupedArray[i][0].getAgeAtExp() <= 69)
-                    {
-                        manAverDosesExt[i] += manAgesGroupedArray[i][k].getDose() - manAgesGroupedArray[i][k].getDoseInt();
-                        manAverDosesInt[i] += manAgesGroupedArray[i][k].getDoseInt();
-                        ages[i] += manAgesGroupedArray[i][k].getAgeAtExp();
-                    }
-                    if (manAgesGroupedArray[i][0].getAgeAtExp() >= 70)
-                    {
-                        manAverDosesExt[i] += manAgesGroupedArray[i][k].getDose() - manAgesGroupedArray[i][k].getDoseInt();
-                        manAverDosesInt[i] += manAgesGroupedArray[i][k].getDoseInt();
-                        ages[i] += manAgesGroupedArray[i][k].getAgeAtExp();
-                    }
-                }
+                        
+                        if (manAgesGroupedArray[i][0].getAgeAtExp() >= 18 && manAgesGroupedArray[i][0].getAgeAtExp() <= 24)
+                        {
+                            manAverDosesExt[i] += manAgesGroupedArray[i][k].getDose() - manAgesGroupedArray[i][k].getDoseInt();
+                            manAverDosesInt[i] += manAgesGroupedArray[i][k].getDoseInt();
+                            ages[i] += manAgesGroupedArray[i][k].getAgeAtExp();
 
+                        }
+                        if (manAgesGroupedArray[i][0].getAgeAtExp() >= 25 && manAgesGroupedArray[i][0].getAgeAtExp() <= 29)
+                        {
+                            manAverDosesExt[i] += manAgesGroupedArray[i][k].getDose() - manAgesGroupedArray[i][k].getDoseInt();
+                            manAverDosesInt[i] += manAgesGroupedArray[i][k].getDoseInt();
+                            ages[i] += manAgesGroupedArray[i][k].getAgeAtExp();
+
+                        }
+                        if (manAgesGroupedArray[i][0].getAgeAtExp() >= 30 && manAgesGroupedArray[i][0].getAgeAtExp() <= 34)
+                        {
+                            manAverDosesExt[i] += manAgesGroupedArray[i][k].getDose() - manAgesGroupedArray[i][k].getDoseInt();
+                            manAverDosesInt[i] += manAgesGroupedArray[i][k].getDoseInt();
+                            ages[i] += manAgesGroupedArray[i][k].getAgeAtExp();
+
+                        }
+                        if (manAgesGroupedArray[i][0].getAgeAtExp() >= 35 && manAgesGroupedArray[i][0].getAgeAtExp() <= 39)
+                        {
+                            manAverDosesExt[i] += manAgesGroupedArray[i][k].getDose() - manAgesGroupedArray[i][k].getDoseInt();
+                            manAverDosesInt[i] += manAgesGroupedArray[i][k].getDoseInt();
+                            ages[i] += manAgesGroupedArray[i][k].getAgeAtExp();
+
+                        }
+                        if (manAgesGroupedArray[i][0].getAgeAtExp() >= 40 && manAgesGroupedArray[i][0].getAgeAtExp() <= 44)
+                        {
+                            manAverDosesExt[i] += manAgesGroupedArray[i][k].getDose() - manAgesGroupedArray[i][k].getDoseInt();
+                            manAverDosesInt[i] += manAgesGroupedArray[i][k].getDoseInt();
+                            ages[i] += manAgesGroupedArray[i][k].getAgeAtExp();
+
+                        }
+                        if (manAgesGroupedArray[i][0].getAgeAtExp() >= 45 && manAgesGroupedArray[i][0].getAgeAtExp() <= 49)
+                        {
+                            manAverDosesExt[i] += manAgesGroupedArray[i][k].getDose() - manAgesGroupedArray[i][k].getDoseInt();
+                            manAverDosesInt[i] += manAgesGroupedArray[i][k].getDoseInt();
+                            ages[i] += manAgesGroupedArray[i][k].getAgeAtExp();
+
+                        }
+                        if (manAgesGroupedArray[i][0].getAgeAtExp() >= 50 && manAgesGroupedArray[i][0].getAgeAtExp() <= 54)
+                        {
+                            manAverDosesExt[i] += manAgesGroupedArray[i][k].getDose() - manAgesGroupedArray[i][k].getDoseInt();
+                            manAverDosesInt[i] += manAgesGroupedArray[i][k].getDoseInt();
+                            ages[i] += manAgesGroupedArray[i][k].getAgeAtExp();
+
+                        }
+                        if (manAgesGroupedArray[i][0].getAgeAtExp() >= 55 && manAgesGroupedArray[i][0].getAgeAtExp() <= 59)
+                        {
+                            manAverDosesExt[i] += manAgesGroupedArray[i][k].getDose() - manAgesGroupedArray[i][k].getDoseInt();
+                            manAverDosesInt[i] += manAgesGroupedArray[i][k].getDoseInt();
+                            ages[i] += manAgesGroupedArray[i][k].getAgeAtExp();
+
+                        }
+                        if (manAgesGroupedArray[i][0].getAgeAtExp() >= 60 && manAgesGroupedArray[i][0].getAgeAtExp() <= 64)
+                        {
+                            manAverDosesExt[i] += manAgesGroupedArray[i][k].getDose() - manAgesGroupedArray[i][k].getDoseInt();
+                            manAverDosesInt[i] += manAgesGroupedArray[i][k].getDoseInt();
+                            ages[i] += manAgesGroupedArray[i][k].getAgeAtExp();
+
+                        }
+                        if (manAgesGroupedArray[i][0].getAgeAtExp() >= 65 && manAgesGroupedArray[i][0].getAgeAtExp() <= 69)
+                        {
+                            manAverDosesExt[i] += manAgesGroupedArray[i][k].getDose() - manAgesGroupedArray[i][k].getDoseInt();
+                            manAverDosesInt[i] += manAgesGroupedArray[i][k].getDoseInt();
+                            ages[i] += manAgesGroupedArray[i][k].getAgeAtExp();
+
+                        }
+                        if (manAgesGroupedArray[i][0].getAgeAtExp() >= 70)
+                        {
+                            manAverDosesExt[i] += manAgesGroupedArray[i][k].getDose() - manAgesGroupedArray[i][k].getDoseInt();
+                            manAverDosesInt[i] += manAgesGroupedArray[i][k].getDoseInt();
+                            ages[i] += manAgesGroupedArray[i][k].getAgeAtExp();
+
+                        }
+                }
                 manAverDosesExt[i] = manAverDosesExt[i] / manAgesGroupedArray[i].Count;
                 manAverDosesInt[i] = manAverDosesInt[i] / manAgesGroupedArray[i].Count;
             }
@@ -318,11 +356,73 @@ namespace TVELtest
              * что-то
              * придумать
              */
-            int[] count = new int[ageGroups.Count - 1];
-            int buffer = 0;
 
-            testTextBox.Text = "sss";
-            resultTextBox.Text = "sss";
+            double smth = manAverDosesExt[0] + manAverDosesExt[1] + manAverDosesExt[2] + manAverDosesExt[3] + manAverDosesExt[4] + manAverDosesExt[5] + manAverDosesExt[6];
+            int aver = 7;
+            double averDose = smth / aver; // Вот так должна получаться средняя доза в группе
+
+            double ageAver = (ages[0] + ages[1] + ages[2] + ages[3] + ages[4] + ages[5] + ages[6]) / (manAgesGroupedArray[0].Count + manAgesGroupedArray[1].Count + manAgesGroupedArray[2].Count + manAgesGroupedArray[3].Count + manAgesGroupedArray[4].Count + manAgesGroupedArray[5].Count + manAgesGroupedArray[6].Count);
+            double[] buffer = new double[ageGroups.Count];
+            for (int i = 0; i < buffer.Length; i++)
+                buffer[i] = 0;
+                for (int i = 0; i < manAgesGroupedArray.Length; i++)
+                {
+                    for (int k = 0; k < buffer.Length; k++)
+                    {
+                        if (ages[i] / manAgesGroupedArray[i].Count >= ageLowerBound[k] && ages[i] / manAgesGroupedArray[i].Count <= ageUpperBound[k])
+                        {
+                            buffer[k] += 1; //ЭТО ПОБЕДА ИЗ ПОБЕД! ДОПИШИ УТРОМ!!!!
+                        }
+                        //if (ages[i] / manAgesGroupedArray[i].Count >= ageLowerBound[k] && ages[i] / manAgesGroupedArray[i].Count <= ageUpperBound[k])
+                        //{
+                        //    buffer[k] += manAverDosesExt[i];
+                        //}
+                        //if (ages[i] / manAgesGroupedArray[i].Count >= ageLowerBound[k] && ages[i] / manAgesGroupedArray[i].Count <= ageUpperBound[k])
+                        //{
+                        //    buffer[k] += manAverDosesExt[i];
+                        //}
+                        //if (ages[i] / manAgesGroupedArray[i].Count >= ageLowerBound[k] && ages[i] / manAgesGroupedArray[i].Count <= ageUpperBound[k])
+                        //{
+                        //    buffer[k] += manAverDosesExt[i];
+                        //}
+                        //if (ages[i] / manAgesGroupedArray[i].Count >= ageLowerBound[k] && ages[i] / manAgesGroupedArray[i].Count <= ageUpperBound[k])
+                        //{
+                        //    buffer[k] += manAverDosesExt[i];
+                        //}
+                        //if (ages[i] / manAgesGroupedArray[i].Count >= ageLowerBound[k] && ages[i] / manAgesGroupedArray[i].Count <= ageUpperBound[k])
+                        //{
+                        //    buffer[k] += manAverDosesExt[i];
+                        //}
+                        //if (ages[i] / manAgesGroupedArray[i].Count >= ageLowerBound[k] && ages[i] / manAgesGroupedArray[i].Count <= ageUpperBound[k])
+                        //{
+                        //    buffer[k] += manAverDosesExt[i];
+                        //}
+                        //if (ages[i] / manAgesGroupedArray[i].Count >= ageLowerBound[k] && ages[i] / manAgesGroupedArray[i].Count <= ageUpperBound[k])
+                        //{
+                        //    buffer[k] += manAverDosesExt[i];
+                        //}
+                        //if (ages[i] / manAgesGroupedArray[i].Count >= ageLowerBound[k] && ages[i] / manAgesGroupedArray[i].Count <= ageUpperBound[k])
+                        //{
+                        //    buffer[k] += manAverDosesExt[i];
+                        //}
+                        //if (ages[i] / manAgesGroupedArray[i].Count >= ageLowerBound[k] && ages[i] / manAgesGroupedArray[i].Count <= ageUpperBound[k])
+                        //{
+                        //    buffer[k] += manAverDosesExt[i];
+                        //}
+                        //if (ages[i] / manAgesGroupedArray[i].Count >= ageLowerBound[k] && ages[i] / manAgesGroupedArray[i].Count <= ageUpperBound[k])
+                        //{
+                        //    buffer[k] += manAverDosesExt[i];
+                        //}
+                    }
+                }
+
+
+
+                //textBox1.Text = "0";//manAverDosesExt[0].ToString() + " + " + (ages[0] / manAgesGroupedArray[0].Count).ToString();
+                testTextBox.Text = smth.ToString();
+                resultTextBox.Text = buffer[Convert.ToInt32(textBox1.Text)].ToString();
+
+
 
             ///*-----Массивы списков для мужчин и для женщин, в каждом из которых будут храниться объекты, сгруппированные по возрастам облучения. i = 0 - 18-летние, i = 1 - 19-летние и тд-----*/
             //List<dbObject>[] manAgesGroupedArray = new List<dbObject>[manMaxAge - manMinAge + 1];
@@ -571,10 +671,6 @@ namespace TVELtest
                 //            meanAge = amountAge / countOfRecords;
                 //        }
                 //}//Может быть, идея достойна жизни, но очень нечитабельно получается, запутался в логике сам
-
-
-//womanExtDosesDictionary.Count.ToString();//manDictKeys[Convert.ToInt32(textBox1.Text)] + " + Записей " + manDictionary[manDictKeys[Convert.ToInt32(textBox1.Text)]].Count.ToString();//womanDictionary[womanMaxAge][0].getId().ToString();   
-
 
                 /* ПОЛНОСТЬЮ МЕНЯЕМ ЛОГИКУ ПРОГРАММЫ!
                  * ТО, ЧТО НАПИСАНО НИЖЕ, БУДЕТ ЗАКОММЕНТИРОВАННО,
