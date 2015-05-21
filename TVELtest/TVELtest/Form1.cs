@@ -621,11 +621,108 @@ namespace TVELtest
             
             //testTextBox.Text = (manAmountOfAverExtDoses[Convert.ToInt32(textBox1.Text)] / manValueOfSubgroups[Convert.ToInt32(textBox1.Text)]).ToString();//getOrpo(getManExtLar(manAgeAmountOfGroup[Convert.ToInt32(textBox1.Text)] / manAmountOfSubgroupCounts[Convert.ToInt32(textBox1.Text)]), (manAmountOfAverExtDoses[Convert.ToInt32(textBox1.Text)] / manValueOfSubgroups[Convert.ToInt32(textBox1.Text)])).ToString();
             //resultTextBox.Text = (manAmountOfAverIntDoses[Convert.ToInt32(textBox1.Text)] / manValueOfSubgroups[Convert.ToInt32(textBox1.Text)]).ToString();
+            testTextBox.Text = "ОРПО! " + (dbManAges.Count + dbWomanAges.Count).ToString();
+            resultTextBox.Text = "ОРПО! " + dbRecords.Count;
         }
 
         private void getIbpoButton_Click(object sender, EventArgs e)
         {
+            String dbPath = Path.GetDirectoryName(Application.ExecutablePath) + "\\dbTvel.mdb";
+            String connectionString = @"Provider=Microsoft.Jet.OLEDB.4.0; Data Source=" + dbPath;
+            OleDbConnection connection = new OleDbConnection(connectionString);
+            connection.Open();
 
+            OleDbDataAdapter adapter = new OleDbDataAdapter("SELECT [ID], [Dose], [DoseInt], [Year], [Gender], [BirthYear], [AgeAtExp] FROM [Final] WHERE [Shop]='r3'", connectionString);//Выбор нужных столбцов из нужной таблицы
+            DataSet dataSet = new DataSet();
+            adapter.Fill(dataSet, "Final");
+            DataTable table = dataSet.Tables[0];//Из Final в эту таблицу считываются поля, указанные в запросе; Выборка для МСК (shop = r3)
+
+            /*-----Заполнения списка уникальных ID-----*/
+            List<int> uniqueIdList = new List<int>();
+            for (int i = 0; i < table.Rows.Count; i++)
+            {
+                uniqueIdList.Add(Convert.ToInt32(table.Rows[i]["id"]));
+            }
+            uniqueIdList = uniqueIdList.Distinct().ToList();
+
+            List<String> ageGroups = new List<string>();//Строки, в которых указаны возростные группы. Это ключи для дальнейшей связи через словари.
+            ageGroups.Add("18-24");
+            ageGroups.Add("25-29");
+            ageGroups.Add("30-34");
+            ageGroups.Add("35-39");
+            ageGroups.Add("40-44");
+            ageGroups.Add("45-49");
+            ageGroups.Add("50-54");
+            ageGroups.Add("55-59");
+            ageGroups.Add("60-64");
+            ageGroups.Add("65-69");
+            ageGroups.Add("70+");
+
+            /*-----Список объектов; достаем все необходимое для расчетов: id, dose, doseInt, ageAtExp, gender-----*/
+            List<dbObject> dbRecords = new List<dbObject>();
+            for (int i = 0; i < table.Rows.Count; i++)
+            {
+                dbRecords.Add(new dbObject(Convert.ToInt32(table.Rows[i]["id"]), Convert.ToByte(table.Rows[i]["gender"]), Convert.ToInt16(table.Rows[i]["ageatexp"]), Convert.ToDouble(table.Rows[i]["dose"]), Convert.ToDouble(table.Rows[i]["doseint"])));
+            }
+
+            /*-----Список, в котором хранится пол-----*/
+            List<byte> dbSex = new List<byte>();
+            for (int i = 0; i < dbRecords.Count; i++)
+                dbSex.Add(dbRecords[i].getSex());
+
+            /*-----Определение пола; Меньшая цифра пола - М, большая - Ж-----*/
+            byte sexMale = dbSex.Min();
+            byte sexFemale = dbSex.Max();
+
+            /*
+             * -----
+             * Создания массива списков, где каждый элемент
+             * массива - это список объектов, id которых
+             * совпадают с уникальными id; например, если уникальный id = 1,
+             * то в элемент массива списков записываются все объекты с id = 1.
+             * -----
+             */
+            List<dbObject>[] manRecordsList = new List<dbObject>[uniqueIdList.Count];
+            for (int i = 0; i < manRecordsList.Length; i++)
+                manRecordsList[i] = new List<dbObject>();
+
+            for (int i = 0; i < manRecordsList.Length; i++)
+                for (int k = 0; k < dbRecords.Count; k++)
+            {
+                if (Equals(uniqueIdList[i], dbRecords[k].getId()))
+                {
+                    manRecordsList[i].Add(dbRecords[k]);
+                }
+            }
+
+            testTextBox.Text = "ИБПО! " + manRecordsList.Length.ToString();
+            resultTextBox.Text = "ИБПО! " + dbRecords.Count.ToString();
+
+
+            ///*-----Создание пустого списка дозовых историй; для каждого уникального ID своя дозовая история (по сути, это ячейки, которые надо заполнить)-----*/
+            //List<RiskCalculator.DoseHistoryRecord[]> doseHistoryList = new List<RiskCalculator.DoseHistoryRecord[]>();
+            //for (int i = 0; i < uniqueIdList.Count; i++)
+            //{
+            //    doseHistoryList.Add(new RiskCalculator.DoseHistoryRecord[manRecordsList[i].Count]);
+            //}
+            //foreach (RiskCalculator.DoseHistoryRecord[] note in doseHistoryList)
+            //{
+            //    for (int i = 0; i < note.Length; i++)
+            //        note[i] = new RiskCalculator.DoseHistoryRecord();
+            //}
+
+            ///*-----Заполнение дозовых историй-----*/
+            //for (int i = 0; i < uniqueIdList.Count; i++)
+            //    for (int k = 0; k < manRecordsList[i].Count; k++)
+            //    {
+            //        doseHistoryList[i][k].AgeAtExposure = manRecordsList[i][k].getAgeAtExp();
+            //        doseHistoryList[i][k].AllSolidDoseInmGy = manRecordsList[i][k].getDose() - manRecordsList[i][k].getDoseInt();
+            //        doseHistoryList[i][k].LeukaemiaDoseInmGy = manRecordsList[i][k].getDose() - manRecordsList[i][k].getDoseInt();
+            //        doseHistoryList[i][k].LungDoseInmGy = manRecordsList[i][k].getDoseInt();
+            //    }
+            //RiskCalculator.DoseHistoryRecord[] rec = doseHistoryList[0];
+            //RiskCalculatorLib.RiskCalculator calc = new RiskCalculator(1, 1, ref rec, true);
+            //calc.getYLLBounds();
         }
 
         private void testTextBox_TextChanged(object sender, EventArgs e)
