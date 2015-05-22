@@ -618,7 +618,7 @@ namespace TVELtest
             //    excelCells.Value2 = womanOrpoInt_95[i - 2];
             //    excelCells.Borders.ColorIndex = 1;
             //}
-            
+
             //testTextBox.Text = (manAmountOfAverExtDoses[Convert.ToInt32(textBox1.Text)] / manValueOfSubgroups[Convert.ToInt32(textBox1.Text)]).ToString();//getOrpo(getManExtLar(manAgeAmountOfGroup[Convert.ToInt32(textBox1.Text)] / manAmountOfSubgroupCounts[Convert.ToInt32(textBox1.Text)]), (manAmountOfAverExtDoses[Convert.ToInt32(textBox1.Text)] / manValueOfSubgroups[Convert.ToInt32(textBox1.Text)])).ToString();
             //resultTextBox.Text = (manAmountOfAverIntDoses[Convert.ToInt32(textBox1.Text)] / manValueOfSubgroups[Convert.ToInt32(textBox1.Text)]).ToString();
             testTextBox.Text = "ОРПО! " + (dbManAges.Count + dbWomanAges.Count).ToString();
@@ -632,20 +632,14 @@ namespace TVELtest
             OleDbConnection connection = new OleDbConnection(connectionString);
             connection.Open();
 
+            /*-----Из таблицы Final в эту таблицу считываются поля, указанные в запросе; Выборка для МСК (shop = r3)-----*/
             OleDbDataAdapter adapter = new OleDbDataAdapter("SELECT [ID], [Dose], [DoseInt], [Year], [Gender], [BirthYear], [AgeAtExp] FROM [Final] WHERE [Shop]='r3'", connectionString);//Выбор нужных столбцов из нужной таблицы
             DataSet dataSet = new DataSet();
             adapter.Fill(dataSet, "Final");
-            DataTable table = dataSet.Tables[0];//Из Final в эту таблицу считываются поля, указанные в запросе; Выборка для МСК (shop = r3)
+            DataTable table = dataSet.Tables[0];
 
-            /*-----Заполнения списка уникальных ID-----*/
-            List<int> uniqueIdList = new List<int>();
-            for (int i = 0; i < table.Rows.Count; i++)
-            {
-                uniqueIdList.Add(Convert.ToInt32(table.Rows[i]["id"]));
-            }
-            uniqueIdList = uniqueIdList.Distinct().ToList();
-
-            List<String> ageGroups = new List<string>();//Строки, в которых указаны возростные группы. Это ключи для дальнейшей связи через словари.
+            /*-----Заполнение списка ключей возрастных групп-----*/
+            List<String> ageGroups = new List<string>();
             ageGroups.Add("18-24");
             ageGroups.Add("25-29");
             ageGroups.Add("30-34");
@@ -674,6 +668,39 @@ namespace TVELtest
             byte sexMale = dbSex.Min();
             byte sexFemale = dbSex.Max();
 
+            /*-----Уникальные ID мужчин-----*/
+            List<int> manUniqueIdList = new List<int>();
+            for (int i = 0; i < dbRecords.Count; i++)
+            {
+                if (dbRecords[i].getSex() == sexMale)
+                {
+                    manUniqueIdList.Add(dbRecords[i].getId());
+                }
+            }
+            manUniqueIdList = manUniqueIdList.Distinct().ToList();
+
+            /*-----Уникальные ID женщин-----*/
+            List<int> womanUniqueIdList = new List<int>();
+            for (int i = 0; i < dbRecords.Count; i++)
+            {
+                if (dbRecords[i].getSex() == sexFemale)
+                {
+                    womanUniqueIdList.Add(dbRecords[i].getId());
+                }
+            }
+            womanUniqueIdList = womanUniqueIdList.Distinct().ToList();
+
+            /*-----Разделение записей БД на мужские и женские-----*/
+            List<dbObject> manList = new List<dbObject>();
+            for (int i = 0; i < dbRecords.Count; i++)
+                if (dbRecords[i].getSex() == sexMale)
+                    manList.Add(dbRecords[i]);
+
+            List<dbObject> womanList = new List<dbObject>();
+            for (int i = 0; i < dbRecords.Count; i++)
+                if (dbRecords[i].getSex() == sexFemale)
+                    womanList.Add(dbRecords[i]);
+
             /*
              * -----
              * Создания массива списков, где каждый элемент
@@ -682,23 +709,37 @@ namespace TVELtest
              * то в элемент массива списков записываются все объекты с id = 1.
              * -----
              */
-            List<dbObject>[] manRecordsList = new List<dbObject>[uniqueIdList.Count];
-            for (int i = 0; i < manRecordsList.Length; i++)
-                manRecordsList[i] = new List<dbObject>();
+            List<dbObject>[] manIdRecordsArray = new List<dbObject>[manUniqueIdList.Count];
+            for (int i = 0; i < manIdRecordsArray.Length; i++)
+                manIdRecordsArray[i] = new List<dbObject>();
 
-            for (int i = 0; i < manRecordsList.Length; i++)
-                for (int k = 0; k < dbRecords.Count; k++)
-            {
-                if (Equals(uniqueIdList[i], dbRecords[k].getId()))
+            for (int i = 0; i < manIdRecordsArray.Length; i++)
+                for (int k = 0; k < manList.Count; k++)
                 {
-                    manRecordsList[i].Add(dbRecords[k]);
+                    if (Equals(manUniqueIdList[i], manList[k].getId()))
+                    {
+                        manIdRecordsArray[i].Add(manList[k]);
+                    }
                 }
-            }
 
-            testTextBox.Text = "ИБПО! " + manRecordsList.Length.ToString();
-            resultTextBox.Text = "ИБПО! " + dbRecords.Count.ToString();
+            /*-----Создание аналогичного массива списков для женщин-----*/
+            List<dbObject>[] womanIdRecordsArray = new List<dbObject>[womanUniqueIdList.Count];
+            for (int i = 0; i < womanIdRecordsArray.Length; i++)
+                womanIdRecordsArray[i] = new List<dbObject>();
 
+            for (int i = 0; i < womanIdRecordsArray.Length; i++)
+                for (int k = 0; k < womanList.Count; k++)
+                {
+                    if (Equals(womanUniqueIdList[i], womanList[k].getId()))
+                    {
+                        womanIdRecordsArray[i].Add(womanList[k]);
+                    }
+                }
 
+            testTextBox.Text = "ИБПО! " + manIdRecordsArray[0][Convert.ToInt32(textBox1.Text)].getDoseInt();//manUniqueIdList.Count;
+            resultTextBox.Text = "ИБПО! " + womanIdRecordsArray[0][Convert.ToInt32(textBox1.Text)].getDoseInt();//womanUniqueIdList.Count;
+
+            /*----------------------------------------------------------------------------------------------------------------------------------------------*/
             ///*-----Создание пустого списка дозовых историй; для каждого уникального ID своя дозовая история (по сути, это ячейки, которые надо заполнить)-----*/
             //List<RiskCalculator.DoseHistoryRecord[]> doseHistoryList = new List<RiskCalculator.DoseHistoryRecord[]>();
             //for (int i = 0; i < uniqueIdList.Count; i++)
