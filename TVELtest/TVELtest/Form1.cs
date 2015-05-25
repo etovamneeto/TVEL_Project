@@ -52,11 +52,13 @@ namespace TVELtest
             private double dose = 0;
             private double doseInt = 0;
             private byte sex = 0;
+            private int year = 0;
 
-            public dbObject(int id, byte sex, short ageAtExp, double dose, double doseInt)
+            public dbObject(int id, byte sex, int year, short ageAtExp, double dose, double doseInt)
             {
                 this.id = id;
                 this.sex = sex;
+                this.year = year;
                 this.ageAtExp = ageAtExp;
                 this.dose = dose;
                 this.doseInt = doseInt;
@@ -64,12 +66,14 @@ namespace TVELtest
 
             public void setId(int id) { this.id = id; }
             public void setAgeAtExp(short ageAtExp) { this.ageAtExp = ageAtExp; }
+            public void setYear(int year) { this.year = year; }
             public void setDose(double dose) { this.dose = dose; }
             public void setDoseInt(double doseInt) { this.doseInt = doseInt; }
             public void setSex(byte sex) { this.sex = sex; }
 
             public int getId() { return this.id; }
             public short getAgeAtExp() { return this.ageAtExp; }
+            public int getYear() { return this.year; }
             public double getDose() { return this.dose; }
             public double getDoseInt() { return this.doseInt; }
             public byte getSex() { return this.sex; }
@@ -202,7 +206,7 @@ namespace TVELtest
             List<dbObject> dbRecords = new List<dbObject>();
             for (int i = 0; i < table.Rows.Count; i++)
             {
-                dbRecords.Add(new dbObject(Convert.ToInt32(table.Rows[i]["id"]), Convert.ToByte(table.Rows[i]["gender"]), Convert.ToInt16(table.Rows[i]["ageatexp"]), Convert.ToDouble(table.Rows[i]["dose"]) / 1000, Convert.ToDouble(table.Rows[i]["doseint"]) / 1000));
+                dbRecords.Add(new dbObject(Convert.ToInt32(table.Rows[i]["id"]), Convert.ToByte(table.Rows[i]["gender"]), Convert.ToInt32(table.Rows[i]["year"]), Convert.ToInt16(table.Rows[i]["ageatexp"]), Convert.ToDouble(table.Rows[i]["dose"]) / 1000, Convert.ToDouble(table.Rows[i]["doseint"]) / 1000));
             }
 
             /*-----Список, в котором хранится пол-----*/
@@ -656,7 +660,7 @@ namespace TVELtest
             List<dbObject> dbRecords = new List<dbObject>();
             for (int i = 0; i < table.Rows.Count; i++)
             {
-                dbRecords.Add(new dbObject(Convert.ToInt32(table.Rows[i]["id"]), Convert.ToByte(table.Rows[i]["gender"]), Convert.ToInt16(table.Rows[i]["ageatexp"]), Convert.ToDouble(table.Rows[i]["dose"]), Convert.ToDouble(table.Rows[i]["doseint"])));
+                dbRecords.Add(new dbObject(Convert.ToInt32(table.Rows[i]["id"]), Convert.ToByte(table.Rows[i]["gender"]), Convert.ToInt32(table.Rows[i]["year"]), Convert.ToInt16(table.Rows[i]["ageatexp"]), Convert.ToDouble(table.Rows[i]["dose"]), Convert.ToDouble(table.Rows[i]["doseint"])));
             }
 
             /*-----Список, в котором хранится пол-----*/
@@ -736,22 +740,54 @@ namespace TVELtest
                     }
                 }
 
-            testTextBox.Text = "ИБПО! " + manIdRecordsArray[0][Convert.ToInt32(textBox1.Text)].getDoseInt();//manUniqueIdList.Count;
-            resultTextBox.Text = "ИБПО! " + womanIdRecordsArray[0][Convert.ToInt32(textBox1.Text)].getDoseInt();//womanUniqueIdList.Count;
+            /*-----Создание пустого списка дозовых историй мужчин; для каждого уникального ID своя дозовая история (по сути, это ячейки, которые надо заполнить)-----*/
+            List<RiskCalculator.DoseHistoryRecord[]> manDoseHistoryList = new List<RiskCalculator.DoseHistoryRecord[]>();
+            for (int i = 0; i < manUniqueIdList.Count; i++)
+            {
+                manDoseHistoryList.Add(new RiskCalculator.DoseHistoryRecord[manIdRecordsArray[i].Count]);
+            }
+            foreach (RiskCalculator.DoseHistoryRecord[] note in manDoseHistoryList)
+            {
+                for (int i = 0; i < note.Length; i++)
+                    note[i] = new RiskCalculator.DoseHistoryRecord();
+            }
+
+            /*-----Заполнение дозовых историй мужчин-----*/
+            for (int i = 0; i < manUniqueIdList.Count; i++)
+                for (int k = 0; k < manIdRecordsArray[i].Count; k++)
+                {
+                    manDoseHistoryList[i][k].AgeAtExposure = manIdRecordsArray[i][k].getAgeAtExp();
+                    manDoseHistoryList[i][k].AllSolidDoseInmGy = manIdRecordsArray[i][k].getDose() - manIdRecordsArray[i][k].getDoseInt();
+                    manDoseHistoryList[i][k].LeukaemiaDoseInmGy = manIdRecordsArray[i][k].getDose() - manIdRecordsArray[i][k].getDoseInt();
+                    manDoseHistoryList[i][k].LungDoseInmGy = manIdRecordsArray[i][k].getDoseInt();
+                }
+
+            /*-----Создание аналогичного списка дозовых историй для женщин-----*/
+            List<RiskCalculator.DoseHistoryRecord[]> womanDoseHistoryList = new List<RiskCalculator.DoseHistoryRecord[]>();
+            for (int i = 0; i < womanUniqueIdList.Count; i++)
+            {
+                womanDoseHistoryList.Add(new RiskCalculator.DoseHistoryRecord[womanIdRecordsArray[i].Count]);
+            }
+            foreach (RiskCalculator.DoseHistoryRecord[] note in womanDoseHistoryList)
+            {
+                for (int i = 0; i < note.Length; i++)
+                    note[i] = new RiskCalculator.DoseHistoryRecord();
+            }
+
+            /*-----Заполнение дозовых историй женщин-----*/
+            for (int i = 0; i < womanUniqueIdList.Count; i++)
+                for (int k = 0; k < womanIdRecordsArray[i].Count; k++)
+                {
+                    womanDoseHistoryList[i][k].AgeAtExposure = womanIdRecordsArray[i][k].getAgeAtExp();
+                    womanDoseHistoryList[i][k].AllSolidDoseInmGy = womanIdRecordsArray[i][k].getDose() - womanIdRecordsArray[i][k].getDoseInt();
+                    womanDoseHistoryList[i][k].LeukaemiaDoseInmGy = womanIdRecordsArray[i][k].getDose() - womanIdRecordsArray[i][k].getDoseInt();
+                    womanDoseHistoryList[i][k].LungDoseInmGy = womanIdRecordsArray[i][k].getDoseInt();
+                }
+
+            testTextBox.Text = "ИБПО! " + womanDoseHistoryList[0][Convert.ToInt32(textBox1.Text)].LungDoseInmGy;//manIdRecordsArray[0][Convert.ToInt32(textBox1.Text)].getDoseInt();//manUniqueIdList.Count;
+            resultTextBox.Text = "ИБПО! " + womanDoseHistoryList[0][Convert.ToInt32(textBox1.Text)].AllSolidDoseInmGy;//womanIdRecordsArray[0][Convert.ToInt32(textBox1.Text)].getDoseInt();//womanUniqueIdList.Count;
 
             /*----------------------------------------------------------------------------------------------------------------------------------------------*/
-            ///*-----Создание пустого списка дозовых историй; для каждого уникального ID своя дозовая история (по сути, это ячейки, которые надо заполнить)-----*/
-            //List<RiskCalculator.DoseHistoryRecord[]> doseHistoryList = new List<RiskCalculator.DoseHistoryRecord[]>();
-            //for (int i = 0; i < uniqueIdList.Count; i++)
-            //{
-            //    doseHistoryList.Add(new RiskCalculator.DoseHistoryRecord[manRecordsList[i].Count]);
-            //}
-            //foreach (RiskCalculator.DoseHistoryRecord[] note in doseHistoryList)
-            //{
-            //    for (int i = 0; i < note.Length; i++)
-            //        note[i] = new RiskCalculator.DoseHistoryRecord();
-            //}
-
             ///*-----Заполнение дозовых историй-----*/
             //for (int i = 0; i < uniqueIdList.Count; i++)
             //    for (int k = 0; k < manRecordsList[i].Count; k++)
