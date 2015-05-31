@@ -783,9 +783,19 @@ namespace TVELtest
                     womanDoseHistoryList[i][k].LeukaemiaDoseInmGy = womanIdRecordsArray[i][k].getDose() - womanIdRecordsArray[i][k].getDoseInt();
                     womanDoseHistoryList[i][k].LungDoseInmGy = womanIdRecordsArray[i][k].getDoseInt();
                 }
+            
+            /*-----Вычленение только тех членов персонала, что наблюдались включительно по 2012 год-----*/
+            int count = 0;
+            for (int i = 0; i < manIdRecordsArray.Length; i++)
+                if (manIdRecordsArray[i][manIdRecordsArray[i].Count - 1].getYear() == 2012)
+                    count++;
+            count = 0;
+            for (int i = 0; i < womanIdRecordsArray.Length; i++)
+                if (womanIdRecordsArray[i][womanIdRecordsArray[i].Count - 1].getYear() == 2012)
+                    count++;
 
-            testTextBox.Text = "ИБПО! " + womanDoseHistoryList[0][Convert.ToInt32(textBox1.Text)].LungDoseInmGy;//manIdRecordsArray[0][Convert.ToInt32(textBox1.Text)].getDoseInt();//manUniqueIdList.Count;
-            resultTextBox.Text = "ИБПО! " + womanDoseHistoryList[0][Convert.ToInt32(textBox1.Text)].AllSolidDoseInmGy;//womanIdRecordsArray[0][Convert.ToInt32(textBox1.Text)].getDoseInt();//womanUniqueIdList.Count;
+            testTextBox.Text = "ИБПО! " + manIdRecordsArray.Length;//count;//womanDoseHistoryList[0][Convert.ToInt32(textBox1.Text)].LungDoseInmGy;//manIdRecordsArray[0][Convert.ToInt32(textBox1.Text)].getDoseInt();//manUniqueIdList.Count;
+            resultTextBox.Text = "ИБПО! " + manUniqueIdList.Count;//womanDoseHistoryList[0][Convert.ToInt32(textBox1.Text)].AllSolidDoseInmGy;//womanIdRecordsArray[0][Convert.ToInt32(textBox1.Text)].getDoseInt();//womanUniqueIdList.Count;
 
             /*----------------------------------------------------------------------------------------------------------------------------------------------*/
             ///*-----Заполнение дозовых историй-----*/
