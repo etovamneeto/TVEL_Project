@@ -855,6 +855,11 @@ namespace TVELtest
                         womanLarIntArray[k].Add(calculator.getLAR(false, true).Lung);
                     }
 
+            /*
+             * Пока это массивы, в которых R хранятся,
+             * на самом деле можно хранить тут сразу q
+             * 
+             */
             /*-----Вычисление знаменателя R, используемого при расчете q, используемого в ИБПО-----*/
             double[] manExtR = new double[ageGroups.Count];
             double[] manIntR = new double[ageGroups.Count];
@@ -862,15 +867,19 @@ namespace TVELtest
             double[] womanIntR = new double[ageGroups.Count];
             for (int i = 0; i < ageGroups.Count; i++)
             {
-                manExtR[i] = manLarExtArray[i].Sum() / manLarExtArray[i].Count;
-                manIntR[i] = manLarIntArray[i].Sum() / manLarIntArray[i].Count;
-                womanExtR[i] = womanLarExtArray[i].Sum() / womanLarExtArray[i].Count;
-                womanIntR[i] = womanLarIntArray[i].Sum() / womanLarIntArray[i].Count;
+                //manExtR[i] = manLarExtArray[i].Sum() / manLarExtArray[i].Count;
+                //manIntR[i] = manLarIntArray[i].Sum() / manLarIntArray[i].Count;
+                //womanExtR[i] = womanLarExtArray[i].Sum() / womanLarExtArray[i].Count;
+                //womanIntR[i] = womanLarIntArray[i].Sum() / womanLarIntArray[i].Count;
+                manExtR[i] = 1 - ((manLarExtArray[i].Sum() / manLarExtArray[i].Count) / (4.1 * Math.Pow(10, -2)));//Сейчас здесь вычисляется q, по идее
+                manIntR[i] = 1 - ((manLarIntArray[i].Sum() / manLarIntArray[i].Count) / (4.1 * Math.Pow(10, -2)));
+                womanExtR[i] = 1 - ((womanLarExtArray[i].Sum() / womanLarExtArray[i].Count) / (4.1 * Math.Pow(10, -2)));
+                womanIntR[i] = 1 - ((womanLarIntArray[i].Sum() / womanLarIntArray[i].Count) / (4.1 * Math.Pow(10, -2)));
             }
 
-            testTextBox.Text = "ИБПО! " + manLarExtArray[Convert.ToInt32(textBox2.Text)][Convert.ToInt32(textBox1.Text)].ToString();//manIdRecordsArray[Convert.ToInt32(textBox2.Text)][Convert.ToInt32(textBox1.Text)].getId();//manIdRecordsArray.Length + " " + test.Count;//shit[1].Count;//count;//womanDoseHistoryList[0][Convert.ToInt32(textBox1.Text)].LungDoseInmGy;//manIdRecordsArray[0][Convert.ToInt32(textBox1.Text)].getDoseInt();//manUniqueIdList.Count;
-            resultTextBox.Text = "ИБПО! " + manLarIntArray[Convert.ToInt32(textBox2.Text)][Convert.ToInt32(textBox1.Text)].ToString();//manIdRecordsArray[Convert.ToInt32(textBox2.Text)][Convert.ToInt32(textBox1.Text)].getYear();//womanIdRecordsArray.Length;//womanDoseHistoryList[0][Convert.ToInt32(textBox1.Text)].AllSolidDoseInmGy;//womanIdRecordsArray[0][Convert.ToInt32(textBox1.Text)].getDoseInt();//womanUniqueIdList.Count;
-            label1.Text = manLarExtArray[Convert.ToInt32(textBox2.Text)].Count.ToString();//manIdRecordsArray[Convert.ToInt32(textBox2.Text)].Count.ToString();
+            testTextBox.Text = "ИБПО! " + Math.Pow(Convert.ToInt32(textBox2.Text), -2);//manLarExtArray[Convert.ToInt32(textBox2.Text)][Convert.ToInt32(textBox1.Text)].ToString();//manIdRecordsArray[Convert.ToInt32(textBox2.Text)][Convert.ToInt32(textBox1.Text)].getId();//manIdRecordsArray.Length + " " + test.Count;//shit[1].Count;//count;//womanDoseHistoryList[0][Convert.ToInt32(textBox1.Text)].LungDoseInmGy;//manIdRecordsArray[0][Convert.ToInt32(textBox1.Text)].getDoseInt();//manUniqueIdList.Count;
+            //resultTextBox.Text = "ИБПО! " + manLarIntArray[Convert.ToInt32(textBox2.Text)][Convert.ToInt32(textBox1.Text)].ToString();//manIdRecordsArray[Convert.ToInt32(textBox2.Text)][Convert.ToInt32(textBox1.Text)].getYear();//womanIdRecordsArray.Length;//womanDoseHistoryList[0][Convert.ToInt32(textBox1.Text)].AllSolidDoseInmGy;//womanIdRecordsArray[0][Convert.ToInt32(textBox1.Text)].getDoseInt();//womanUniqueIdList.Count;
+            //label1.Text = manLarExtArray[Convert.ToInt32(textBox2.Text)].Count.ToString();//manIdRecordsArray[Convert.ToInt32(textBox2.Text)].Count.ToString();
 
             ///*-----Вывод в Excel-файл-----*/
             ///*-----Инициализация Excel-файла-----*/
