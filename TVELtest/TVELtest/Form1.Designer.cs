@@ -30,11 +30,13 @@
         {
             this.getOrpoButton = new System.Windows.Forms.Button();
             this.resultTextBox = new System.Windows.Forms.TextBox();
-            this.testTextBox = new System.Windows.Forms.TextBox();
             this.testLabel = new System.Windows.Forms.Label();
             this.resultLabel = new System.Windows.Forms.Label();
             this.textBox1 = new System.Windows.Forms.TextBox();
             this.getIbpoButton = new System.Windows.Forms.Button();
+            this.testTextBox = new System.Windows.Forms.TextBox();
+            this.textBox2 = new System.Windows.Forms.TextBox();
+            this.label1 = new System.Windows.Forms.Label();
             this.SuspendLayout();
             // 
             // getOrpoButton
@@ -53,15 +55,6 @@
             this.resultTextBox.Name = "resultTextBox";
             this.resultTextBox.Size = new System.Drawing.Size(100, 20);
             this.resultTextBox.TabIndex = 1;
-            this.resultTextBox.TextChanged += new System.EventHandler(this.resultTextBox_TextChanged);
-            // 
-            // testTextBox
-            // 
-            this.testTextBox.Location = new System.Drawing.Point(103, 88);
-            this.testTextBox.Name = "testTextBox";
-            this.testTextBox.Size = new System.Drawing.Size(100, 20);
-            this.testTextBox.TabIndex = 2;
-            this.testTextBox.TextChanged += new System.EventHandler(this.testTextBox_TextChanged);
             // 
             // testLabel
             // 
@@ -71,7 +64,6 @@
             this.testLabel.Size = new System.Drawing.Size(24, 13);
             this.testLabel.TabIndex = 3;
             this.testLabel.Text = "test";
-            this.testLabel.Click += new System.EventHandler(this.testLabel_Click);
             // 
             // resultLabel
             // 
@@ -81,11 +73,10 @@
             this.resultLabel.Size = new System.Drawing.Size(32, 13);
             this.resultLabel.TabIndex = 4;
             this.resultLabel.Text = "result";
-            this.resultLabel.Click += new System.EventHandler(this.resultLabel_Click);
             // 
             // textBox1
             // 
-            this.textBox1.Location = new System.Drawing.Point(103, 53);
+            this.textBox1.Location = new System.Drawing.Point(103, 62);
             this.textBox1.Name = "textBox1";
             this.textBox1.Size = new System.Drawing.Size(100, 20);
             this.textBox1.TabIndex = 5;
@@ -101,11 +92,36 @@
             this.getIbpoButton.UseVisualStyleBackColor = true;
             this.getIbpoButton.Click += new System.EventHandler(this.getIbpoButton_Click);
             // 
+            // testTextBox
+            // 
+            this.testTextBox.Location = new System.Drawing.Point(103, 88);
+            this.testTextBox.Name = "testTextBox";
+            this.testTextBox.Size = new System.Drawing.Size(100, 20);
+            this.testTextBox.TabIndex = 7;
+            // 
+            // textBox2
+            // 
+            this.textBox2.Location = new System.Drawing.Point(103, 36);
+            this.textBox2.Name = "textBox2";
+            this.textBox2.Size = new System.Drawing.Size(100, 20);
+            this.textBox2.TabIndex = 8;
+            // 
+            // label1
+            // 
+            this.label1.AutoSize = true;
+            this.label1.Location = new System.Drawing.Point(210, 42);
+            this.label1.Name = "label1";
+            this.label1.Size = new System.Drawing.Size(35, 13);
+            this.label1.TabIndex = 9;
+            this.label1.Text = "label1";
+            // 
             // Form1
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(292, 273);
+            this.Controls.Add(this.label1);
+            this.Controls.Add(this.textBox2);
             this.Controls.Add(this.getIbpoButton);
             this.Controls.Add(this.textBox1);
             this.Controls.Add(this.resultLabel);
@@ -125,11 +141,13 @@
 
         private System.Windows.Forms.Button getOrpoButton;
         private System.Windows.Forms.TextBox resultTextBox;
-        private System.Windows.Forms.TextBox testTextBox;
         private System.Windows.Forms.Label testLabel;
         private System.Windows.Forms.Label resultLabel;
         private System.Windows.Forms.TextBox textBox1;
         private System.Windows.Forms.Button getIbpoButton;
+        private System.Windows.Forms.TextBox testTextBox;
+        private System.Windows.Forms.TextBox textBox2;
+        private System.Windows.Forms.Label label1;
 
 
     }

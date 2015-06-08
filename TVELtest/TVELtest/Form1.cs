@@ -623,6 +623,7 @@ namespace TVELtest
             //    excelCells.Borders.ColorIndex = 1;
             //}
 
+
             //testTextBox.Text = (manAmountOfAverExtDoses[Convert.ToInt32(textBox1.Text)] / manValueOfSubgroups[Convert.ToInt32(textBox1.Text)]).ToString();//getOrpo(getManExtLar(manAgeAmountOfGroup[Convert.ToInt32(textBox1.Text)] / manAmountOfSubgroupCounts[Convert.ToInt32(textBox1.Text)]), (manAmountOfAverExtDoses[Convert.ToInt32(textBox1.Text)] / manValueOfSubgroups[Convert.ToInt32(textBox1.Text)])).ToString();
             //resultTextBox.Text = (manAmountOfAverIntDoses[Convert.ToInt32(textBox1.Text)] / manValueOfSubgroups[Convert.ToInt32(textBox1.Text)]).ToString();
             testTextBox.Text = "ОРПО! " + (dbManAges.Count + dbWomanAges.Count).ToString();
@@ -656,17 +657,45 @@ namespace TVELtest
             ageGroups.Add("65-69");
             ageGroups.Add("70+");
 
+            /*-----Список, в котором хранятся нижние границы возрастов для возрастных групп-----*/
+            List<int> ageLowerBound = new List<int>();
+            ageLowerBound.Add(18);
+            ageLowerBound.Add(25);
+            ageLowerBound.Add(30);
+            ageLowerBound.Add(35);
+            ageLowerBound.Add(40);
+            ageLowerBound.Add(45);
+            ageLowerBound.Add(50);
+            ageLowerBound.Add(55);
+            ageLowerBound.Add(60);
+            ageLowerBound.Add(65);
+            ageLowerBound.Add(70);
+
+            /*-----Список, в котором хранятся верхние границы возрастов для возрастных групп-----*/
+            List<int> ageUpperBound = new List<int>();
+            ageUpperBound.Add(24);
+            ageUpperBound.Add(29);
+            ageUpperBound.Add(34);
+            ageUpperBound.Add(39);
+            ageUpperBound.Add(44);
+            ageUpperBound.Add(49);
+            ageUpperBound.Add(54);
+            ageUpperBound.Add(59);
+            ageUpperBound.Add(64);
+            ageUpperBound.Add(69);
+            ageUpperBound.Add(100);
+
             /*-----Список объектов; достаем все необходимое для расчетов: id, dose, doseInt, ageAtExp, gender-----*/
-            List<dbObject> dbRecords = new List<dbObject>();
+            List<dbObject> dbRecord = new List<dbObject>();
             for (int i = 0; i < table.Rows.Count; i++)
             {
-                dbRecords.Add(new dbObject(Convert.ToInt32(table.Rows[i]["id"]), Convert.ToByte(table.Rows[i]["gender"]), Convert.ToInt32(table.Rows[i]["year"]), Convert.ToInt16(table.Rows[i]["ageatexp"]), Convert.ToDouble(table.Rows[i]["dose"]), Convert.ToDouble(table.Rows[i]["doseint"])));
+                dbRecord.Add(new dbObject(Convert.ToInt32(table.Rows[i]["id"]), Convert.ToByte(table.Rows[i]["gender"]), Convert.ToInt32(table.Rows[i]["year"]), Convert.ToInt16(table.Rows[i]["ageatexp"]), Convert.ToDouble(table.Rows[i]["dose"]) / 1000, Convert.ToDouble(table.Rows[i]["doseint"]) / 1000));
             }
 
             /*-----Список, в котором хранится пол-----*/
             List<byte> dbSex = new List<byte>();
-            for (int i = 0; i < dbRecords.Count; i++)
-                dbSex.Add(dbRecords[i].getSex());
+            for (int i = 0; i < dbRecord.Count; i++)
+                dbSex.Add(dbRecord[i].getSex());
 
             /*-----Определение пола; Меньшая цифра пола - М, большая - Ж-----*/
             byte sexMale = dbSex.Min();
@@ -674,36 +703,38 @@ namespace TVELtest
 
             /*-----Уникальные ID мужчин-----*/
             List<int> manUniqueIdList = new List<int>();
-            for (int i = 0; i < dbRecords.Count; i++)
+            for (int i = 0; i < dbRecord.Count; i++)
             {
-                if (dbRecords[i].getSex() == sexMale)
+                if (dbRecord[i].getSex() == sexMale && dbRecord[i].getYear() == 2012)
+                //if (dbRecord[i].getSex() == sexMale)
                 {
-                    manUniqueIdList.Add(dbRecords[i].getId());
+                    manUniqueIdList.Add(dbRecord[i].getId());
                 }
             }
             manUniqueIdList = manUniqueIdList.Distinct().ToList();
 
             /*-----Уникальные ID женщин-----*/
             List<int> womanUniqueIdList = new List<int>();
-            for (int i = 0; i < dbRecords.Count; i++)
+            for (int i = 0; i < dbRecord.Count; i++)
             {
-                if (dbRecords[i].getSex() == sexFemale)
+                if (dbRecord[i].getSex() == sexFemale && dbRecord[i].getYear() == 2012)
+                //if (dbRecord[i].getSex() == sexFemale)
                 {
-                    womanUniqueIdList.Add(dbRecords[i].getId());
+                    womanUniqueIdList.Add(dbRecord[i].getId());
                 }
             }
             womanUniqueIdList = womanUniqueIdList.Distinct().ToList();
 
             /*-----Разделение записей БД на мужские и женские-----*/
             List<dbObject> manList = new List<dbObject>();
-            for (int i = 0; i < dbRecords.Count; i++)
-                if (dbRecords[i].getSex() == sexMale)
-                    manList.Add(dbRecords[i]);
+            for (int i = 0; i < dbRecord.Count; i++)
+                if (dbRecord[i].getSex() == sexMale)
+                    manList.Add(dbRecord[i]);
 
             List<dbObject> womanList = new List<dbObject>();
-            for (int i = 0; i < dbRecords.Count; i++)
-                if (dbRecords[i].getSex() == sexFemale)
-                    womanList.Add(dbRecords[i]);
+            for (int i = 0; i < dbRecord.Count; i++)
+                if (dbRecord[i].getSex() == sexFemale)
+                    womanList.Add(dbRecord[i]);
 
             /*
              * -----
@@ -742,7 +773,7 @@ namespace TVELtest
 
             /*-----Создание пустого списка дозовых историй мужчин; для каждого уникального ID своя дозовая история (по сути, это ячейки, которые надо заполнить)-----*/
             List<RiskCalculator.DoseHistoryRecord[]> manDoseHistoryList = new List<RiskCalculator.DoseHistoryRecord[]>();
-            for (int i = 0; i < manUniqueIdList.Count; i++)
+            for (int i = 0; i < manIdRecordsArray.Length; i++)
             {
                 manDoseHistoryList.Add(new RiskCalculator.DoseHistoryRecord[manIdRecordsArray[i].Count]);
             }
@@ -752,19 +783,22 @@ namespace TVELtest
                     note[i] = new RiskCalculator.DoseHistoryRecord();
             }
 
+            /*-----Задание весовых коэффициентов для тканей (в нашем случае учитывается только влияние на лёгкие)-----*/
+            double wLung = 0.12;
+
             /*-----Заполнение дозовых историй мужчин-----*/
-            for (int i = 0; i < manUniqueIdList.Count; i++)
+            for (int i = 0; i < manIdRecordsArray.Length; i++)
                 for (int k = 0; k < manIdRecordsArray[i].Count; k++)
                 {
                     manDoseHistoryList[i][k].AgeAtExposure = manIdRecordsArray[i][k].getAgeAtExp();
                     manDoseHistoryList[i][k].AllSolidDoseInmGy = manIdRecordsArray[i][k].getDose() - manIdRecordsArray[i][k].getDoseInt();
                     manDoseHistoryList[i][k].LeukaemiaDoseInmGy = manIdRecordsArray[i][k].getDose() - manIdRecordsArray[i][k].getDoseInt();
-                    manDoseHistoryList[i][k].LungDoseInmGy = manIdRecordsArray[i][k].getDoseInt();
+                    manDoseHistoryList[i][k].LungDoseInmGy = manIdRecordsArray[i][k].getDoseInt() / wLung;
                 }
 
             /*-----Создание аналогичного списка дозовых историй для женщин-----*/
             List<RiskCalculator.DoseHistoryRecord[]> womanDoseHistoryList = new List<RiskCalculator.DoseHistoryRecord[]>();
-            for (int i = 0; i < womanUniqueIdList.Count; i++)
+            for (int i = 0; i < womanIdRecordsArray.Length; i++)
             {
                 womanDoseHistoryList.Add(new RiskCalculator.DoseHistoryRecord[womanIdRecordsArray[i].Count]);
             }
@@ -775,41 +809,116 @@ namespace TVELtest
             }
 
             /*-----Заполнение дозовых историй женщин-----*/
-            for (int i = 0; i < womanUniqueIdList.Count; i++)
+            for (int i = 0; i < womanIdRecordsArray.Length; i++)
                 for (int k = 0; k < womanIdRecordsArray[i].Count; k++)
                 {
                     womanDoseHistoryList[i][k].AgeAtExposure = womanIdRecordsArray[i][k].getAgeAtExp();
                     womanDoseHistoryList[i][k].AllSolidDoseInmGy = womanIdRecordsArray[i][k].getDose() - womanIdRecordsArray[i][k].getDoseInt();
                     womanDoseHistoryList[i][k].LeukaemiaDoseInmGy = womanIdRecordsArray[i][k].getDose() - womanIdRecordsArray[i][k].getDoseInt();
-                    womanDoseHistoryList[i][k].LungDoseInmGy = womanIdRecordsArray[i][k].getDoseInt();
+                    womanDoseHistoryList[i][k].LungDoseInmGy = womanIdRecordsArray[i][k].getDoseInt() / wLung;
                 }
-            
+
             /*-----Вычленение только тех членов персонала, что наблюдались включительно по 2012 год-----*/
-            int count = 0;
+            List<double>[] manLarExtArray = new List<double>[ageGroups.Count];
+            List<double>[] manLarIntArray = new List<double>[ageGroups.Count];
+
+            /*-----Создание аналогичного массива списков LAR для возрастных групп женщин-----*/
+            List<double>[] womanLarExtArray = new List<double>[ageGroups.Count];
+            List<double>[] womanLarIntArray = new List<double>[ageGroups.Count];
+
+            /*-----Инициализация всех элементов массивов-----*/
+            for (int i = 0; i < ageGroups.Count; i++)
+            {
+                manLarExtArray[i] = new List<double>();
+                manLarIntArray[i] = new List<double>();
+                womanLarExtArray[i] = new List<double>();
+                womanLarIntArray[i] = new List<double>();
+            }
+            
             for (int i = 0; i < manIdRecordsArray.Length; i++)
-                if (manIdRecordsArray[i][manIdRecordsArray[i].Count - 1].getYear() == 2012)
-                    count++;
-            count = 0;
+                for (int k = 0; k < ageGroups.Count; k++)
+                    if (manIdRecordsArray[i][0].getAgeAtExp() >= ageLowerBound[k] && manIdRecordsArray[i][0].getAgeAtExp() <= ageUpperBound[k])
+                    {
+                        RiskCalculator.DoseHistoryRecord[] record = manDoseHistoryList[i];
+                        RiskCalculatorLib.RiskCalculator calculator = new RiskCalculatorLib.RiskCalculator(RiskCalculator.SEX_MALE, manIdRecordsArray[i][0].getAgeAtExp(), ref record, true);
+                        manLarExtArray[k].Add(calculator.getLAR(false, true).AllCancers);
+                        manLarIntArray[k].Add(calculator.getLAR(false, true).Lung);
+                    }
+
             for (int i = 0; i < womanIdRecordsArray.Length; i++)
-                if (womanIdRecordsArray[i][womanIdRecordsArray[i].Count - 1].getYear() == 2012)
-                    count++;
+                for (int k = 0; k < ageGroups.Count; k++)
+                    if (womanIdRecordsArray[i][0].getAgeAtExp() >= ageLowerBound[k] && womanIdRecordsArray[i][0].getAgeAtExp() <= ageUpperBound[k])
+                    {
+                        RiskCalculator.DoseHistoryRecord[] record = womanDoseHistoryList[i];
+                        RiskCalculatorLib.RiskCalculator calculator = new RiskCalculatorLib.RiskCalculator(RiskCalculator.SEX_FEMALE, womanIdRecordsArray[i][0].getAgeAtExp(), ref record, true);
+                        womanLarExtArray[k].Add(calculator.getLAR(false, true).AllCancers);
+                        womanLarIntArray[k].Add(calculator.getLAR(false, true).Lung);
+                    }
 
-            testTextBox.Text = "ИБПО! " + manIdRecordsArray.Length;//count;//womanDoseHistoryList[0][Convert.ToInt32(textBox1.Text)].LungDoseInmGy;//manIdRecordsArray[0][Convert.ToInt32(textBox1.Text)].getDoseInt();//manUniqueIdList.Count;
-            resultTextBox.Text = "ИБПО! " + manUniqueIdList.Count;//womanDoseHistoryList[0][Convert.ToInt32(textBox1.Text)].AllSolidDoseInmGy;//womanIdRecordsArray[0][Convert.ToInt32(textBox1.Text)].getDoseInt();//womanUniqueIdList.Count;
+            /*-----Вычисление знаменателя R, используемого при расчете q, используемого в ИБПО-----*/
+            double[] manExtR = new double[ageGroups.Count];
+            double[] manIntR = new double[ageGroups.Count];
+            double[] womanExtR = new double[ageGroups.Count];
+            double[] womanIntR = new double[ageGroups.Count];
+            for (int i = 0; i < ageGroups.Count; i++)
+            {
+                manExtR[i] = manLarExtArray[i].Sum() / manLarExtArray[i].Count;
+                manIntR[i] = manLarIntArray[i].Sum() / manLarIntArray[i].Count;
+                womanExtR[i] = womanLarExtArray[i].Sum() / womanLarExtArray[i].Count;
+                womanIntR[i] = womanLarIntArray[i].Sum() / womanLarIntArray[i].Count;
+            }
 
-            /*----------------------------------------------------------------------------------------------------------------------------------------------*/
-            ///*-----Заполнение дозовых историй-----*/
-            //for (int i = 0; i < uniqueIdList.Count; i++)
-            //    for (int k = 0; k < manRecordsList[i].Count; k++)
-            //    {
-            //        doseHistoryList[i][k].AgeAtExposure = manRecordsList[i][k].getAgeAtExp();
-            //        doseHistoryList[i][k].AllSolidDoseInmGy = manRecordsList[i][k].getDose() - manRecordsList[i][k].getDoseInt();
-            //        doseHistoryList[i][k].LeukaemiaDoseInmGy = manRecordsList[i][k].getDose() - manRecordsList[i][k].getDoseInt();
-            //        doseHistoryList[i][k].LungDoseInmGy = manRecordsList[i][k].getDoseInt();
-            //    }
-            //RiskCalculator.DoseHistoryRecord[] rec = doseHistoryList[0];
-            //RiskCalculatorLib.RiskCalculator calc = new RiskCalculator(1, 1, ref rec, true);
-            //calc.getYLLBounds();
+            testTextBox.Text = "ИБПО! " + manLarExtArray[Convert.ToInt32(textBox2.Text)][Convert.ToInt32(textBox1.Text)].ToString();//manIdRecordsArray[Convert.ToInt32(textBox2.Text)][Convert.ToInt32(textBox1.Text)].getId();//manIdRecordsArray.Length + " " + test.Count;//shit[1].Count;//count;//womanDoseHistoryList[0][Convert.ToInt32(textBox1.Text)].LungDoseInmGy;//manIdRecordsArray[0][Convert.ToInt32(textBox1.Text)].getDoseInt();//manUniqueIdList.Count;
+            resultTextBox.Text = "ИБПО! " + manLarIntArray[Convert.ToInt32(textBox2.Text)][Convert.ToInt32(textBox1.Text)].ToString();//manIdRecordsArray[Convert.ToInt32(textBox2.Text)][Convert.ToInt32(textBox1.Text)].getYear();//womanIdRecordsArray.Length;//womanDoseHistoryList[0][Convert.ToInt32(textBox1.Text)].AllSolidDoseInmGy;//womanIdRecordsArray[0][Convert.ToInt32(textBox1.Text)].getDoseInt();//womanUniqueIdList.Count;
+            label1.Text = manLarExtArray[Convert.ToInt32(textBox2.Text)].Count.ToString();//manIdRecordsArray[Convert.ToInt32(textBox2.Text)].Count.ToString();
+
+            ///*-----Вывод в Excel-файл-----*/
+            ///*-----Инициализация Excel-файла-----*/
+            //Excel.Application excelApp = new Excel.Application();
+            //excelApp.Visible = true;
+            //excelApp.DisplayAlerts = true;
+            //excelApp.StandardFont = "Times-New-Roman";
+            //excelApp.StandardFontSize = 12;
+
+            ///*-----Создание рабочей книги с 4 страницами, в которые будет выводиться информация-----*/
+            //excelApp.Workbooks.Add(Type.Missing);
+            //Excel.Workbook excelWorkbook = excelApp.Workbooks[1];
+            //excelApp.SheetsInNewWorkbook = 4;
+            //Excel.Worksheet excelWorksheet = null;
+            //Excel.Range excelCells = null;
+
+            ///*-----Вывод в столбцы-----*/
+            //excelWorksheet = (Excel.Worksheet)excelWorkbook.Worksheets.get_Item(1);
+            //excelWorksheet.Name = "Чушь";
+
+            ///*-----Описываем ячейку А1 на странице-----*/
+            //excelCells = excelWorksheet.get_Range("A1");
+            //excelCells.VerticalAlignment = Excel.Constants.xlCenter;
+            //excelCells.HorizontalAlignment = Excel.Constants.xlCenter;
+            //excelCells.Borders.Weight = Excel.XlBorderWeight.xlThick;
+            //excelCells.Value2 = "id";
+
+            ///*-----Описываем ячейку B1 на странице-----*/
+            //excelCells = excelWorksheet.get_Range("B1");
+            //excelCells.VerticalAlignment = Excel.Constants.xlCenter;
+            //excelCells.HorizontalAlignment = Excel.Constants.xlCenter;
+            //excelCells.Borders.Weight = Excel.XlBorderWeight.xlThick;
+            //excelCells.Value2 = "последние годы наблюдения";
+
+            ////for (int i = 0; i < manIdRecordsArray.Length; i++)
+            ////    for (int k = 0; k < manIdRecordsArray[i].Count; k++)
+            //        for (int l = 2; l <= test.Count + 1; l++)
+            ////            if (manList[l - 2] == manIdRecordsArray[i][k])
+            //            {
+            //                excelCells = (Excel.Range)excelWorksheet.Cells[l, "A"];
+            //                excelCells.Value2 = test[l-2];//shit[0][i - 2];
+            //                excelCells.Borders.ColorIndex = 1;
+            //                //excelCells = (Excel.Range)excelWorksheet.Cells[l, "B"];
+            //                //excelCells.Value2 = manIdRecordsArray[i][k].getYear();//shit1[0][i - 2];
+            //                //excelCells.Borders.ColorIndex = 1;
+            //            }
+
+
         }
 
         private void testTextBox_TextChanged(object sender, EventArgs e)
