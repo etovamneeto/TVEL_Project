@@ -139,6 +139,15 @@ namespace TVELtest
             return orpo;
         }
 
+        public double getIbpo(List<double> groupedLar, double orpo)
+        {
+            //womanIntIbpo[i] = 100 / (1 + womanIntOrpo[i] / (2 * Math.Pow(10, -4) * (1 - ((womanLarIntArray[i].Sum() / womanLarIntArray[i].Count) / (4.1 * Math.Pow(10, -2))))));
+            double r = groupedLar.Average();
+            double q = 1 - r / (4.1 * Math.Pow(10, -2));
+            double denominator = 1 + orpo / (2 * Math.Pow(10, -4) * q);
+            return 100 / denominator;
+        }
+
         private void Form1_Load(object sender, EventArgs e)
         {
             RiskCalculatorLib.RiskCalculator.FillData(ref libPath);
@@ -623,11 +632,10 @@ namespace TVELtest
             //    excelCells.Borders.ColorIndex = 1;
             //}
 
-
             //testTextBox.Text = (manAmountOfAverExtDoses[Convert.ToInt32(textBox1.Text)] / manValueOfSubgroups[Convert.ToInt32(textBox1.Text)]).ToString();//getOrpo(getManExtLar(manAgeAmountOfGroup[Convert.ToInt32(textBox1.Text)] / manAmountOfSubgroupCounts[Convert.ToInt32(textBox1.Text)]), (manAmountOfAverExtDoses[Convert.ToInt32(textBox1.Text)] / manValueOfSubgroups[Convert.ToInt32(textBox1.Text)])).ToString();
             //resultTextBox.Text = (manAmountOfAverIntDoses[Convert.ToInt32(textBox1.Text)] / manValueOfSubgroups[Convert.ToInt32(textBox1.Text)]).ToString();
-            testTextBox.Text = "ОРПО! " + (dbManAges.Count + dbWomanAges.Count).ToString();
-            resultTextBox.Text = "ОРПО! " + dbRecords.Count;
+            //testTextBox.Text = "ОРПО! " + list.Sum() / list.Count;//(dbManAges.Count + dbWomanAges.Count).ToString();
+            //resultTextBox.Text = "ОРПО! " + list.Average();//dbRecords.Count;
         }
 
         private void getIbpoButton_Click(object sender, EventArgs e)
@@ -855,29 +863,26 @@ namespace TVELtest
                         womanLarIntArray[k].Add(calculator.getLAR(false, true).Lung);
                     }
 
-            /*
-             * Пока это массивы, в которых R хранятся,
-             * на самом деле можно хранить тут сразу q
-             * 
-             */
             /*-----Вычисление знаменателя R, используемого при расчете q, используемого в ИБПО-----*/
-            double[] manExtR = new double[ageGroups.Count];
-            double[] manIntR = new double[ageGroups.Count];
-            double[] womanExtR = new double[ageGroups.Count];
-            double[] womanIntR = new double[ageGroups.Count];
+            double[] manExtIbpo = new double[ageGroups.Count];
+            double[] manIntIbpo = new double[ageGroups.Count];
+            double[] womanExtIbpo = new double[ageGroups.Count];
+            double[] womanIntIbpo = new double[ageGroups.Count];
+
+            double[] manExtOrpo = new double[ageGroups.Count];//Чем заполняются эти ОРПО?
+            double[] manIntOrpo = new double[ageGroups.Count];
+            double[] womanExtOrpo = new double[ageGroups.Count];
+            double[] womanIntOrpo = new double[ageGroups.Count];
+
             for (int i = 0; i < ageGroups.Count; i++)
             {
-                //manExtR[i] = manLarExtArray[i].Sum() / manLarExtArray[i].Count;
-                //manIntR[i] = manLarIntArray[i].Sum() / manLarIntArray[i].Count;
-                //womanExtR[i] = womanLarExtArray[i].Sum() / womanLarExtArray[i].Count;
-                //womanIntR[i] = womanLarIntArray[i].Sum() / womanLarIntArray[i].Count;
-                manExtR[i] = 1 - ((manLarExtArray[i].Sum() / manLarExtArray[i].Count) / (4.1 * Math.Pow(10, -2)));//Сейчас здесь вычисляется q, по идее
-                manIntR[i] = 1 - ((manLarIntArray[i].Sum() / manLarIntArray[i].Count) / (4.1 * Math.Pow(10, -2)));
-                womanExtR[i] = 1 - ((womanLarExtArray[i].Sum() / womanLarExtArray[i].Count) / (4.1 * Math.Pow(10, -2)));
-                womanIntR[i] = 1 - ((womanLarIntArray[i].Sum() / womanLarIntArray[i].Count) / (4.1 * Math.Pow(10, -2)));
+                manExtIbpo[i] = getIbpo(manLarExtArray[i], manExtOrpo[i]);
+                manIntIbpo[i] = getIbpo(manLarIntArray[i], manIntOrpo[i]);
+                womanExtIbpo[i] = getIbpo(womanLarExtArray[i], womanExtOrpo[i]);
+                womanIntIbpo[i] = getIbpo(womanLarIntArray[i], womanIntOrpo[i]);
             }
 
-            testTextBox.Text = "ИБПО! " + Math.Pow(Convert.ToInt32(textBox2.Text), -2);//manLarExtArray[Convert.ToInt32(textBox2.Text)][Convert.ToInt32(textBox1.Text)].ToString();//manIdRecordsArray[Convert.ToInt32(textBox2.Text)][Convert.ToInt32(textBox1.Text)].getId();//manIdRecordsArray.Length + " " + test.Count;//shit[1].Count;//count;//womanDoseHistoryList[0][Convert.ToInt32(textBox1.Text)].LungDoseInmGy;//manIdRecordsArray[0][Convert.ToInt32(textBox1.Text)].getDoseInt();//manUniqueIdList.Count;
+            //testTextBox.Text = "ИБПО! " + Math.Pow(Convert.ToInt32(textBox2.Text), -2);//manLarExtArray[Convert.ToInt32(textBox2.Text)][Convert.ToInt32(textBox1.Text)].ToString();//manIdRecordsArray[Convert.ToInt32(textBox2.Text)][Convert.ToInt32(textBox1.Text)].getId();//manIdRecordsArray.Length + " " + test.Count;//shit[1].Count;//count;//womanDoseHistoryList[0][Convert.ToInt32(textBox1.Text)].LungDoseInmGy;//manIdRecordsArray[0][Convert.ToInt32(textBox1.Text)].getDoseInt();//manUniqueIdList.Count;
             //resultTextBox.Text = "ИБПО! " + manLarIntArray[Convert.ToInt32(textBox2.Text)][Convert.ToInt32(textBox1.Text)].ToString();//manIdRecordsArray[Convert.ToInt32(textBox2.Text)][Convert.ToInt32(textBox1.Text)].getYear();//womanIdRecordsArray.Length;//womanDoseHistoryList[0][Convert.ToInt32(textBox1.Text)].AllSolidDoseInmGy;//womanIdRecordsArray[0][Convert.ToInt32(textBox1.Text)].getDoseInt();//womanUniqueIdList.Count;
             //label1.Text = manLarExtArray[Convert.ToInt32(textBox2.Text)].Count.ToString();//manIdRecordsArray[Convert.ToInt32(textBox2.Text)].Count.ToString();
 
