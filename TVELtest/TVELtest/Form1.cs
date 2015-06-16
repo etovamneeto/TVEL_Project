@@ -164,7 +164,7 @@ namespace TVELtest
             OleDbConnection connection = new OleDbConnection(connectionString);
             connection.Open();
 
-            OleDbDataAdapter adapter = new OleDbDataAdapter("SELECT [ID], [Dose], [DoseInt], [Year], [Gender], [BirthYear], [AgeAtExp] FROM [Final] WHERE [Shop]='r3'", connectionString);//Выбор нужных столбцов из нужной таблицы
+            OleDbDataAdapter adapter = new OleDbDataAdapter("SELECT [ID], [Dose], [Year], [DoseInt], [Gender], [AgeAtExp] FROM [Final] WHERE [Shop]='r3'", connectionString);//Выбор нужных столбцов из нужной таблицы
             DataSet dataSet = new DataSet();
             adapter.Fill(dataSet, "Final");
             DataTable table = dataSet.Tables[0];//Из Final в эту таблицу считываются поля, указанные в запросе; Выборка для МСК (shop = r3)
@@ -245,224 +245,285 @@ namespace TVELtest
             short womanMinAge = dbWomanAges.Min();
             short womanMaxAge = dbWomanAges.Max();
 
-            /*-----Массивы списков для мужчин и для женщин, в каждом из которых будут храниться объекты, сгруппированные по возрастам облучения. i = 0 - 18-летние, i = 1 - 19-летние и тд-----*/
-            List<dbObject>[] manAgesGroupedArray = new List<dbObject>[manMaxAge - manMinAge + 1];
-            for (int i = 0; i < manAgesGroupedArray.Length; i++)
-                manAgesGroupedArray[i] = new List<dbObject>();
+            /*-----Массивы списков для мужчин и для женщин, в каждом из которых хранятся дозы (внешние и внутренние) для соответствующий половозрастной группы-----*/
+            List<double>[] manSadExtArray = new List<double>[ageGroups.Count];//SAD - SexAgeDose
+            List<double>[] manSadIntArray = new List<double>[ageGroups.Count];
+            List<double>[] womanSadExtArray = new List<double>[ageGroups.Count];
+            List<double>[] womanSadIntArray = new List<double>[ageGroups.Count];
 
-            List<dbObject>[] womanAgesGroupedArray = new List<dbObject>[womanMaxAge - womanMinAge + 1];
-            for (int i = 0; i < womanAgesGroupedArray.Length; i++)
-                womanAgesGroupedArray[i] = new List<dbObject>();
-
-            for (int i = manMinAge - manMinAge; i <= manMaxAge - manMinAge; i++)
-            {
-                for (int k = 0; k < dbRecords.Count; k++)
-                {
-                    if (dbRecords[k].getSex() == sexMale)
-                        if (dbRecords[k].getAgeAtExp() == i + manMinAge)
-                        {
-                            manAgesGroupedArray[i].Add(dbRecords[k]);
-                        }
-                }
-            }
-
-            for (int i = womanMinAge - womanMinAge; i <= womanMaxAge - womanMinAge; i++)
-            {
-                for (int k = 0; k < dbRecords.Count; k++)
-                {
-                    if (dbRecords[k].getSex() == sexFemale)
-                        if (dbRecords[k].getAgeAtExp() == i + womanMinAge)
-                        {
-                            womanAgesGroupedArray[i].Add(dbRecords[k]);
-                        }
-                }
-            }
-
-            /*-----Создание массивов, в которых хранятся суммы средних доз подгрупп, входящих в половозрастную группу-----*/
-            double[] manAverDosesExt = new double[manAgesGroupedArray.Length];
-            double[] manAverDosesInt = new double[manAgesGroupedArray.Length];
-            double[] womanAverDosesExt = new double[womanAgesGroupedArray.Length];
-            double[] womanAverDosesInt = new double[womanAgesGroupedArray.Length];
-
-            /*-----Создание массива, в котором хранятся суммы возрастов подгруппы; по факту это ageAtExt * Count-----*/
-            double[] manAgeAmountOfSubgroup = new double[manAgesGroupedArray.Length];
-            double[] womanAgeAmountOfSubgroup = new double[womanAgesGroupedArray.Length];
-
-            for (int i = 0; i < manAgesGroupedArray.Length; i++)
-            {
-                for (int n = 0; n < ageGroups.Count; n++)
-                    for (int k = 0; k < manAgesGroupedArray[i].Count; k++)
-                    {
-                        if (manAgesGroupedArray[i][0].getAgeAtExp() >= ageLowerBound[n] && manAgesGroupedArray[i][0].getAgeAtExp() <= ageUpperBound[n])
-                        {
-                            manAverDosesExt[i] += manAgesGroupedArray[i][k].getDose() - manAgesGroupedArray[i][k].getDoseInt();
-                            manAverDosesInt[i] += manAgesGroupedArray[i][k].getDoseInt();
-                            manAgeAmountOfSubgroup[i] += manAgesGroupedArray[i][k].getAgeAtExp();
-                        }
-                    }
-                manAverDosesExt[i] = manAverDosesExt[i] / manAgesGroupedArray[i].Count;
-                manAverDosesInt[i] = manAverDosesInt[i] / manAgesGroupedArray[i].Count;
-            }
-
-            for (int i = 0; i < womanAgesGroupedArray.Length; i++)
-            {
-                for (int n = 0; n < ageGroups.Count; n++)
-                    for (int k = 0; k < womanAgesGroupedArray[i].Count; k++)
-                    {
-                        if (womanAgesGroupedArray[i][0].getAgeAtExp() >= ageLowerBound[n] && womanAgesGroupedArray[i][0].getAgeAtExp() <= ageUpperBound[n])
-                        {
-                            womanAverDosesExt[i] += womanAgesGroupedArray[i][k].getDose() - womanAgesGroupedArray[i][k].getDoseInt();
-                            womanAverDosesInt[i] += womanAgesGroupedArray[i][k].getDoseInt();
-                            womanAgeAmountOfSubgroup[i] += womanAgesGroupedArray[i][k].getAgeAtExp();
-                        }
-                    }
-                womanAverDosesExt[i] = womanAverDosesExt[i] / womanAgesGroupedArray[i].Count;
-                womanAverDosesInt[i] = womanAverDosesInt[i] / womanAgesGroupedArray[i].Count;
-            }
-
-            /*-----Создание массива, в котором хранится число подгрупп, входящих в возрастную группу-----*/
-            double[] manValueOfSubgroups = new double[ageGroups.Count];
-            double[] womanValueOfSubgroups = new double[ageGroups.Count];
-            /*-----Создание массива, в котором хранятся суммы возрастов всех записей в подгруппе-----*/
-            double[] manAgeAmountOfGroup = new double[ageGroups.Count];
-            double[] womanAgeAmountOfGroup = new double[ageGroups.Count];
-            /*-----Создание массива, в котором хранятся суммы количеств записей для каждой подгруппы, входящей в возрастую группу-----*/
-            double[] manAmountOfSubgroupCounts = new double[ageGroups.Count];
-            double[] womanAmountOfSubgroupCounts = new double[ageGroups.Count];
-            /*-----Создание массивов, в которых хранятся суммы средних доз всех подгрупп, входящих в возрастные группы-----*/
-            double[] manAmountOfAverExtDoses = new double[ageGroups.Count];
-            double[] manAmountOfAverIntDoses = new double[ageGroups.Count];
-            double[] womanAmountOfAverExtDoses = new double[ageGroups.Count];
-            double[] womanAmountOfAverIntDoses = new double[ageGroups.Count];
-
-            for (int i = 0; i < ageGroups.Count - 1; i++)
-            {
-                manValueOfSubgroups[i] = 0;
-                manAgeAmountOfGroup[i] = 0;
-                manAmountOfSubgroupCounts[i] = 0;
-                manAmountOfAverExtDoses[i] = 0;
-                manAmountOfAverIntDoses[i] = 0;
-
-                womanValueOfSubgroups[i] = 0;
-                womanAgeAmountOfGroup[i] = 0;
-                womanAmountOfSubgroupCounts[i] = 0;
-                womanAmountOfAverExtDoses[i] = 0;
-                womanAmountOfAverIntDoses[i] = 0;
-            }
-
-            /*-----Создание массивов списков, которые будут использоваться для расчета среднеквадр. отклонения-----*/
-            List<double>[] manArrayForDeviationExt = new List<double>[ageGroups.Count];
-            List<double>[] manArrayForDeviationInt = new List<double>[ageGroups.Count];
-            List<double>[] womanArrayForDeviationExt = new List<double>[ageGroups.Count];
-            List<double>[] womanArrayForDeviationInt = new List<double>[ageGroups.Count];
+            /*-----Массив списоков, через которые будут вычесляться средние возроста половозрастных групп-----*/
+            List<int>[] manYearsArray = new List<int>[ageGroups.Count];
+            List<int>[] womanYearsArray = new List<int>[ageGroups.Count];
 
             for (int i = 0; i < ageGroups.Count; i++)
             {
-                manArrayForDeviationExt[i] = new List<double>();
-                manArrayForDeviationInt[i] = new List<double>();
+                manSadExtArray[i] = new List<double>();
+                manSadIntArray[i] = new List<double>();
+                womanSadExtArray[i] = new List<double>();
+                womanSadIntArray[i] = new List<double>();
 
-                womanArrayForDeviationExt[i] = new List<double>();
-                womanArrayForDeviationInt[i] = new List<double>();
+                manYearsArray[i] = new List<int>();
+                womanYearsArray[i] = new List<int>();
             }
 
-            for (int i = 0; i < manAgesGroupedArray.Length; i++)
+            for (int i = 0; i < ageGroups.Count; i++)
+                for (int k = 0; k < dbRecords.Count; k++)
+                {
+                    if (dbRecords[k].getSex() == sexMale)
+                        if (dbRecords[k].getAgeAtExp() >= ageLowerBound[i] && dbRecords[k].getAgeAtExp() <= ageUpperBound[i])
+                        {
+                            manSadExtArray[i].Add(dbRecords[k].getDose() - dbRecords[k].getDoseInt());
+                            manSadIntArray[i].Add(dbRecords[k].getDoseInt());
+                            manYearsArray[i].Add(dbRecords[k].getAgeAtExp());
+                        }
+                    if (dbRecords[k].getSex() == sexFemale)
+                        if (dbRecords[k].getAgeAtExp() >= ageLowerBound[i] && dbRecords[k].getAgeAtExp() <= ageUpperBound[i])
+                        {
+                            womanSadExtArray[i].Add(dbRecords[k].getDose() - dbRecords[k].getDoseInt());
+                            womanSadIntArray[i].Add(dbRecords[k].getDoseInt());
+                            womanYearsArray[i].Add(dbRecords[k].getAgeAtExp());
+                        }
+                }
+
+            //List<double> manExtOrpo = new List<double>();
+            //List<double> manIntOrpo = new List<double>();
+            //List<double> womanExtOrpo = new List<double>();
+            //List<double> womanIntOrpo = new List<double>();
+            double[] manExtOrpo = new double[manSadExtArray.Length];
+            double[] manIntOrpo = new double[manSadIntArray.Length];
+            double[] womanExtOrpo = new double[womanSadExtArray.Length];
+            double[] womanIntOrpo = new double[womanSadIntArray.Length];
+
+            /*-----Заполнение переделать, а считается правильно
+             * Надо придумать еще схему для расчета ОРПО_95
+             * Можно написать функцию для расчета отклонения, падавать в нее
+             * список, а на выходе давать отклонение.
+             * Изи бабки-----*/ 
+            for (int i = 0; i < manExtOrpo.Length; i++)
             {
-                for (int k = 0; k < ageGroups.Count; k++)
-                {
-                    if (manAgeAmountOfSubgroup[i] / manAgesGroupedArray[i].Count >= ageLowerBound[k] && manAgeAmountOfSubgroup[i] / manAgesGroupedArray[i].Count <= ageUpperBound[k])
-                    {
-                        manValueOfSubgroups[k] += 1;
-                        manAmountOfAverExtDoses[k] += manAverDosesExt[i];
-                        manAmountOfAverIntDoses[k] += manAverDosesInt[i];
-                        manAgeAmountOfGroup[k] += manAgeAmountOfSubgroup[i];
-                        manAmountOfSubgroupCounts[k] += manAgesGroupedArray[i].Count;
-                        manArrayForDeviationExt[k].Add(manAverDosesExt[i]);
-                        manArrayForDeviationInt[k].Add(manAverDosesInt[i]);
-                    }
-                }
+                if (manSadExtArray[i].Count > 0)
+                manExtOrpo[i] = getOrpo(getManExtLar(manYearsArray[i].Average()), manSadExtArray[i].Average());
             }
-
-            for (int i = 0; i < womanAgesGroupedArray.Length; i++)
+            for (int i = 0; i < manIntOrpo.Length; i++)
             {
-                for (int k = 0; k < ageGroups.Count; k++)
-                {
-                    if (womanAgeAmountOfSubgroup[i] / womanAgesGroupedArray[i].Count >= ageLowerBound[k] && womanAgeAmountOfSubgroup[i] / womanAgesGroupedArray[i].Count <= ageUpperBound[k])
-                    {
-                        womanValueOfSubgroups[k] += 1;
-                        womanAmountOfAverExtDoses[k] += womanAverDosesExt[i];
-                        womanAmountOfAverIntDoses[k] += womanAverDosesInt[i];
-                        womanAgeAmountOfGroup[k] += womanAgeAmountOfSubgroup[i];
-                        womanAmountOfSubgroupCounts[k] += womanAgesGroupedArray[i].Count;
-                        womanArrayForDeviationExt[k].Add(womanAverDosesExt[i]);
-                        womanArrayForDeviationInt[k].Add(womanAverDosesInt[i]);
-                    }
-                }
+                if (manSadIntArray[i].Count > 0)
+                manIntOrpo[i] = getOrpo(getManIntLar(manYearsArray[i].Average()), manSadIntArray[i].Average());
             }
-
-            /*-----Создание массивов, в которых хранятся среднеквадратические погрешности-----*/
-            double[] manDeviationExt = new double[ageGroups.Count];
-            double[] manDeviationInt = new double[ageGroups.Count];
-            double[] womanDeviationExt = new double[ageGroups.Count];
-            double[] womanDeviationInt = new double[ageGroups.Count];
-            for (int i = 0; i < ageGroups.Count - 1; i++)
+            for (int i = 0; i < womanExtOrpo.Length; i++)
             {
-                for (int k = 0; k < manArrayForDeviationExt[i].Count; k++)
-                {
-                    manDeviationExt[i] += Math.Pow((manArrayForDeviationExt[i][k] - manArrayForDeviationExt[i].Average()), 2);
-                }
-                for (int k = 0; k < manArrayForDeviationInt[i].Count; k++)
-                {
-                    manDeviationInt[i] += Math.Pow((manArrayForDeviationInt[i][k] - manArrayForDeviationInt[i].Average()), 2);
-                }
-
-                manDeviationExt[i] = Math.Sqrt(manDeviationExt[i] / manArrayForDeviationExt[i].Count);
-                manDeviationInt[i] = Math.Sqrt(manDeviationInt[i] / manArrayForDeviationInt[i].Count);
-
-
-                for (int k = 0; k < womanArrayForDeviationExt[i].Count; k++)
-                {
-                    womanDeviationExt[i] += Math.Pow((womanArrayForDeviationExt[i][k] - womanArrayForDeviationExt[i].Average()), 2);
-                }
-                for (int k = 0; k < womanArrayForDeviationInt[i].Count; k++)
-                {
-                    womanDeviationInt[i] += Math.Pow((womanArrayForDeviationInt[i][k] - womanArrayForDeviationInt[i].Average()), 2);
-                }
-
-                womanDeviationExt[i] = Math.Sqrt(womanDeviationExt[i] / womanArrayForDeviationExt[i].Count);
-                womanDeviationInt[i] = Math.Sqrt(womanDeviationInt[i] / womanArrayForDeviationInt[i].Count);
+                if (womanSadExtArray[i].Count > 0)
+                womanExtOrpo[i] = getOrpo(getWomanExtLar(womanYearsArray[i].Average()), womanSadExtArray[i].Average());
+            }
+            for (int i = 0; i < womanIntOrpo.Length; i++)
+            {
+                if (womanSadIntArray[i].Count > 0)
+                womanIntOrpo[i] = getOrpo(getWomanIntLar(womanYearsArray[i].Average()), womanSadIntArray[i].Average());
             }
 
-            /*-----Создание массивов, в которых хрянятся ОРПО для каждой половозрастной группы-----*/
-            double[] manOrpoExt = new double[ageGroups.Count];
-            double[] manOrpoInt = new double[ageGroups.Count];
-            double[] womanOrpoExt = new double[ageGroups.Count];
-            double[] womanOrpoInt = new double[ageGroups.Count];
+                //for (int i = 0; i < ageGroups.Count - 2; i++)
+                //{
+                //    manExtOrpo.Add(getOrpo(getManExtLar(manYearsArray[i].Average()), manSadExtArray[i].Average()));
+                //    manIntOrpo.Add(getOrpo(getManIntLar(manYearsArray[i].Average()), manSadIntArray[i].Average()));
+                //    womanExtOrpo.Add(getOrpo(getWomanExtLar(womanYearsArray[i].Average()), womanSadExtArray[i].Average()));
+                //    womanIntOrpo.Add(getOrpo(getWomanIntLar(womanYearsArray[i].Average()), womanSadIntArray[i].Average()));
+                //}
 
-            /*-----Создание массивов, в которых хрянятся ОРПО-95% для каждой половозрастной группы-----*/
-            double[] manOrpoExt_95 = new double[ageGroups.Count];
-            double[] manOrpoInt_95 = new double[ageGroups.Count];
-            double[] womanOrpoExt_95 = new double[ageGroups.Count];
-            double[] womanOrpoInt_95 = new double[ageGroups.Count];
 
-            /*
-             * 
-             * LAR считается от Зв, а у нас доза в мЗв.
-             * Передалать надо!
-             * После этого начинаем программировать ИБПО
-             * 
-             */
-            for (int k = 0; k < manAgesGroupedArray.Length; k++)
-                for (int i = 0; i < ageGroups.Count; i++)
-                {
-                    manOrpoExt[i] = getOrpo(getManExtLar(manAgeAmountOfGroup[i] / manAmountOfSubgroupCounts[i]), manAmountOfAverExtDoses[i] / manValueOfSubgroups[i]);
-                    manOrpoInt[i] = getOrpo(getManIntLar(manAgeAmountOfGroup[i] / manAmountOfSubgroupCounts[i]), manAmountOfAverIntDoses[i] / manValueOfSubgroups[i]);
-                    manOrpoExt_95[i] = getOrpo_95(getManExtLar(manAgeAmountOfGroup[i] / manAmountOfSubgroupCounts[i]), manAmountOfAverExtDoses[i] / manValueOfSubgroups[i], manDeviationExt[i]);
-                    manOrpoInt_95[i] = getOrpo_95(getManIntLar(manAgeAmountOfGroup[i] / manAmountOfSubgroupCounts[i]), manAmountOfAverIntDoses[i] / manValueOfSubgroups[i], manDeviationInt[i]);
-                    womanOrpoExt[i] = getOrpo(getWomanExtLar(womanAgeAmountOfGroup[i] / womanAmountOfSubgroupCounts[i]), womanAmountOfAverExtDoses[i] / womanValueOfSubgroups[i]);
-                    womanOrpoInt[i] = getOrpo(getWomanIntLar(womanAgeAmountOfGroup[i] / womanAmountOfSubgroupCounts[i]), womanAmountOfAverIntDoses[i] / womanValueOfSubgroups[i]);
-                    womanOrpoExt_95[i] = getOrpo_95(getWomanExtLar(womanAgeAmountOfGroup[i] / womanAmountOfSubgroupCounts[i]), womanAmountOfAverExtDoses[i] / womanValueOfSubgroups[i], womanDeviationExt[i]);
-                    womanOrpoInt_95[i] = getOrpo_95(getWomanIntLar(womanAgeAmountOfGroup[i] / womanAmountOfSubgroupCounts[i]), womanAmountOfAverIntDoses[i] / womanValueOfSubgroups[i], womanDeviationInt[i]);
-                }
+
+                /*-----Дозы выделены правильно, средние дозы считаются верно и быстро. Надо еще средние года в группах, совсем забыл... Дальше считаем ОРПО и ОРПО95-----*/
+
+                testlab.Text = manSadExtArray.Length.ToString();
+            reslab.Text = womanSadExtArray.Length.ToString();
+            testTextBox.Text = "ОРПО! " + manSadExtArray[Convert.ToInt32(textBox1.Text)].Count.ToString();
+            resultTextBox.Text = "ОРПО! " + womanSadExtArray[Convert.ToInt32(textBox1.Text)].Count.ToString();
+
+            /*--------------------------------------------------------------Отсюда надо писать все заново--------------------------------------------------------------------------------*/
+            //            /*-----Создание массивов, в которых хранятся суммы средних доз подгрупп, входящих в половозрастную группу-----*/
+            //            double[] manAverDosesExt = new double[manAgesGroupedArray.Length];
+            //            double[] manAverDosesInt = new double[manAgesGroupedArray.Length];
+            //            double[] womanAverDosesExt = new double[womanAgesGroupedArray.Length];
+            //            double[] womanAverDosesInt = new double[womanAgesGroupedArray.Length];
+
+            //            /*-----Создание массива, в котором хранятся суммы возрастов подгруппы; по факту это ageAtExt * Count-----*/
+            //            double[] manAgeAmountOfSubgroup = new double[manAgesGroupedArray.Length];
+            //            double[] womanAgeAmountOfSubgroup = new double[womanAgesGroupedArray.Length];
+
+            //            for (int i = 0; i < manAgesGroupedArray.Length; i++)
+            //            {
+            //                for (int n = 0; n < ageGroups.Count; n++)
+            //                    for (int k = 0; k < manAgesGroupedArray[i].Count; k++)
+            //                    {
+            //                        if (manAgesGroupedArray[i][0].getAgeAtExp() >= ageLowerBound[n] && manAgesGroupedArray[i][0].getAgeAtExp() <= ageUpperBound[n])
+            //                        {
+            //                            manAverDosesExt[i] += manAgesGroupedArray[i][k].getDose() - manAgesGroupedArray[i][k].getDoseInt();
+            //                            manAverDosesInt[i] += manAgesGroupedArray[i][k].getDoseInt();
+            //                            manAgeAmountOfSubgroup[i] += manAgesGroupedArray[i][k].getAgeAtExp();
+            //                        }
+            //                    }
+            //                manAverDosesExt[i] = manAverDosesExt[i] / manAgesGroupedArray[i].Count;
+            //                manAverDosesInt[i] = manAverDosesInt[i] / manAgesGroupedArray[i].Count;
+            //            }
+
+            //            for (int i = 0; i < womanAgesGroupedArray.Length; i++)
+            //            {
+            //                for (int n = 0; n < ageGroups.Count; n++)
+            //                    for (int k = 0; k < womanAgesGroupedArray[i].Count; k++)
+            //                    {
+            //                        if (womanAgesGroupedArray[i][0].getAgeAtExp() >= ageLowerBound[n] && womanAgesGroupedArray[i][0].getAgeAtExp() <= ageUpperBound[n])
+            //                        {
+            //                            womanAverDosesExt[i] += womanAgesGroupedArray[i][k].getDose() - womanAgesGroupedArray[i][k].getDoseInt();
+            //                            womanAverDosesInt[i] += womanAgesGroupedArray[i][k].getDoseInt();
+            //                            womanAgeAmountOfSubgroup[i] += womanAgesGroupedArray[i][k].getAgeAtExp();
+            //                        }
+            //                    }
+            //                womanAverDosesExt[i] = womanAverDosesExt[i] / womanAgesGroupedArray[i].Count;
+            //                womanAverDosesInt[i] = womanAverDosesInt[i] / womanAgesGroupedArray[i].Count;
+            //            }
+
+            //            /*-----Создание массива, в котором хранится число подгрупп, входящих в возрастную группу-----*/
+            //            double[] manValueOfSubgroups = new double[ageGroups.Count];
+            //            double[] womanValueOfSubgroups = new double[ageGroups.Count];
+            //            /*-----Создание массива, в котором хранятся суммы возрастов всех записей в подгруппе-----*/
+            //            double[] manAgeAmountOfGroup = new double[ageGroups.Count];
+            //            double[] womanAgeAmountOfGroup = new double[ageGroups.Count];
+            //            /*-----Создание массива, в котором хранятся суммы количеств записей для каждой подгруппы, входящей в возрастую группу-----*/
+            //            double[] manAmountOfSubgroupCounts = new double[ageGroups.Count];
+            //            double[] womanAmountOfSubgroupCounts = new double[ageGroups.Count];
+            //            /*-----Создание массивов, в которых хранятся суммы средних доз всех подгрупп, входящих в возрастные группы-----*/
+            //            double[] manAmountOfAverExtDoses = new double[ageGroups.Count];
+            //            double[] manAmountOfAverIntDoses = new double[ageGroups.Count];
+            //            double[] womanAmountOfAverExtDoses = new double[ageGroups.Count];
+            //            double[] womanAmountOfAverIntDoses = new double[ageGroups.Count];
+
+            //            for (int i = 0; i < ageGroups.Count - 1; i++)
+            //            {
+            //                manValueOfSubgroups[i] = 0;
+            //                manAgeAmountOfGroup[i] = 0;
+            //                manAmountOfSubgroupCounts[i] = 0;
+            //                manAmountOfAverExtDoses[i] = 0;
+            //                manAmountOfAverIntDoses[i] = 0;
+
+            //                womanValueOfSubgroups[i] = 0;
+            //                womanAgeAmountOfGroup[i] = 0;
+            //                womanAmountOfSubgroupCounts[i] = 0;
+            //                womanAmountOfAverExtDoses[i] = 0;
+            //                womanAmountOfAverIntDoses[i] = 0;
+            //            }
+
+            //            /*-----Создание массивов списков, которые будут использоваться для расчета среднеквадр. отклонения-----*/
+            //            List<double>[] manArrayForDeviationExt = new List<double>[ageGroups.Count];
+            //            List<double>[] manArrayForDeviationInt = new List<double>[ageGroups.Count];
+            //            List<double>[] womanArrayForDeviationExt = new List<double>[ageGroups.Count];
+            //            List<double>[] womanArrayForDeviationInt = new List<double>[ageGroups.Count];
+
+            //            for (int i = 0; i < ageGroups.Count; i++)
+            //            {
+            //                manArrayForDeviationExt[i] = new List<double>();
+            //                manArrayForDeviationInt[i] = new List<double>();
+
+            //                womanArrayForDeviationExt[i] = new List<double>();
+            //                womanArrayForDeviationInt[i] = new List<double>();
+            //            }
+
+            //            for (int i = 0; i < manAgesGroupedArray.Length; i++)
+            //            {
+            //                for (int k = 0; k < ageGroups.Count; k++)
+            //                {
+            //                    if (manAgeAmountOfSubgroup[i] / manAgesGroupedArray[i].Count >= ageLowerBound[k] && manAgeAmountOfSubgroup[i] / manAgesGroupedArray[i].Count <= ageUpperBound[k])
+            //                    {
+            //                        manValueOfSubgroups[k] += 1;
+            //                        manAmountOfAverExtDoses[k] += manAverDosesExt[i];
+            //                        manAmountOfAverIntDoses[k] += manAverDosesInt[i];
+            //                        manAgeAmountOfGroup[k] += manAgeAmountOfSubgroup[i];
+            //                        manAmountOfSubgroupCounts[k] += manAgesGroupedArray[i].Count;
+            //                        manArrayForDeviationExt[k].Add(manAverDosesExt[i]);
+            //                        manArrayForDeviationInt[k].Add(manAverDosesInt[i]);
+            //                    }
+            //                }
+            //            }
+
+            //            for (int i = 0; i < womanAgesGroupedArray.Length; i++)
+            //            {
+            //                for (int k = 0; k < ageGroups.Count; k++)
+            //                {
+            //                    if (womanAgeAmountOfSubgroup[i] / womanAgesGroupedArray[i].Count >= ageLowerBound[k] && womanAgeAmountOfSubgroup[i] / womanAgesGroupedArray[i].Count <= ageUpperBound[k])
+            //                    {
+            //                        womanValueOfSubgroups[k] += 1;
+            //                        womanAmountOfAverExtDoses[k] += womanAverDosesExt[i];
+            //                        womanAmountOfAverIntDoses[k] += womanAverDosesInt[i];
+            //                        womanAgeAmountOfGroup[k] += womanAgeAmountOfSubgroup[i];
+            //                        womanAmountOfSubgroupCounts[k] += womanAgesGroupedArray[i].Count;
+            //                        womanArrayForDeviationExt[k].Add(womanAverDosesExt[i]);
+            //                        womanArrayForDeviationInt[k].Add(womanAverDosesInt[i]);
+            //                    }
+            //                }
+            //            }
+            ///*--------------------------------------------------------------------Неправильно--------------------------------------------------------------------------*/
+            //            /*-----Создание массивов, в которых хранятся среднеквадратические погрешности-----*/
+            //            double[] manDeviationExt = new double[ageGroups.Count];
+            //            double[] manDeviationInt = new double[ageGroups.Count];
+            //            double[] womanDeviationExt = new double[ageGroups.Count];
+            //            double[] womanDeviationInt = new double[ageGroups.Count];
+            //            for (int i = 0; i < ageGroups.Count - 1; i++)
+            //            {
+            //                for (int k = 0; k < manArrayForDeviationExt[i].Count; k++)
+            //                {
+            //                    manDeviationExt[i] += Math.Pow((manArrayForDeviationExt[i][k] - manArrayForDeviationExt[i].Average()), 2);
+            //                }
+            //                for (int k = 0; k < manArrayForDeviationInt[i].Count; k++)
+            //                {
+            //                    manDeviationInt[i] += Math.Pow((manArrayForDeviationInt[i][k] - manArrayForDeviationInt[i].Average()), 2);
+            //                }
+
+            //                manDeviationExt[i] = Math.Sqrt(manDeviationExt[i] / manArrayForDeviationExt[i].Count);
+            //                manDeviationInt[i] = Math.Sqrt(manDeviationInt[i] / manArrayForDeviationInt[i].Count);
+
+
+            //                for (int k = 0; k < womanArrayForDeviationExt[i].Count; k++)
+            //                {
+            //                    womanDeviationExt[i] += Math.Pow((womanArrayForDeviationExt[i][k] - womanArrayForDeviationExt[i].Average()), 2);
+            //                }
+            //                for (int k = 0; k < womanArrayForDeviationInt[i].Count; k++)
+            //                {
+            //                    womanDeviationInt[i] += Math.Pow((womanArrayForDeviationInt[i][k] - womanArrayForDeviationInt[i].Average()), 2);
+            //                }
+
+            //                womanDeviationExt[i] = Math.Sqrt(womanDeviationExt[i] / womanArrayForDeviationExt[i].Count);
+            //                womanDeviationInt[i] = Math.Sqrt(womanDeviationInt[i] / womanArrayForDeviationInt[i].Count);
+            //            }
+            ///*----------------------------------------------------------------------------------------------------------------------------------------------*/
+
+            //            /*-----Создание массивов, в которых хрянятся ОРПО для каждой половозрастной группы-----*/
+            //            double[] manOrpoExt = new double[ageGroups.Count];
+            //            double[] manOrpoInt = new double[ageGroups.Count];
+            //            double[] womanOrpoExt = new double[ageGroups.Count];
+            //            double[] womanOrpoInt = new double[ageGroups.Count];
+
+            //            /*-----Создание массивов, в которых хрянятся ОРПО-95% для каждой половозрастной группы-----*/
+            //            double[] manOrpoExt_95 = new double[ageGroups.Count];
+            //            double[] manOrpoInt_95 = new double[ageGroups.Count];
+            //            double[] womanOrpoExt_95 = new double[ageGroups.Count];
+            //            double[] womanOrpoInt_95 = new double[ageGroups.Count];
+
+            //            /*
+            //             * 
+            //             * LAR считается от Зв, а у нас доза в мЗв.
+            //             * Передалать надо!
+            //             * После этого начинаем программировать ИБПО
+            //             * 
+            //             */
+            //            for (int k = 0; k < manAgesGroupedArray.Length; k++)
+            //                for (int i = 0; i < ageGroups.Count; i++)
+            //                {
+            //                    manOrpoExt[i] = getOrpo(getManExtLar(manAgeAmountOfGroup[i] / manAmountOfSubgroupCounts[i]), manAmountOfAverExtDoses[i] / manValueOfSubgroups[i]);
+            //                    manOrpoInt[i] = getOrpo(getManIntLar(manAgeAmountOfGroup[i] / manAmountOfSubgroupCounts[i]), manAmountOfAverIntDoses[i] / manValueOfSubgroups[i]);
+            //                    manOrpoExt_95[i] = getOrpo_95(getManExtLar(manAgeAmountOfGroup[i] / manAmountOfSubgroupCounts[i]), manAmountOfAverExtDoses[i] / manValueOfSubgroups[i], manDeviationExt[i]);
+            //                    manOrpoInt_95[i] = getOrpo_95(getManIntLar(manAgeAmountOfGroup[i] / manAmountOfSubgroupCounts[i]), manAmountOfAverIntDoses[i] / manValueOfSubgroups[i], manDeviationInt[i]);
+            //                    womanOrpoExt[i] = getOrpo(getWomanExtLar(womanAgeAmountOfGroup[i] / womanAmountOfSubgroupCounts[i]), womanAmountOfAverExtDoses[i] / womanValueOfSubgroups[i]);
+            //                    womanOrpoInt[i] = getOrpo(getWomanIntLar(womanAgeAmountOfGroup[i] / womanAmountOfSubgroupCounts[i]), womanAmountOfAverIntDoses[i] / womanValueOfSubgroups[i]);
+            //                    womanOrpoExt_95[i] = getOrpo_95(getWomanExtLar(womanAgeAmountOfGroup[i] / womanAmountOfSubgroupCounts[i]), womanAmountOfAverExtDoses[i] / womanValueOfSubgroups[i], womanDeviationExt[i]);
+            //                    womanOrpoInt_95[i] = getOrpo_95(getWomanIntLar(womanAgeAmountOfGroup[i] / womanAmountOfSubgroupCounts[i]), womanAmountOfAverIntDoses[i] / womanValueOfSubgroups[i], womanDeviationInt[i]);
+            //                }
 
             ///*-----Вывод в Excel-файл-----*/
             ///*-----Инициализация Excel-файла-----*/
@@ -634,8 +695,6 @@ namespace TVELtest
 
             //testTextBox.Text = (manAmountOfAverExtDoses[Convert.ToInt32(textBox1.Text)] / manValueOfSubgroups[Convert.ToInt32(textBox1.Text)]).ToString();//getOrpo(getManExtLar(manAgeAmountOfGroup[Convert.ToInt32(textBox1.Text)] / manAmountOfSubgroupCounts[Convert.ToInt32(textBox1.Text)]), (manAmountOfAverExtDoses[Convert.ToInt32(textBox1.Text)] / manValueOfSubgroups[Convert.ToInt32(textBox1.Text)])).ToString();
             //resultTextBox.Text = (manAmountOfAverIntDoses[Convert.ToInt32(textBox1.Text)] / manValueOfSubgroups[Convert.ToInt32(textBox1.Text)]).ToString();
-            //testTextBox.Text = "ОРПО! " + list.Sum() / list.Count;//(dbManAges.Count + dbWomanAges.Count).ToString();
-            //resultTextBox.Text = "ОРПО! " + list.Average();//dbRecords.Count;
         }
 
         private void getIbpoButton_Click(object sender, EventArgs e)
@@ -842,7 +901,7 @@ namespace TVELtest
                 womanLarExtArray[i] = new List<double>();
                 womanLarIntArray[i] = new List<double>();
             }
-            
+
             for (int i = 0; i < manIdRecordsArray.Length; i++)
                 for (int k = 0; k < ageGroups.Count; k++)
                     if (manIdRecordsArray[i][0].getAgeAtExp() >= ageLowerBound[k] && manIdRecordsArray[i][0].getAgeAtExp() <= ageUpperBound[k])

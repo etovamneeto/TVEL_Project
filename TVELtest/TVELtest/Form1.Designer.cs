@@ -30,13 +30,14 @@
         {
             this.getOrpoButton = new System.Windows.Forms.Button();
             this.resultTextBox = new System.Windows.Forms.TextBox();
-            this.testLabel = new System.Windows.Forms.Label();
             this.resultLabel = new System.Windows.Forms.Label();
             this.textBox1 = new System.Windows.Forms.TextBox();
             this.getIbpoButton = new System.Windows.Forms.Button();
             this.testTextBox = new System.Windows.Forms.TextBox();
-            this.textBox2 = new System.Windows.Forms.TextBox();
             this.label1 = new System.Windows.Forms.Label();
+            this.testlabel = new System.Windows.Forms.Label();
+            this.reslab = new System.Windows.Forms.Label();
+            this.testlab = new System.Windows.Forms.Label();
             this.SuspendLayout();
             // 
             // getOrpoButton
@@ -55,15 +56,6 @@
             this.resultTextBox.Name = "resultTextBox";
             this.resultTextBox.Size = new System.Drawing.Size(100, 20);
             this.resultTextBox.TabIndex = 1;
-            // 
-            // testLabel
-            // 
-            this.testLabel.AutoSize = true;
-            this.testLabel.Location = new System.Drawing.Point(65, 91);
-            this.testLabel.Name = "testLabel";
-            this.testLabel.Size = new System.Drawing.Size(24, 13);
-            this.testLabel.TabIndex = 3;
-            this.testLabel.Text = "test";
             // 
             // resultLabel
             // 
@@ -99,33 +91,54 @@
             this.testTextBox.Size = new System.Drawing.Size(100, 20);
             this.testTextBox.TabIndex = 7;
             // 
-            // textBox2
-            // 
-            this.textBox2.Location = new System.Drawing.Point(103, 36);
-            this.textBox2.Name = "textBox2";
-            this.textBox2.Size = new System.Drawing.Size(100, 20);
-            this.textBox2.TabIndex = 8;
-            // 
             // label1
             // 
             this.label1.AutoSize = true;
-            this.label1.Location = new System.Drawing.Point(210, 42);
+            this.label1.Location = new System.Drawing.Point(65, 65);
             this.label1.Name = "label1";
-            this.label1.Size = new System.Drawing.Size(35, 13);
-            this.label1.TabIndex = 9;
-            this.label1.Text = "label1";
+            this.label1.Size = new System.Drawing.Size(24, 13);
+            this.label1.TabIndex = 8;
+            this.label1.Text = "text";
+            // 
+            // testlabel
+            // 
+            this.testlabel.AutoSize = true;
+            this.testlabel.Location = new System.Drawing.Point(65, 91);
+            this.testlabel.Name = "testlabel";
+            this.testlabel.Size = new System.Drawing.Size(24, 13);
+            this.testlabel.TabIndex = 9;
+            this.testlabel.Text = "test";
+            // 
+            // reslab
+            // 
+            this.reslab.AutoSize = true;
+            this.reslab.Location = new System.Drawing.Point(209, 117);
+            this.reslab.Name = "reslab";
+            this.reslab.Size = new System.Drawing.Size(24, 13);
+            this.reslab.TabIndex = 10;
+            this.reslab.Text = "text";
+            // 
+            // testlab
+            // 
+            this.testlab.AutoSize = true;
+            this.testlab.Location = new System.Drawing.Point(209, 91);
+            this.testlab.Name = "testlab";
+            this.testlab.Size = new System.Drawing.Size(24, 13);
+            this.testlab.TabIndex = 11;
+            this.testlab.Text = "text";
             // 
             // Form1
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(292, 273);
+            this.Controls.Add(this.testlab);
+            this.Controls.Add(this.reslab);
+            this.Controls.Add(this.testlabel);
             this.Controls.Add(this.label1);
-            this.Controls.Add(this.textBox2);
             this.Controls.Add(this.getIbpoButton);
             this.Controls.Add(this.textBox1);
             this.Controls.Add(this.resultLabel);
-            this.Controls.Add(this.testLabel);
             this.Controls.Add(this.testTextBox);
             this.Controls.Add(this.resultTextBox);
             this.Controls.Add(this.getOrpoButton);
@@ -141,13 +154,14 @@
 
         private System.Windows.Forms.Button getOrpoButton;
         private System.Windows.Forms.TextBox resultTextBox;
-        private System.Windows.Forms.Label testLabel;
         private System.Windows.Forms.Label resultLabel;
         private System.Windows.Forms.TextBox textBox1;
         private System.Windows.Forms.Button getIbpoButton;
         private System.Windows.Forms.TextBox testTextBox;
-        private System.Windows.Forms.TextBox textBox2;
         private System.Windows.Forms.Label label1;
+        private System.Windows.Forms.Label testlabel;
+        private System.Windows.Forms.Label reslab;
+        private System.Windows.Forms.Label testlab;
 
 
     }
