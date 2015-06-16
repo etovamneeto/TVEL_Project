@@ -139,6 +139,19 @@ namespace TVELtest
             return orpo;
         }
 
+        public double getDeviation(List<double> list)
+        {
+            double deviation = 0;
+            double[] buffer = new double[list.Count];
+            for (int i = 0; i < list.Count; i++)
+            {
+                buffer[i] = Math.Pow((list[i] - list.Average()), 2);
+                deviation += buffer[i];
+            }
+            deviation = Math.Sqrt(deviation / buffer.Length);
+            return deviation;
+        }
+
         public double getIbpo(List<double> groupedLar, double orpo)
         {
             //womanIntIbpo[i] = 100 / (1 + womanIntOrpo[i] / (2 * Math.Pow(10, -4) * (1 - ((womanLarIntArray[i].Sum() / womanLarIntArray[i].Count) / (4.1 * Math.Pow(10, -2))))));
@@ -285,57 +298,63 @@ namespace TVELtest
                         }
                 }
 
-            //List<double> manExtOrpo = new List<double>();
-            //List<double> manIntOrpo = new List<double>();
-            //List<double> womanExtOrpo = new List<double>();
-            //List<double> womanIntOrpo = new List<double>();
+            /*-----Массивы, хранящие ОРПО для половозрастных групп-----*/
             double[] manExtOrpo = new double[manSadExtArray.Length];
             double[] manIntOrpo = new double[manSadIntArray.Length];
             double[] womanExtOrpo = new double[womanSadExtArray.Length];
             double[] womanIntOrpo = new double[womanSadIntArray.Length];
 
+            double[] manExtOrpo_95 = new double[manSadExtArray.Length];
+            double[] manIntOrpo_95 = new double[manSadIntArray.Length];
+            double[] womanExtOrpo_95 = new double[womanSadExtArray.Length];
+            double[] womanIntOrpo_95 = new double[womanSadIntArray.Length];
+
             /*-----Заполнение переделать, а считается правильно
-             * Надо придумать еще схему для расчета ОРПО_95
+             * Надо придумать еще схему для расчета ОРПО_95+
              * Можно написать функцию для расчета отклонения, падавать в нее
-             * список, а на выходе давать отклонение.
-             * Изи бабки-----*/ 
-            for (int i = 0; i < manExtOrpo.Length; i++)
+             * список, а на выходе давать отклонение+
+             * Изи бабки-----*/
+            for (int i = 0; i < ageGroups.Count; i++)
             {
                 if (manSadExtArray[i].Count > 0)
-                manExtOrpo[i] = getOrpo(getManExtLar(manYearsArray[i].Average()), manSadExtArray[i].Average());
-            }
-            for (int i = 0; i < manIntOrpo.Length; i++)
-            {
+                {
+                    manExtOrpo[i] = getOrpo(getManExtLar(manYearsArray[i].Average()), manSadExtArray[i].Average());
+                    manExtOrpo_95[i] = getOrpo_95(getManExtLar(manYearsArray[i].Average()), manSadExtArray[i].Average(), getDeviation(manSadExtArray[i])); 
+                }
+
                 if (manSadIntArray[i].Count > 0)
-                manIntOrpo[i] = getOrpo(getManIntLar(manYearsArray[i].Average()), manSadIntArray[i].Average());
-            }
-            for (int i = 0; i < womanExtOrpo.Length; i++)
-            {
+                {
+                    manIntOrpo[i] = getOrpo(getManIntLar(manYearsArray[i].Average()), manSadIntArray[i].Average());
+                    manIntOrpo_95[i] = getOrpo_95(getManIntLar(manYearsArray[i].Average()), manSadIntArray[i].Average(), getDeviation(manSadIntArray[i]));
+                }
+
                 if (womanSadExtArray[i].Count > 0)
-                womanExtOrpo[i] = getOrpo(getWomanExtLar(womanYearsArray[i].Average()), womanSadExtArray[i].Average());
-            }
-            for (int i = 0; i < womanIntOrpo.Length; i++)
-            {
+                {
+                    womanExtOrpo[i] = getOrpo(getWomanExtLar(womanYearsArray[i].Average()), womanSadExtArray[i].Average());
+                    womanExtOrpo_95[i] = getOrpo_95(getWomanExtLar(womanYearsArray[i].Average()), womanSadExtArray[i].Average(), getDeviation(womanSadExtArray[i]));
+                }
+
                 if (womanSadIntArray[i].Count > 0)
-                womanIntOrpo[i] = getOrpo(getWomanIntLar(womanYearsArray[i].Average()), womanSadIntArray[i].Average());
+                {
+                    womanIntOrpo[i] = getOrpo(getWomanIntLar(womanYearsArray[i].Average()), womanSadIntArray[i].Average());
+                    womanIntOrpo_95[i] = getOrpo_95(getWomanIntLar(womanYearsArray[i].Average()), womanSadIntArray[i].Average(), getDeviation(womanSadIntArray[i]));
+                }
             }
 
-                //for (int i = 0; i < ageGroups.Count - 2; i++)
-                //{
-                //    manExtOrpo.Add(getOrpo(getManExtLar(manYearsArray[i].Average()), manSadExtArray[i].Average()));
-                //    manIntOrpo.Add(getOrpo(getManIntLar(manYearsArray[i].Average()), manSadIntArray[i].Average()));
-                //    womanExtOrpo.Add(getOrpo(getWomanExtLar(womanYearsArray[i].Average()), womanSadExtArray[i].Average()));
-                //    womanIntOrpo.Add(getOrpo(getWomanIntLar(womanYearsArray[i].Average()), womanSadIntArray[i].Average()));
-                //}
+            /*
+             * ОРПО и ОРПО95 считаются.
+             * Надо делать ИБПО теперь!
+             * 
+             */
 
 
 
                 /*-----Дозы выделены правильно, средние дозы считаются верно и быстро. Надо еще средние года в группах, совсем забыл... Дальше считаем ОРПО и ОРПО95-----*/
 
-                testlab.Text = manSadExtArray.Length.ToString();
+            testlab.Text = manSadExtArray.Length.ToString();
             reslab.Text = womanSadExtArray.Length.ToString();
-            testTextBox.Text = "ОРПО! " + manSadExtArray[Convert.ToInt32(textBox1.Text)].Count.ToString();
-            resultTextBox.Text = "ОРПО! " + womanSadExtArray[Convert.ToInt32(textBox1.Text)].Count.ToString();
+            testTextBox.Text = "ОРПО! " + manSadIntArray[Convert.ToInt32(textBox1.Text)].Count.ToString();
+            resultTextBox.Text = "ОРПО! " + getDeviation(manSadIntArray[Convert.ToInt32(textBox1.Text)]).ToString();
 
             /*--------------------------------------------------------------Отсюда надо писать все заново--------------------------------------------------------------------------------*/
             //            /*-----Создание массивов, в которых хранятся суммы средних доз подгрупп, входящих в половозрастную группу-----*/
