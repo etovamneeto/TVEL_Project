@@ -29,139 +29,443 @@
         private void InitializeComponent()
         {
             this.getOrpoButton = new System.Windows.Forms.Button();
-            this.resultTextBox = new System.Windows.Forms.TextBox();
-            this.resultLabel = new System.Windows.Forms.Label();
-            this.textBox1 = new System.Windows.Forms.TextBox();
             this.getIbpoButton = new System.Windows.Forms.Button();
-            this.testTextBox = new System.Windows.Forms.TextBox();
-            this.label1 = new System.Windows.Forms.Label();
-            this.testlabel = new System.Windows.Forms.Label();
-            this.reslab = new System.Windows.Forms.Label();
-            this.testlab = new System.Windows.Forms.Label();
+            this.openFileButton = new System.Windows.Forms.Button();
+            this.orpoGroupBox = new System.Windows.Forms.GroupBox();
+            this.womanIntOrpoBox95 = new System.Windows.Forms.TextBox();
+            this.womanExtOrpoBox95 = new System.Windows.Forms.TextBox();
+            this.orpoBoxWomanIntLabel95 = new System.Windows.Forms.Label();
+            this.orpoBoxWomanExtLabel95 = new System.Windows.Forms.Label();
+            this.womanIntOrpoBox = new System.Windows.Forms.TextBox();
+            this.womanExtOrpoBox = new System.Windows.Forms.TextBox();
+            this.orpoBoxWomanIntLabel = new System.Windows.Forms.Label();
+            this.orpoBoxWomanExtLabel = new System.Windows.Forms.Label();
+            this.manIntOrpoBox95 = new System.Windows.Forms.TextBox();
+            this.manExtOrpoBox95 = new System.Windows.Forms.TextBox();
+            this.orpoGroupManInt95Label = new System.Windows.Forms.Label();
+            this.orpoGroupManExt95Label = new System.Windows.Forms.Label();
+            this.manIntOrpoBox = new System.Windows.Forms.TextBox();
+            this.manExtOrpoBox = new System.Windows.Forms.TextBox();
+            this.orpoBoxManIntLabel = new System.Windows.Forms.Label();
+            this.orpoBoxManExtLabel = new System.Windows.Forms.Label();
+            this.ibpoGroupBox = new System.Windows.Forms.GroupBox();
+            this.womanIntIbpoBox95 = new System.Windows.Forms.TextBox();
+            this.womanExtIbpoBox95 = new System.Windows.Forms.TextBox();
+            this.ibpoBoxWomanIntLabel95 = new System.Windows.Forms.Label();
+            this.ibpoBoxWomanExtLabel95 = new System.Windows.Forms.Label();
+            this.womanIntIbpoBox = new System.Windows.Forms.TextBox();
+            this.womanExtIbpoBox = new System.Windows.Forms.TextBox();
+            this.ibpoBoxWomanIntLabel = new System.Windows.Forms.Label();
+            this.ibpoBoxWomanExtLabel = new System.Windows.Forms.Label();
+            this.manIntIbpoBox95 = new System.Windows.Forms.TextBox();
+            this.manExtIbpoBox95 = new System.Windows.Forms.TextBox();
+            this.ibpoBoxManIntLabel95 = new System.Windows.Forms.Label();
+            this.ibpoBoxManExtLabel95 = new System.Windows.Forms.Label();
+            this.manIntIbpoBox = new System.Windows.Forms.TextBox();
+            this.manExtIbpoBox = new System.Windows.Forms.TextBox();
+            this.ibpoBoxManIntLabel = new System.Windows.Forms.Label();
+            this.ibpoBoxManExtLabel = new System.Windows.Forms.Label();
+            this.orpoGroupBox.SuspendLayout();
+            this.ibpoGroupBox.SuspendLayout();
             this.SuspendLayout();
             // 
             // getOrpoButton
             // 
-            this.getOrpoButton.Location = new System.Drawing.Point(103, 173);
+            this.getOrpoButton.Location = new System.Drawing.Point(12, 61);
             this.getOrpoButton.Name = "getOrpoButton";
-            this.getOrpoButton.Size = new System.Drawing.Size(75, 23);
+            this.getOrpoButton.Size = new System.Drawing.Size(468, 43);
             this.getOrpoButton.TabIndex = 0;
-            this.getOrpoButton.Text = "ОРПО";
+            this.getOrpoButton.Text = "Шаг 2: Рассчитать ОРПО";
             this.getOrpoButton.UseVisualStyleBackColor = true;
             this.getOrpoButton.Click += new System.EventHandler(this.getOrpoButton_Click);
             // 
-            // resultTextBox
-            // 
-            this.resultTextBox.Location = new System.Drawing.Point(103, 114);
-            this.resultTextBox.Name = "resultTextBox";
-            this.resultTextBox.Size = new System.Drawing.Size(100, 20);
-            this.resultTextBox.TabIndex = 1;
-            // 
-            // resultLabel
-            // 
-            this.resultLabel.AutoSize = true;
-            this.resultLabel.Location = new System.Drawing.Point(65, 117);
-            this.resultLabel.Name = "resultLabel";
-            this.resultLabel.Size = new System.Drawing.Size(32, 13);
-            this.resultLabel.TabIndex = 4;
-            this.resultLabel.Text = "result";
-            // 
-            // textBox1
-            // 
-            this.textBox1.Location = new System.Drawing.Point(103, 62);
-            this.textBox1.Name = "textBox1";
-            this.textBox1.Size = new System.Drawing.Size(100, 20);
-            this.textBox1.TabIndex = 5;
-            this.textBox1.TextChanged += new System.EventHandler(this.textBox1_TextChanged);
-            // 
             // getIbpoButton
             // 
-            this.getIbpoButton.Location = new System.Drawing.Point(103, 144);
+            this.getIbpoButton.Location = new System.Drawing.Point(12, 110);
             this.getIbpoButton.Name = "getIbpoButton";
-            this.getIbpoButton.Size = new System.Drawing.Size(75, 23);
+            this.getIbpoButton.Size = new System.Drawing.Size(468, 43);
             this.getIbpoButton.TabIndex = 6;
-            this.getIbpoButton.Text = "ИБПО";
+            this.getIbpoButton.Text = "Шаг 3: Рассчитать ИБПО";
             this.getIbpoButton.UseVisualStyleBackColor = true;
             this.getIbpoButton.Click += new System.EventHandler(this.getIbpoButton_Click);
             // 
-            // testTextBox
+            // openFileButton
             // 
-            this.testTextBox.Location = new System.Drawing.Point(103, 88);
-            this.testTextBox.Name = "testTextBox";
-            this.testTextBox.Size = new System.Drawing.Size(100, 20);
-            this.testTextBox.TabIndex = 7;
+            this.openFileButton.Location = new System.Drawing.Point(12, 12);
+            this.openFileButton.Name = "openFileButton";
+            this.openFileButton.Size = new System.Drawing.Size(468, 43);
+            this.openFileButton.TabIndex = 12;
+            this.openFileButton.Text = "Шаг 1: Выберите файл";
+            this.openFileButton.UseVisualStyleBackColor = true;
+            this.openFileButton.Click += new System.EventHandler(this.openFileButton_Click);
             // 
-            // label1
+            // orpoGroupBox
             // 
-            this.label1.AutoSize = true;
-            this.label1.Location = new System.Drawing.Point(65, 65);
-            this.label1.Name = "label1";
-            this.label1.Size = new System.Drawing.Size(24, 13);
-            this.label1.TabIndex = 8;
-            this.label1.Text = "text";
+            this.orpoGroupBox.Controls.Add(this.womanIntOrpoBox95);
+            this.orpoGroupBox.Controls.Add(this.womanExtOrpoBox95);
+            this.orpoGroupBox.Controls.Add(this.orpoBoxWomanIntLabel95);
+            this.orpoGroupBox.Controls.Add(this.orpoBoxWomanExtLabel95);
+            this.orpoGroupBox.Controls.Add(this.womanIntOrpoBox);
+            this.orpoGroupBox.Controls.Add(this.womanExtOrpoBox);
+            this.orpoGroupBox.Controls.Add(this.orpoBoxWomanIntLabel);
+            this.orpoGroupBox.Controls.Add(this.orpoBoxWomanExtLabel);
+            this.orpoGroupBox.Controls.Add(this.manIntOrpoBox95);
+            this.orpoGroupBox.Controls.Add(this.manExtOrpoBox95);
+            this.orpoGroupBox.Controls.Add(this.orpoGroupManInt95Label);
+            this.orpoGroupBox.Controls.Add(this.orpoGroupManExt95Label);
+            this.orpoGroupBox.Controls.Add(this.manIntOrpoBox);
+            this.orpoGroupBox.Controls.Add(this.manExtOrpoBox);
+            this.orpoGroupBox.Controls.Add(this.orpoBoxManIntLabel);
+            this.orpoGroupBox.Controls.Add(this.orpoBoxManExtLabel);
+            this.orpoGroupBox.Location = new System.Drawing.Point(12, 161);
+            this.orpoGroupBox.Name = "orpoGroupBox";
+            this.orpoGroupBox.Size = new System.Drawing.Size(468, 150);
+            this.orpoGroupBox.TabIndex = 13;
+            this.orpoGroupBox.TabStop = false;
+            this.orpoGroupBox.Text = "Среднее ОРПО";
             // 
-            // testlabel
+            // womanIntOrpoBox95
             // 
-            this.testlabel.AutoSize = true;
-            this.testlabel.Location = new System.Drawing.Point(65, 91);
-            this.testlabel.Name = "testlabel";
-            this.testlabel.Size = new System.Drawing.Size(24, 13);
-            this.testlabel.TabIndex = 9;
-            this.testlabel.Text = "test";
+            this.womanIntOrpoBox95.Location = new System.Drawing.Point(362, 105);
+            this.womanIntOrpoBox95.Name = "womanIntOrpoBox95";
+            this.womanIntOrpoBox95.Size = new System.Drawing.Size(100, 20);
+            this.womanIntOrpoBox95.TabIndex = 15;
             // 
-            // reslab
+            // womanExtOrpoBox95
             // 
-            this.reslab.AutoSize = true;
-            this.reslab.Location = new System.Drawing.Point(209, 117);
-            this.reslab.Name = "reslab";
-            this.reslab.Size = new System.Drawing.Size(24, 13);
-            this.reslab.TabIndex = 10;
-            this.reslab.Text = "text";
+            this.womanExtOrpoBox95.Location = new System.Drawing.Point(362, 79);
+            this.womanExtOrpoBox95.Name = "womanExtOrpoBox95";
+            this.womanExtOrpoBox95.Size = new System.Drawing.Size(100, 20);
+            this.womanExtOrpoBox95.TabIndex = 14;
             // 
-            // testlab
+            // orpoBoxWomanIntLabel95
             // 
-            this.testlab.AutoSize = true;
-            this.testlab.Location = new System.Drawing.Point(209, 91);
-            this.testlab.Name = "testlab";
-            this.testlab.Size = new System.Drawing.Size(24, 13);
-            this.testlab.TabIndex = 11;
-            this.testlab.Text = "text";
+            this.orpoBoxWomanIntLabel95.AutoSize = true;
+            this.orpoBoxWomanIntLabel95.Location = new System.Drawing.Point(235, 108);
+            this.orpoBoxWomanIntLabel95.Name = "orpoBoxWomanIntLabel95";
+            this.orpoBoxWomanIntLabel95.Size = new System.Drawing.Size(125, 13);
+            this.orpoBoxWomanIntLabel95.TabIndex = 13;
+            this.orpoBoxWomanIntLabel95.Text = "Женщины, внутр. (95%)";
+            // 
+            // orpoBoxWomanExtLabel95
+            // 
+            this.orpoBoxWomanExtLabel95.AutoSize = true;
+            this.orpoBoxWomanExtLabel95.Location = new System.Drawing.Point(235, 82);
+            this.orpoBoxWomanExtLabel95.Name = "orpoBoxWomanExtLabel95";
+            this.orpoBoxWomanExtLabel95.Size = new System.Drawing.Size(123, 13);
+            this.orpoBoxWomanExtLabel95.TabIndex = 12;
+            this.orpoBoxWomanExtLabel95.Text = "Женщины, внеш. (95%)";
+            // 
+            // womanIntOrpoBox
+            // 
+            this.womanIntOrpoBox.Location = new System.Drawing.Point(102, 105);
+            this.womanIntOrpoBox.Name = "womanIntOrpoBox";
+            this.womanIntOrpoBox.Size = new System.Drawing.Size(100, 20);
+            this.womanIntOrpoBox.TabIndex = 11;
+            // 
+            // womanExtOrpoBox
+            // 
+            this.womanExtOrpoBox.Location = new System.Drawing.Point(102, 79);
+            this.womanExtOrpoBox.Name = "womanExtOrpoBox";
+            this.womanExtOrpoBox.Size = new System.Drawing.Size(100, 20);
+            this.womanExtOrpoBox.TabIndex = 10;
+            // 
+            // orpoBoxWomanIntLabel
+            // 
+            this.orpoBoxWomanIntLabel.AutoSize = true;
+            this.orpoBoxWomanIntLabel.Location = new System.Drawing.Point(5, 108);
+            this.orpoBoxWomanIntLabel.Name = "orpoBoxWomanIntLabel";
+            this.orpoBoxWomanIntLabel.Size = new System.Drawing.Size(96, 13);
+            this.orpoBoxWomanIntLabel.TabIndex = 9;
+            this.orpoBoxWomanIntLabel.Text = "Женщины, внутр.";
+            // 
+            // orpoBoxWomanExtLabel
+            // 
+            this.orpoBoxWomanExtLabel.AutoSize = true;
+            this.orpoBoxWomanExtLabel.Location = new System.Drawing.Point(5, 82);
+            this.orpoBoxWomanExtLabel.Name = "orpoBoxWomanExtLabel";
+            this.orpoBoxWomanExtLabel.Size = new System.Drawing.Size(94, 13);
+            this.orpoBoxWomanExtLabel.TabIndex = 8;
+            this.orpoBoxWomanExtLabel.Text = "Женщины, внеш.";
+            // 
+            // manIntOrpoBox95
+            // 
+            this.manIntOrpoBox95.Location = new System.Drawing.Point(362, 53);
+            this.manIntOrpoBox95.Name = "manIntOrpoBox95";
+            this.manIntOrpoBox95.Size = new System.Drawing.Size(100, 20);
+            this.manIntOrpoBox95.TabIndex = 7;
+            // 
+            // manExtOrpoBox95
+            // 
+            this.manExtOrpoBox95.Location = new System.Drawing.Point(362, 30);
+            this.manExtOrpoBox95.Name = "manExtOrpoBox95";
+            this.manExtOrpoBox95.Size = new System.Drawing.Size(100, 20);
+            this.manExtOrpoBox95.TabIndex = 6;
+            // 
+            // orpoGroupManInt95Label
+            // 
+            this.orpoGroupManInt95Label.AutoSize = true;
+            this.orpoGroupManInt95Label.Location = new System.Drawing.Point(235, 56);
+            this.orpoGroupManInt95Label.Name = "orpoGroupManInt95Label";
+            this.orpoGroupManInt95Label.Size = new System.Drawing.Size(120, 13);
+            this.orpoGroupManInt95Label.TabIndex = 5;
+            this.orpoGroupManInt95Label.Text = "Мужчины, внутр. (95%)";
+            // 
+            // orpoGroupManExt95Label
+            // 
+            this.orpoGroupManExt95Label.AutoSize = true;
+            this.orpoGroupManExt95Label.Location = new System.Drawing.Point(235, 30);
+            this.orpoGroupManExt95Label.Name = "orpoGroupManExt95Label";
+            this.orpoGroupManExt95Label.Size = new System.Drawing.Size(118, 13);
+            this.orpoGroupManExt95Label.TabIndex = 4;
+            this.orpoGroupManExt95Label.Text = "Мужчины, внеш. (95%)";
+            // 
+            // manIntOrpoBox
+            // 
+            this.manIntOrpoBox.Location = new System.Drawing.Point(102, 53);
+            this.manIntOrpoBox.Name = "manIntOrpoBox";
+            this.manIntOrpoBox.Size = new System.Drawing.Size(100, 20);
+            this.manIntOrpoBox.TabIndex = 3;
+            // 
+            // manExtOrpoBox
+            // 
+            this.manExtOrpoBox.Location = new System.Drawing.Point(102, 27);
+            this.manExtOrpoBox.Name = "manExtOrpoBox";
+            this.manExtOrpoBox.Size = new System.Drawing.Size(100, 20);
+            this.manExtOrpoBox.TabIndex = 2;
+            // 
+            // orpoBoxManIntLabel
+            // 
+            this.orpoBoxManIntLabel.AutoSize = true;
+            this.orpoBoxManIntLabel.Location = new System.Drawing.Point(5, 56);
+            this.orpoBoxManIntLabel.Name = "orpoBoxManIntLabel";
+            this.orpoBoxManIntLabel.Size = new System.Drawing.Size(91, 13);
+            this.orpoBoxManIntLabel.TabIndex = 1;
+            this.orpoBoxManIntLabel.Text = "Мужчины, внутр.";
+            // 
+            // orpoBoxManExtLabel
+            // 
+            this.orpoBoxManExtLabel.AutoSize = true;
+            this.orpoBoxManExtLabel.Location = new System.Drawing.Point(5, 30);
+            this.orpoBoxManExtLabel.Name = "orpoBoxManExtLabel";
+            this.orpoBoxManExtLabel.Size = new System.Drawing.Size(89, 13);
+            this.orpoBoxManExtLabel.TabIndex = 0;
+            this.orpoBoxManExtLabel.Text = "Мужчины, внеш.";
+            // 
+            // ibpoGroupBox
+            // 
+            this.ibpoGroupBox.Controls.Add(this.womanIntIbpoBox95);
+            this.ibpoGroupBox.Controls.Add(this.womanExtIbpoBox95);
+            this.ibpoGroupBox.Controls.Add(this.ibpoBoxWomanIntLabel95);
+            this.ibpoGroupBox.Controls.Add(this.ibpoBoxWomanExtLabel95);
+            this.ibpoGroupBox.Controls.Add(this.womanIntIbpoBox);
+            this.ibpoGroupBox.Controls.Add(this.womanExtIbpoBox);
+            this.ibpoGroupBox.Controls.Add(this.ibpoBoxWomanIntLabel);
+            this.ibpoGroupBox.Controls.Add(this.ibpoBoxWomanExtLabel);
+            this.ibpoGroupBox.Controls.Add(this.manIntIbpoBox95);
+            this.ibpoGroupBox.Controls.Add(this.manExtIbpoBox95);
+            this.ibpoGroupBox.Controls.Add(this.ibpoBoxManIntLabel95);
+            this.ibpoGroupBox.Controls.Add(this.ibpoBoxManExtLabel95);
+            this.ibpoGroupBox.Controls.Add(this.manIntIbpoBox);
+            this.ibpoGroupBox.Controls.Add(this.manExtIbpoBox);
+            this.ibpoGroupBox.Controls.Add(this.ibpoBoxManIntLabel);
+            this.ibpoGroupBox.Controls.Add(this.ibpoBoxManExtLabel);
+            this.ibpoGroupBox.Location = new System.Drawing.Point(12, 317);
+            this.ibpoGroupBox.Name = "ibpoGroupBox";
+            this.ibpoGroupBox.Size = new System.Drawing.Size(468, 150);
+            this.ibpoGroupBox.TabIndex = 14;
+            this.ibpoGroupBox.TabStop = false;
+            this.ibpoGroupBox.Text = "Среднее ИБПО";
+            // 
+            // womanIntIbpoBox95
+            // 
+            this.womanIntIbpoBox95.Location = new System.Drawing.Point(362, 105);
+            this.womanIntIbpoBox95.Name = "womanIntIbpoBox95";
+            this.womanIntIbpoBox95.Size = new System.Drawing.Size(100, 20);
+            this.womanIntIbpoBox95.TabIndex = 15;
+            // 
+            // womanExtIbpoBox95
+            // 
+            this.womanExtIbpoBox95.Location = new System.Drawing.Point(362, 79);
+            this.womanExtIbpoBox95.Name = "womanExtIbpoBox95";
+            this.womanExtIbpoBox95.Size = new System.Drawing.Size(100, 20);
+            this.womanExtIbpoBox95.TabIndex = 14;
+            // 
+            // ibpoBoxWomanIntLabel95
+            // 
+            this.ibpoBoxWomanIntLabel95.AutoSize = true;
+            this.ibpoBoxWomanIntLabel95.Location = new System.Drawing.Point(235, 108);
+            this.ibpoBoxWomanIntLabel95.Name = "ibpoBoxWomanIntLabel95";
+            this.ibpoBoxWomanIntLabel95.Size = new System.Drawing.Size(125, 13);
+            this.ibpoBoxWomanIntLabel95.TabIndex = 13;
+            this.ibpoBoxWomanIntLabel95.Text = "Женщины, внутр. (95%)";
+            // 
+            // ibpoBoxWomanExtLabel95
+            // 
+            this.ibpoBoxWomanExtLabel95.AutoSize = true;
+            this.ibpoBoxWomanExtLabel95.Location = new System.Drawing.Point(235, 82);
+            this.ibpoBoxWomanExtLabel95.Name = "ibpoBoxWomanExtLabel95";
+            this.ibpoBoxWomanExtLabel95.Size = new System.Drawing.Size(123, 13);
+            this.ibpoBoxWomanExtLabel95.TabIndex = 12;
+            this.ibpoBoxWomanExtLabel95.Text = "Женщины, внеш. (95%)";
+            // 
+            // womanIntIbpoBox
+            // 
+            this.womanIntIbpoBox.Location = new System.Drawing.Point(102, 105);
+            this.womanIntIbpoBox.Name = "womanIntIbpoBox";
+            this.womanIntIbpoBox.Size = new System.Drawing.Size(100, 20);
+            this.womanIntIbpoBox.TabIndex = 11;
+            // 
+            // womanExtIbpoBox
+            // 
+            this.womanExtIbpoBox.Location = new System.Drawing.Point(102, 79);
+            this.womanExtIbpoBox.Name = "womanExtIbpoBox";
+            this.womanExtIbpoBox.Size = new System.Drawing.Size(100, 20);
+            this.womanExtIbpoBox.TabIndex = 10;
+            // 
+            // ibpoBoxWomanIntLabel
+            // 
+            this.ibpoBoxWomanIntLabel.AutoSize = true;
+            this.ibpoBoxWomanIntLabel.Location = new System.Drawing.Point(5, 108);
+            this.ibpoBoxWomanIntLabel.Name = "ibpoBoxWomanIntLabel";
+            this.ibpoBoxWomanIntLabel.Size = new System.Drawing.Size(96, 13);
+            this.ibpoBoxWomanIntLabel.TabIndex = 9;
+            this.ibpoBoxWomanIntLabel.Text = "Женщины, внутр.";
+            // 
+            // ibpoBoxWomanExtLabel
+            // 
+            this.ibpoBoxWomanExtLabel.AutoSize = true;
+            this.ibpoBoxWomanExtLabel.Location = new System.Drawing.Point(5, 82);
+            this.ibpoBoxWomanExtLabel.Name = "ibpoBoxWomanExtLabel";
+            this.ibpoBoxWomanExtLabel.Size = new System.Drawing.Size(94, 13);
+            this.ibpoBoxWomanExtLabel.TabIndex = 8;
+            this.ibpoBoxWomanExtLabel.Text = "Женщины, внеш.";
+            // 
+            // manIntIbpoBox95
+            // 
+            this.manIntIbpoBox95.Location = new System.Drawing.Point(362, 53);
+            this.manIntIbpoBox95.Name = "manIntIbpoBox95";
+            this.manIntIbpoBox95.Size = new System.Drawing.Size(100, 20);
+            this.manIntIbpoBox95.TabIndex = 7;
+            // 
+            // manExtIbpoBox95
+            // 
+            this.manExtIbpoBox95.Location = new System.Drawing.Point(362, 27);
+            this.manExtIbpoBox95.Name = "manExtIbpoBox95";
+            this.manExtIbpoBox95.Size = new System.Drawing.Size(100, 20);
+            this.manExtIbpoBox95.TabIndex = 6;
+            // 
+            // ibpoBoxManIntLabel95
+            // 
+            this.ibpoBoxManIntLabel95.AutoSize = true;
+            this.ibpoBoxManIntLabel95.Location = new System.Drawing.Point(235, 56);
+            this.ibpoBoxManIntLabel95.Name = "ibpoBoxManIntLabel95";
+            this.ibpoBoxManIntLabel95.Size = new System.Drawing.Size(120, 13);
+            this.ibpoBoxManIntLabel95.TabIndex = 5;
+            this.ibpoBoxManIntLabel95.Text = "Мужчины, внутр. (95%)";
+            // 
+            // ibpoBoxManExtLabel95
+            // 
+            this.ibpoBoxManExtLabel95.AutoSize = true;
+            this.ibpoBoxManExtLabel95.Location = new System.Drawing.Point(235, 30);
+            this.ibpoBoxManExtLabel95.Name = "ibpoBoxManExtLabel95";
+            this.ibpoBoxManExtLabel95.Size = new System.Drawing.Size(118, 13);
+            this.ibpoBoxManExtLabel95.TabIndex = 4;
+            this.ibpoBoxManExtLabel95.Text = "Мужчины, внеш. (95%)";
+            // 
+            // manIntIbpoBox
+            // 
+            this.manIntIbpoBox.Location = new System.Drawing.Point(102, 53);
+            this.manIntIbpoBox.Name = "manIntIbpoBox";
+            this.manIntIbpoBox.Size = new System.Drawing.Size(100, 20);
+            this.manIntIbpoBox.TabIndex = 3;
+            // 
+            // manExtIbpoBox
+            // 
+            this.manExtIbpoBox.Location = new System.Drawing.Point(102, 27);
+            this.manExtIbpoBox.Name = "manExtIbpoBox";
+            this.manExtIbpoBox.Size = new System.Drawing.Size(100, 20);
+            this.manExtIbpoBox.TabIndex = 2;
+            // 
+            // ibpoBoxManIntLabel
+            // 
+            this.ibpoBoxManIntLabel.AutoSize = true;
+            this.ibpoBoxManIntLabel.Location = new System.Drawing.Point(5, 56);
+            this.ibpoBoxManIntLabel.Name = "ibpoBoxManIntLabel";
+            this.ibpoBoxManIntLabel.Size = new System.Drawing.Size(91, 13);
+            this.ibpoBoxManIntLabel.TabIndex = 1;
+            this.ibpoBoxManIntLabel.Text = "Мужчины, внутр.";
+            // 
+            // ibpoBoxManExtLabel
+            // 
+            this.ibpoBoxManExtLabel.AutoSize = true;
+            this.ibpoBoxManExtLabel.Location = new System.Drawing.Point(5, 30);
+            this.ibpoBoxManExtLabel.Name = "ibpoBoxManExtLabel";
+            this.ibpoBoxManExtLabel.Size = new System.Drawing.Size(89, 13);
+            this.ibpoBoxManExtLabel.TabIndex = 0;
+            this.ibpoBoxManExtLabel.Text = "Мужчины, внеш.";
             // 
             // Form1
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(292, 273);
-            this.Controls.Add(this.testlab);
-            this.Controls.Add(this.reslab);
-            this.Controls.Add(this.testlabel);
-            this.Controls.Add(this.label1);
+            this.ClientSize = new System.Drawing.Size(492, 473);
+            this.Controls.Add(this.ibpoGroupBox);
+            this.Controls.Add(this.orpoGroupBox);
+            this.Controls.Add(this.openFileButton);
             this.Controls.Add(this.getIbpoButton);
-            this.Controls.Add(this.textBox1);
-            this.Controls.Add(this.resultLabel);
-            this.Controls.Add(this.testTextBox);
-            this.Controls.Add(this.resultTextBox);
             this.Controls.Add(this.getOrpoButton);
             this.Name = "Form1";
+            this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
             this.Text = "Form1";
             this.Load += new System.EventHandler(this.Form1_Load);
+            this.orpoGroupBox.ResumeLayout(false);
+            this.orpoGroupBox.PerformLayout();
+            this.ibpoGroupBox.ResumeLayout(false);
+            this.ibpoGroupBox.PerformLayout();
             this.ResumeLayout(false);
-            this.PerformLayout();
 
         }
 
         #endregion
 
         private System.Windows.Forms.Button getOrpoButton;
-        private System.Windows.Forms.TextBox resultTextBox;
-        private System.Windows.Forms.Label resultLabel;
-        private System.Windows.Forms.TextBox textBox1;
         private System.Windows.Forms.Button getIbpoButton;
-        private System.Windows.Forms.TextBox testTextBox;
-        private System.Windows.Forms.Label label1;
-        private System.Windows.Forms.Label testlabel;
-        private System.Windows.Forms.Label reslab;
-        private System.Windows.Forms.Label testlab;
+        private System.Windows.Forms.Button openFileButton;
+        private System.Windows.Forms.GroupBox orpoGroupBox;
+        private System.Windows.Forms.TextBox womanIntOrpoBox95;
+        private System.Windows.Forms.TextBox womanExtOrpoBox95;
+        private System.Windows.Forms.Label orpoBoxWomanIntLabel95;
+        private System.Windows.Forms.Label orpoBoxWomanExtLabel95;
+        private System.Windows.Forms.TextBox womanIntOrpoBox;
+        private System.Windows.Forms.TextBox womanExtOrpoBox;
+        private System.Windows.Forms.Label orpoBoxWomanIntLabel;
+        private System.Windows.Forms.Label orpoBoxWomanExtLabel;
+        private System.Windows.Forms.TextBox manIntOrpoBox95;
+        private System.Windows.Forms.TextBox manExtOrpoBox95;
+        private System.Windows.Forms.Label orpoGroupManInt95Label;
+        private System.Windows.Forms.Label orpoGroupManExt95Label;
+        private System.Windows.Forms.TextBox manIntOrpoBox;
+        private System.Windows.Forms.TextBox manExtOrpoBox;
+        private System.Windows.Forms.Label orpoBoxManIntLabel;
+        private System.Windows.Forms.Label orpoBoxManExtLabel;
+        private System.Windows.Forms.GroupBox ibpoGroupBox;
+        private System.Windows.Forms.TextBox womanIntIbpoBox95;
+        private System.Windows.Forms.TextBox womanExtIbpoBox95;
+        private System.Windows.Forms.Label ibpoBoxWomanIntLabel95;
+        private System.Windows.Forms.Label ibpoBoxWomanExtLabel95;
+        private System.Windows.Forms.TextBox womanIntIbpoBox;
+        private System.Windows.Forms.TextBox womanExtIbpoBox;
+        private System.Windows.Forms.Label ibpoBoxWomanIntLabel;
+        private System.Windows.Forms.Label ibpoBoxWomanExtLabel;
+        private System.Windows.Forms.TextBox manIntIbpoBox95;
+        private System.Windows.Forms.TextBox manExtIbpoBox95;
+        private System.Windows.Forms.Label ibpoBoxManIntLabel95;
+        private System.Windows.Forms.Label ibpoBoxManExtLabel95;
+        private System.Windows.Forms.TextBox manIntIbpoBox;
+        private System.Windows.Forms.TextBox manExtIbpoBox;
+        private System.Windows.Forms.Label ibpoBoxManIntLabel;
+        private System.Windows.Forms.Label ibpoBoxManExtLabel;
 
 
     }

@@ -17,33 +17,6 @@ namespace TVELtest
 {
     public partial class Form1 : Form
     {
-        /*-----Описание класса Человек, в котором хранится информация: id, пол, возраст при облучении, дозовая история-----*/
-        public class Man
-        {
-            private int id = 0;
-            private byte sex = 0;
-            private short ageAtExp = 0;
-            private RiskCalculator.DoseHistoryRecord[] doseHistory = null;
-
-            public Man(int id, byte sex, short ageAtExp, RiskCalculator.DoseHistoryRecord[] doseHistory)
-            {
-                this.id = id;
-                this.sex = sex;
-                this.ageAtExp = ageAtExp;
-                this.doseHistory = doseHistory;
-            }
-
-            public int getID() { return this.id; }
-            public byte getSex() { return this.sex; }
-            public short getAgeAtExp() { return this.ageAtExp; }
-            public RiskCalculator.DoseHistoryRecord[] getDoseHistory() { return this.doseHistory; }
-
-            public void setID(int id) { this.id = id; }
-            public void setSex(byte sex) { this.sex = sex; }
-            public void setAgeAtExp(short ageAtExp) { this.ageAtExp = ageAtExp; }
-            public void getDoseHistory(RiskCalculator.DoseHistoryRecord[] doseHistory) { this.doseHistory = doseHistory; }
-        }
-
         /*-----Описание класса Объект, представляющий собой строку таблицы с параметрами: id, пол, доза суммарная, доза внутренняя, возраст при облучении-----*/
         public class dbObject
         {
@@ -84,6 +57,9 @@ namespace TVELtest
         {
             InitializeComponent();
             this.Text = title;
+
+            this.FormBorderStyle = FormBorderStyle.FixedDialog;
+            this.MaximizeBox = false;
         }
 
         String libPath = Path.GetDirectoryName(Application.ExecutablePath) + "\\DataRus2012";
@@ -164,9 +140,6 @@ namespace TVELtest
         private void Form1_Load(object sender, EventArgs e)
         {
             RiskCalculatorLib.RiskCalculator.FillData(ref libPath);
-            this.Width = 300;
-            this.Height = 300;
-            this.CenterToScreen();
         }
 
         private void getOrpoButton_Click(object sender, EventArgs e)
@@ -240,23 +213,16 @@ namespace TVELtest
             byte sexMale = dbSex.Min();
             byte sexFemale = dbSex.Max();
 
-            /*-----Список возрастов облучения из БД для М и Ж-----*/
-            List<short> dbManAges = new List<short>();
+            /*-----Счетчики, определяющие количество мужских и женских записей-----*/
+            double dbMan = 0;
             for (int i = 0; i < dbRecords.Count; i++)
                 if (dbRecords[i].getSex() == sexMale)
-                    dbManAges.Add(dbRecords[i].getAgeAtExp());
+                    dbMan++;
 
-            List<short> dbWomanAges = new List<short>();
+            double dbWoman = 0;
             for (int i = 0; i < dbRecords.Count; i++)
                 if (dbRecords[i].getSex() == sexFemale)
-                    dbWomanAges.Add(dbRecords[i].getAgeAtExp());
-
-            /*-----Min и Max возраста облучения для М и Ж-----*/
-            short manMinAge = dbManAges.Min();
-            short manMaxAge = dbManAges.Max();
-
-            short womanMinAge = dbWomanAges.Min();
-            short womanMaxAge = dbWomanAges.Max();
+                    dbWoman++;
 
             /*-----Массивы списков для мужчин и для женщин, в каждом из которых хранятся дозы (внешние и внутренние) для соответствующий половозрастной группы-----*/
             List<double>[] manSadExtArray = new List<double>[ageGroups.Count];//SAD - SexAgeDose
@@ -309,17 +275,12 @@ namespace TVELtest
             double[] womanExtOrpo_95 = new double[womanSadExtArray.Length];
             double[] womanIntOrpo_95 = new double[womanSadIntArray.Length];
 
-            /*-----Заполнение переделать, а считается правильно
-             * Надо придумать еще схему для расчета ОРПО_95+
-             * Можно написать функцию для расчета отклонения, падавать в нее
-             * список, а на выходе давать отклонение+
-             * Изи бабки-----*/
             for (int i = 0; i < ageGroups.Count; i++)
             {
                 if (manSadExtArray[i].Count > 0)
                 {
                     manExtOrpo[i] = getOrpo(getManExtLar(manYearsArray[i].Average()), manSadExtArray[i].Average());
-                    manExtOrpo_95[i] = getOrpo_95(getManExtLar(manYearsArray[i].Average()), manSadExtArray[i].Average(), getDeviation(manSadExtArray[i])); 
+                    manExtOrpo_95[i] = getOrpo_95(getManExtLar(manYearsArray[i].Average()), manSadExtArray[i].Average(), getDeviation(manSadExtArray[i]));
                 }
 
                 if (manSadIntArray[i].Count > 0)
@@ -341,379 +302,206 @@ namespace TVELtest
                 }
             }
 
-            /*
-             * ОРПО и ОРПО95 считаются.
-             * Надо делать ИБПО теперь!
-             * 
-             */
+            List<double> manWeightedExtOrpo = new List<double>();
+            List<double> manWeightedIntOrpo = new List<double>();
+            List<double> womanWeightedExtOrpo = new List<double>();
+            List<double> womanWeightedIntOrpo = new List<double>();
 
+            List<double> manWeightedExtOrpo_95 = new List<double>();
+            List<double> manWeightedIntOrpo_95 = new List<double>();
+            List<double> womanWeightedExtOrpo_95 = new List<double>();
+            List<double> womanWeightedIntOrpo_95 = new List<double>();
+            for (int i = 0; i < ageGroups.Count; i++)
+            {
+                manWeightedExtOrpo.Add(manExtOrpo[i]*manSadExtArray[i].Count);
+                manWeightedIntOrpo.Add(manIntOrpo[i] * manSadIntArray[i].Count);
+                womanWeightedExtOrpo.Add(womanExtOrpo[i] * womanSadExtArray[i].Count);
+                womanWeightedIntOrpo.Add(womanIntOrpo[i] * womanSadIntArray[i].Count);
 
+                manWeightedExtOrpo_95.Add(manExtOrpo_95[i] * manSadExtArray[i].Count);
+                manWeightedIntOrpo_95.Add(manIntOrpo_95[i] * manSadIntArray[i].Count);
+                womanWeightedExtOrpo_95.Add(womanExtOrpo_95[i] * womanSadExtArray[i].Count);
+                womanWeightedIntOrpo_95.Add(womanIntOrpo_95[i] * womanSadIntArray[i].Count);
+            }
 
-                /*-----Дозы выделены правильно, средние дозы считаются верно и быстро. Надо еще средние года в группах, совсем забыл... Дальше считаем ОРПО и ОРПО95-----*/
-
-            testlab.Text = manSadExtArray.Length.ToString();
-            reslab.Text = womanSadExtArray.Length.ToString();
-            testTextBox.Text = "ОРПО! " + manSadIntArray[Convert.ToInt32(textBox1.Text)].Count.ToString();
-            resultTextBox.Text = "ОРПО! " + getDeviation(manSadIntArray[Convert.ToInt32(textBox1.Text)]).ToString();
-
-            /*--------------------------------------------------------------Отсюда надо писать все заново--------------------------------------------------------------------------------*/
-            //            /*-----Создание массивов, в которых хранятся суммы средних доз подгрупп, входящих в половозрастную группу-----*/
-            //            double[] manAverDosesExt = new double[manAgesGroupedArray.Length];
-            //            double[] manAverDosesInt = new double[manAgesGroupedArray.Length];
-            //            double[] womanAverDosesExt = new double[womanAgesGroupedArray.Length];
-            //            double[] womanAverDosesInt = new double[womanAgesGroupedArray.Length];
-
-            //            /*-----Создание массива, в котором хранятся суммы возрастов подгруппы; по факту это ageAtExt * Count-----*/
-            //            double[] manAgeAmountOfSubgroup = new double[manAgesGroupedArray.Length];
-            //            double[] womanAgeAmountOfSubgroup = new double[womanAgesGroupedArray.Length];
-
-            //            for (int i = 0; i < manAgesGroupedArray.Length; i++)
-            //            {
-            //                for (int n = 0; n < ageGroups.Count; n++)
-            //                    for (int k = 0; k < manAgesGroupedArray[i].Count; k++)
-            //                    {
-            //                        if (manAgesGroupedArray[i][0].getAgeAtExp() >= ageLowerBound[n] && manAgesGroupedArray[i][0].getAgeAtExp() <= ageUpperBound[n])
-            //                        {
-            //                            manAverDosesExt[i] += manAgesGroupedArray[i][k].getDose() - manAgesGroupedArray[i][k].getDoseInt();
-            //                            manAverDosesInt[i] += manAgesGroupedArray[i][k].getDoseInt();
-            //                            manAgeAmountOfSubgroup[i] += manAgesGroupedArray[i][k].getAgeAtExp();
-            //                        }
-            //                    }
-            //                manAverDosesExt[i] = manAverDosesExt[i] / manAgesGroupedArray[i].Count;
-            //                manAverDosesInt[i] = manAverDosesInt[i] / manAgesGroupedArray[i].Count;
-            //            }
-
-            //            for (int i = 0; i < womanAgesGroupedArray.Length; i++)
-            //            {
-            //                for (int n = 0; n < ageGroups.Count; n++)
-            //                    for (int k = 0; k < womanAgesGroupedArray[i].Count; k++)
-            //                    {
-            //                        if (womanAgesGroupedArray[i][0].getAgeAtExp() >= ageLowerBound[n] && womanAgesGroupedArray[i][0].getAgeAtExp() <= ageUpperBound[n])
-            //                        {
-            //                            womanAverDosesExt[i] += womanAgesGroupedArray[i][k].getDose() - womanAgesGroupedArray[i][k].getDoseInt();
-            //                            womanAverDosesInt[i] += womanAgesGroupedArray[i][k].getDoseInt();
-            //                            womanAgeAmountOfSubgroup[i] += womanAgesGroupedArray[i][k].getAgeAtExp();
-            //                        }
-            //                    }
-            //                womanAverDosesExt[i] = womanAverDosesExt[i] / womanAgesGroupedArray[i].Count;
-            //                womanAverDosesInt[i] = womanAverDosesInt[i] / womanAgesGroupedArray[i].Count;
-            //            }
-
-            //            /*-----Создание массива, в котором хранится число подгрупп, входящих в возрастную группу-----*/
-            //            double[] manValueOfSubgroups = new double[ageGroups.Count];
-            //            double[] womanValueOfSubgroups = new double[ageGroups.Count];
-            //            /*-----Создание массива, в котором хранятся суммы возрастов всех записей в подгруппе-----*/
-            //            double[] manAgeAmountOfGroup = new double[ageGroups.Count];
-            //            double[] womanAgeAmountOfGroup = new double[ageGroups.Count];
-            //            /*-----Создание массива, в котором хранятся суммы количеств записей для каждой подгруппы, входящей в возрастую группу-----*/
-            //            double[] manAmountOfSubgroupCounts = new double[ageGroups.Count];
-            //            double[] womanAmountOfSubgroupCounts = new double[ageGroups.Count];
-            //            /*-----Создание массивов, в которых хранятся суммы средних доз всех подгрупп, входящих в возрастные группы-----*/
-            //            double[] manAmountOfAverExtDoses = new double[ageGroups.Count];
-            //            double[] manAmountOfAverIntDoses = new double[ageGroups.Count];
-            //            double[] womanAmountOfAverExtDoses = new double[ageGroups.Count];
-            //            double[] womanAmountOfAverIntDoses = new double[ageGroups.Count];
-
-            //            for (int i = 0; i < ageGroups.Count - 1; i++)
-            //            {
-            //                manValueOfSubgroups[i] = 0;
-            //                manAgeAmountOfGroup[i] = 0;
-            //                manAmountOfSubgroupCounts[i] = 0;
-            //                manAmountOfAverExtDoses[i] = 0;
-            //                manAmountOfAverIntDoses[i] = 0;
-
-            //                womanValueOfSubgroups[i] = 0;
-            //                womanAgeAmountOfGroup[i] = 0;
-            //                womanAmountOfSubgroupCounts[i] = 0;
-            //                womanAmountOfAverExtDoses[i] = 0;
-            //                womanAmountOfAverIntDoses[i] = 0;
-            //            }
-
-            //            /*-----Создание массивов списков, которые будут использоваться для расчета среднеквадр. отклонения-----*/
-            //            List<double>[] manArrayForDeviationExt = new List<double>[ageGroups.Count];
-            //            List<double>[] manArrayForDeviationInt = new List<double>[ageGroups.Count];
-            //            List<double>[] womanArrayForDeviationExt = new List<double>[ageGroups.Count];
-            //            List<double>[] womanArrayForDeviationInt = new List<double>[ageGroups.Count];
-
-            //            for (int i = 0; i < ageGroups.Count; i++)
-            //            {
-            //                manArrayForDeviationExt[i] = new List<double>();
-            //                manArrayForDeviationInt[i] = new List<double>();
-
-            //                womanArrayForDeviationExt[i] = new List<double>();
-            //                womanArrayForDeviationInt[i] = new List<double>();
-            //            }
-
-            //            for (int i = 0; i < manAgesGroupedArray.Length; i++)
-            //            {
-            //                for (int k = 0; k < ageGroups.Count; k++)
-            //                {
-            //                    if (manAgeAmountOfSubgroup[i] / manAgesGroupedArray[i].Count >= ageLowerBound[k] && manAgeAmountOfSubgroup[i] / manAgesGroupedArray[i].Count <= ageUpperBound[k])
-            //                    {
-            //                        manValueOfSubgroups[k] += 1;
-            //                        manAmountOfAverExtDoses[k] += manAverDosesExt[i];
-            //                        manAmountOfAverIntDoses[k] += manAverDosesInt[i];
-            //                        manAgeAmountOfGroup[k] += manAgeAmountOfSubgroup[i];
-            //                        manAmountOfSubgroupCounts[k] += manAgesGroupedArray[i].Count;
-            //                        manArrayForDeviationExt[k].Add(manAverDosesExt[i]);
-            //                        manArrayForDeviationInt[k].Add(manAverDosesInt[i]);
-            //                    }
-            //                }
-            //            }
-
-            //            for (int i = 0; i < womanAgesGroupedArray.Length; i++)
-            //            {
-            //                for (int k = 0; k < ageGroups.Count; k++)
-            //                {
-            //                    if (womanAgeAmountOfSubgroup[i] / womanAgesGroupedArray[i].Count >= ageLowerBound[k] && womanAgeAmountOfSubgroup[i] / womanAgesGroupedArray[i].Count <= ageUpperBound[k])
-            //                    {
-            //                        womanValueOfSubgroups[k] += 1;
-            //                        womanAmountOfAverExtDoses[k] += womanAverDosesExt[i];
-            //                        womanAmountOfAverIntDoses[k] += womanAverDosesInt[i];
-            //                        womanAgeAmountOfGroup[k] += womanAgeAmountOfSubgroup[i];
-            //                        womanAmountOfSubgroupCounts[k] += womanAgesGroupedArray[i].Count;
-            //                        womanArrayForDeviationExt[k].Add(womanAverDosesExt[i]);
-            //                        womanArrayForDeviationInt[k].Add(womanAverDosesInt[i]);
-            //                    }
-            //                }
-            //            }
-            ///*--------------------------------------------------------------------Неправильно--------------------------------------------------------------------------*/
-            //            /*-----Создание массивов, в которых хранятся среднеквадратические погрешности-----*/
-            //            double[] manDeviationExt = new double[ageGroups.Count];
-            //            double[] manDeviationInt = new double[ageGroups.Count];
-            //            double[] womanDeviationExt = new double[ageGroups.Count];
-            //            double[] womanDeviationInt = new double[ageGroups.Count];
-            //            for (int i = 0; i < ageGroups.Count - 1; i++)
-            //            {
-            //                for (int k = 0; k < manArrayForDeviationExt[i].Count; k++)
-            //                {
-            //                    manDeviationExt[i] += Math.Pow((manArrayForDeviationExt[i][k] - manArrayForDeviationExt[i].Average()), 2);
-            //                }
-            //                for (int k = 0; k < manArrayForDeviationInt[i].Count; k++)
-            //                {
-            //                    manDeviationInt[i] += Math.Pow((manArrayForDeviationInt[i][k] - manArrayForDeviationInt[i].Average()), 2);
-            //                }
-
-            //                manDeviationExt[i] = Math.Sqrt(manDeviationExt[i] / manArrayForDeviationExt[i].Count);
-            //                manDeviationInt[i] = Math.Sqrt(manDeviationInt[i] / manArrayForDeviationInt[i].Count);
-
-
-            //                for (int k = 0; k < womanArrayForDeviationExt[i].Count; k++)
-            //                {
-            //                    womanDeviationExt[i] += Math.Pow((womanArrayForDeviationExt[i][k] - womanArrayForDeviationExt[i].Average()), 2);
-            //                }
-            //                for (int k = 0; k < womanArrayForDeviationInt[i].Count; k++)
-            //                {
-            //                    womanDeviationInt[i] += Math.Pow((womanArrayForDeviationInt[i][k] - womanArrayForDeviationInt[i].Average()), 2);
-            //                }
-
-            //                womanDeviationExt[i] = Math.Sqrt(womanDeviationExt[i] / womanArrayForDeviationExt[i].Count);
-            //                womanDeviationInt[i] = Math.Sqrt(womanDeviationInt[i] / womanArrayForDeviationInt[i].Count);
-            //            }
-            ///*----------------------------------------------------------------------------------------------------------------------------------------------*/
-
-            //            /*-----Создание массивов, в которых хрянятся ОРПО для каждой половозрастной группы-----*/
-            //            double[] manOrpoExt = new double[ageGroups.Count];
-            //            double[] manOrpoInt = new double[ageGroups.Count];
-            //            double[] womanOrpoExt = new double[ageGroups.Count];
-            //            double[] womanOrpoInt = new double[ageGroups.Count];
-
-            //            /*-----Создание массивов, в которых хрянятся ОРПО-95% для каждой половозрастной группы-----*/
-            //            double[] manOrpoExt_95 = new double[ageGroups.Count];
-            //            double[] manOrpoInt_95 = new double[ageGroups.Count];
-            //            double[] womanOrpoExt_95 = new double[ageGroups.Count];
-            //            double[] womanOrpoInt_95 = new double[ageGroups.Count];
-
-            //            /*
-            //             * 
-            //             * LAR считается от Зв, а у нас доза в мЗв.
-            //             * Передалать надо!
-            //             * После этого начинаем программировать ИБПО
-            //             * 
-            //             */
-            //            for (int k = 0; k < manAgesGroupedArray.Length; k++)
-            //                for (int i = 0; i < ageGroups.Count; i++)
-            //                {
-            //                    manOrpoExt[i] = getOrpo(getManExtLar(manAgeAmountOfGroup[i] / manAmountOfSubgroupCounts[i]), manAmountOfAverExtDoses[i] / manValueOfSubgroups[i]);
-            //                    manOrpoInt[i] = getOrpo(getManIntLar(manAgeAmountOfGroup[i] / manAmountOfSubgroupCounts[i]), manAmountOfAverIntDoses[i] / manValueOfSubgroups[i]);
-            //                    manOrpoExt_95[i] = getOrpo_95(getManExtLar(manAgeAmountOfGroup[i] / manAmountOfSubgroupCounts[i]), manAmountOfAverExtDoses[i] / manValueOfSubgroups[i], manDeviationExt[i]);
-            //                    manOrpoInt_95[i] = getOrpo_95(getManIntLar(manAgeAmountOfGroup[i] / manAmountOfSubgroupCounts[i]), manAmountOfAverIntDoses[i] / manValueOfSubgroups[i], manDeviationInt[i]);
-            //                    womanOrpoExt[i] = getOrpo(getWomanExtLar(womanAgeAmountOfGroup[i] / womanAmountOfSubgroupCounts[i]), womanAmountOfAverExtDoses[i] / womanValueOfSubgroups[i]);
-            //                    womanOrpoInt[i] = getOrpo(getWomanIntLar(womanAgeAmountOfGroup[i] / womanAmountOfSubgroupCounts[i]), womanAmountOfAverIntDoses[i] / womanValueOfSubgroups[i]);
-            //                    womanOrpoExt_95[i] = getOrpo_95(getWomanExtLar(womanAgeAmountOfGroup[i] / womanAmountOfSubgroupCounts[i]), womanAmountOfAverExtDoses[i] / womanValueOfSubgroups[i], womanDeviationExt[i]);
-            //                    womanOrpoInt_95[i] = getOrpo_95(getWomanIntLar(womanAgeAmountOfGroup[i] / womanAmountOfSubgroupCounts[i]), womanAmountOfAverIntDoses[i] / womanValueOfSubgroups[i], womanDeviationInt[i]);
-            //                }
-
-            ///*-----Вывод в Excel-файл-----*/
-            ///*-----Инициализация Excel-файла-----*/
-            //Excel.Application excelApp = new Excel.Application();
+            /*-----Вывод в Excel-файл-----*/
+            /*-----Инициализация Excel-файла-----*/
+            Excel.Application excelApp = new Excel.Application();
             //excelApp.Visible = true;
             //excelApp.DisplayAlerts = true;
-            //excelApp.StandardFont = "Times-New-Roman";
-            //excelApp.StandardFontSize = 12;
+            excelApp.StandardFont = "Times-New-Roman";
+            excelApp.StandardFontSize = 12;
 
-            ///*-----Создание рабочей книги с 4 страницами, в которые будет выводиться информация-----*/
-            //excelApp.Workbooks.Add(Type.Missing);
-            //Excel.Workbook excelWorkbook = excelApp.Workbooks[1];
-            //excelApp.SheetsInNewWorkbook = 4;
-            //Excel.Worksheet excelWorksheet = null;
-            //Excel.Range excelCells = null;
+            /*-----Создание рабочей книги с 4 страницами, в которые будет выводиться информация-----*/
+            excelApp.Workbooks.Add(Type.Missing);
+            Excel.Workbook excelWorkbook = excelApp.Workbooks[1];
+            excelApp.SheetsInNewWorkbook = 4;
+            Excel.Worksheet excelWorksheet = null;
+            Excel.Range excelCells = null;
 
-            ///*-----Вывод в столбцы-----*/
-            //excelWorksheet = (Excel.Worksheet)excelWorkbook.Worksheets.get_Item(1);
-            //excelWorksheet.Name = "Мужчины, ОРПО внеш.";
+            /*-----Вывод в столбцы-----*/
+            excelWorksheet = (Excel.Worksheet)excelWorkbook.Worksheets.get_Item(1);
+            excelWorksheet.Name = "Мужчины, ОРПО внеш.";
 
-            ///*-----Описываем ячейку А1 на странице-----*/
-            //excelCells = excelWorksheet.get_Range("A1");
-            //excelCells.VerticalAlignment = Excel.Constants.xlCenter;
-            //excelCells.HorizontalAlignment = Excel.Constants.xlCenter;
-            //excelCells.Borders.Weight = Excel.XlBorderWeight.xlThick;
-            //excelCells.Value2 = "Возрастные группы";
+            /*-----Описываем ячейку А1 на странице-----*/
+            excelCells = excelWorksheet.get_Range("A1");
+            excelCells.VerticalAlignment = Excel.Constants.xlCenter;
+            excelCells.HorizontalAlignment = Excel.Constants.xlCenter;
+            excelCells.Borders.Weight = Excel.XlBorderWeight.xlThick;
+            excelCells.Value2 = "Возрастные группы";
 
-            ///*-----Описываем ячейку B1 на странице-----*/
-            //excelCells = excelWorksheet.get_Range("B1");
-            //excelCells.VerticalAlignment = Excel.Constants.xlCenter;
-            //excelCells.HorizontalAlignment = Excel.Constants.xlCenter;
-            //excelCells.Borders.Weight = Excel.XlBorderWeight.xlThick;
-            //excelCells.Value2 = "ОРПО";
+            /*-----Описываем ячейку B1 на странице-----*/
+            excelCells = excelWorksheet.get_Range("B1");
+            excelCells.VerticalAlignment = Excel.Constants.xlCenter;
+            excelCells.HorizontalAlignment = Excel.Constants.xlCenter;
+            excelCells.Borders.Weight = Excel.XlBorderWeight.xlThick;
+            excelCells.Value2 = "ОРПО";
 
-            ///*-----Описываем ячейку C1 на странице-----*/
-            //excelCells = excelWorksheet.get_Range("C1");
-            //excelCells.VerticalAlignment = Excel.Constants.xlCenter;
-            //excelCells.HorizontalAlignment = Excel.Constants.xlCenter;
-            //excelCells.Borders.Weight = Excel.XlBorderWeight.xlThick;
-            //excelCells.Value2 = "ОРПО_95";
+            /*-----Описываем ячейку C1 на странице-----*/
+            excelCells = excelWorksheet.get_Range("C1");
+            excelCells.VerticalAlignment = Excel.Constants.xlCenter;
+            excelCells.HorizontalAlignment = Excel.Constants.xlCenter;
+            excelCells.Borders.Weight = Excel.XlBorderWeight.xlThick;
+            excelCells.Value2 = "ОРПО_95";
 
-            //for (int i = 2; i <= ageGroups.Count + 1; i++)
-            //{
-            //    excelCells = (Excel.Range)excelWorksheet.Cells[i, "A"];
-            //    excelCells.Value2 = ageGroups[i - 2];
-            //    excelCells.Borders.ColorIndex = 1;
-            //    excelCells = (Excel.Range)excelWorksheet.Cells[i, "B"];
-            //    excelCells.Value2 = manOrpoExt[i - 2];
-            //    //excelCells.Value2 = 1000 * ((womanAmountOfAverExtDoses[i - 2] / womanValueOfSubgroups[i - 2]) + 1.96 * womanDeviationExt[i - 2]); //на всякий случай выводы для ср эф доз и верхних границ 95% инт
-            //    excelCells.Borders.ColorIndex = 1;
-            //    excelCells = (Excel.Range)excelWorksheet.Cells[i, "C"];
-            //    excelCells.Value2 = manOrpoExt_95[i - 2];
-            //    //excelCells.Value2 = excelCells.Value2 = 1000 * ((womanAmountOfAverIntDoses[i - 2] / womanValueOfSubgroups[i - 2]) + 1.96 * womanDeviationInt[i - 2]);
-            //    excelCells.Borders.ColorIndex = 1;
+            for (int i = 2; i <= manExtOrpo.Length + 1; i++)
+            {
+                excelCells = (Excel.Range)excelWorksheet.Cells[i, "A"];
+                excelCells.Value2 = ageGroups[i - 2];
+                excelCells.Borders.ColorIndex = 1;
+                excelCells = (Excel.Range)excelWorksheet.Cells[i, "B"];
+                excelCells.Value2 = manExtOrpo[i - 2];
+                excelCells.Borders.ColorIndex = 1;
+                excelCells = (Excel.Range)excelWorksheet.Cells[i, "C"];
+                excelCells.Value2 = manExtOrpo_95[i - 2];
+                excelCells.Borders.ColorIndex = 1;
+            }
 
-            //}
+            excelWorksheet = (Excel.Worksheet)excelWorkbook.Worksheets.get_Item(2);
+            excelWorksheet.Name = "Мужчины, ОРПО внут.";
 
-            //excelWorksheet = (Excel.Worksheet)excelWorkbook.Worksheets.get_Item(2);
-            //excelWorksheet.Name = "Мужчины, ОРПО внут.";
+            /*-----Описываем ячейку А1 на странице-----*/
+            excelCells = excelWorksheet.get_Range("A1");
+            excelCells.VerticalAlignment = Excel.Constants.xlCenter;
+            excelCells.HorizontalAlignment = Excel.Constants.xlCenter;
+            excelCells.Borders.Weight = Excel.XlBorderWeight.xlThick;
+            excelCells.Value2 = "Возрастные группы";
 
-            ///*-----Описываем ячейку А1 на странице-----*/
-            //excelCells = excelWorksheet.get_Range("A1");
-            //excelCells.VerticalAlignment = Excel.Constants.xlCenter;
-            //excelCells.HorizontalAlignment = Excel.Constants.xlCenter;
-            //excelCells.Borders.Weight = Excel.XlBorderWeight.xlThick;
-            //excelCells.Value2 = "Возрастные группы";
+            /*-----Описываем ячейку B1 на странице-----*/
+            excelCells = excelWorksheet.get_Range("B1");
+            excelCells.VerticalAlignment = Excel.Constants.xlCenter;
+            excelCells.HorizontalAlignment = Excel.Constants.xlCenter;
+            excelCells.Borders.Weight = Excel.XlBorderWeight.xlThick;
+            excelCells.Value2 = "ОРПО";
 
-            ///*-----Описываем ячейку B1 на странице-----*/
-            //excelCells = excelWorksheet.get_Range("B1");
-            //excelCells.VerticalAlignment = Excel.Constants.xlCenter;
-            //excelCells.HorizontalAlignment = Excel.Constants.xlCenter;
-            //excelCells.Borders.Weight = Excel.XlBorderWeight.xlThick;
-            //excelCells.Value2 = "ОРПО";
+            /*-----Описываем ячейку C1 на странице-----*/
+            excelCells = excelWorksheet.get_Range("C1");
+            excelCells.VerticalAlignment = Excel.Constants.xlCenter;
+            excelCells.HorizontalAlignment = Excel.Constants.xlCenter;
+            excelCells.Borders.Weight = Excel.XlBorderWeight.xlThick;
+            excelCells.Value2 = "ОРПО_95";
 
-            ///*-----Описываем ячейку C1 на странице-----*/
-            //excelCells = excelWorksheet.get_Range("C1");
-            //excelCells.VerticalAlignment = Excel.Constants.xlCenter;
-            //excelCells.HorizontalAlignment = Excel.Constants.xlCenter;
-            //excelCells.Borders.Weight = Excel.XlBorderWeight.xlThick;
-            //excelCells.Value2 = "ОРПО_95";
+            for (int i = 2; i <= manIntOrpo.Length + 1; i++)
+            {
+                excelCells = (Excel.Range)excelWorksheet.Cells[i, "A"];
+                excelCells.Value2 = ageGroups[i - 2];
+                excelCells.Borders.ColorIndex = 1;
+                excelCells = (Excel.Range)excelWorksheet.Cells[i, "B"];
+                excelCells.Value2 = manIntOrpo[i - 2];
+                excelCells.Borders.ColorIndex = 1;
+                excelCells = (Excel.Range)excelWorksheet.Cells[i, "C"];
+                excelCells.Value2 = manIntOrpo_95[i - 2];
+                excelCells.Borders.ColorIndex = 1;
 
-            //for (int i = 2; i <= ageGroups.Count + 1; i++)
-            //{
-            //    excelCells = (Excel.Range)excelWorksheet.Cells[i, "A"];
-            //    excelCells.Value2 = ageGroups[i - 2];
-            //    excelCells.Borders.ColorIndex = 1;
-            //    excelCells = (Excel.Range)excelWorksheet.Cells[i, "B"];
-            //    excelCells.Value2 = manOrpoInt[i - 2];
-            //    excelCells.Borders.ColorIndex = 1;
-            //    excelCells = (Excel.Range)excelWorksheet.Cells[i, "C"];
-            //    excelCells.Value2 = manOrpoInt_95[i - 2];
-            //    excelCells.Borders.ColorIndex = 1;
+            }
 
-            //}
+            excelWorksheet = (Excel.Worksheet)excelWorkbook.Worksheets.get_Item(3);
+            excelWorksheet.Name = "Женщины, ОРПО внеш.";
 
-            //excelWorksheet = (Excel.Worksheet)excelWorkbook.Worksheets.get_Item(3);
-            //excelWorksheet.Name = "Женщины, ОРПО внеш.";
+            /*-----Описываем ячейку А1 на странице-----*/
+            excelCells = excelWorksheet.get_Range("A1");
+            excelCells.VerticalAlignment = Excel.Constants.xlCenter;
+            excelCells.HorizontalAlignment = Excel.Constants.xlCenter;
+            excelCells.Borders.Weight = Excel.XlBorderWeight.xlThick;
+            excelCells.Value2 = "Возрастные группы";
 
-            ///*-----Описываем ячейку А1 на странице-----*/
-            //excelCells = excelWorksheet.get_Range("A1");
-            //excelCells.VerticalAlignment = Excel.Constants.xlCenter;
-            //excelCells.HorizontalAlignment = Excel.Constants.xlCenter;
-            //excelCells.Borders.Weight = Excel.XlBorderWeight.xlThick;
-            //excelCells.Value2 = "Возрастные группы";
+            /*-----Описываем ячейку B1 на странице-----*/
+            excelCells = excelWorksheet.get_Range("B1");
+            excelCells.VerticalAlignment = Excel.Constants.xlCenter;
+            excelCells.HorizontalAlignment = Excel.Constants.xlCenter;
+            excelCells.Borders.Weight = Excel.XlBorderWeight.xlThick;
+            excelCells.Value2 = "ОРПО";
 
-            ///*-----Описываем ячейку B1 на странице-----*/
-            //excelCells = excelWorksheet.get_Range("B1");
-            //excelCells.VerticalAlignment = Excel.Constants.xlCenter;
-            //excelCells.HorizontalAlignment = Excel.Constants.xlCenter;
-            //excelCells.Borders.Weight = Excel.XlBorderWeight.xlThick;
-            //excelCells.Value2 = "ОРПО";
+            /*-----Описываем ячейку C1 на странице-----*/
+            excelCells = excelWorksheet.get_Range("C1");
+            excelCells.VerticalAlignment = Excel.Constants.xlCenter;
+            excelCells.HorizontalAlignment = Excel.Constants.xlCenter;
+            excelCells.Borders.Weight = Excel.XlBorderWeight.xlThick;
+            excelCells.Value2 = "ОРПО_95";
 
-            ///*-----Описываем ячейку C1 на странице-----*/
-            //excelCells = excelWorksheet.get_Range("C1");
-            //excelCells.VerticalAlignment = Excel.Constants.xlCenter;
-            //excelCells.HorizontalAlignment = Excel.Constants.xlCenter;
-            //excelCells.Borders.Weight = Excel.XlBorderWeight.xlThick;
-            //excelCells.Value2 = "ОРПО_95";
+            for (int i = 2; i <= womanExtOrpo.Length + 1; i++)
+            {
+                excelCells = (Excel.Range)excelWorksheet.Cells[i, "A"];
+                excelCells.Value2 = ageGroups[i - 2];
+                excelCells.Borders.ColorIndex = 1;
+                excelCells = (Excel.Range)excelWorksheet.Cells[i, "B"];
+                excelCells.Value2 = womanExtOrpo[i - 2];
+                excelCells.Borders.ColorIndex = 1;
+                excelCells = (Excel.Range)excelWorksheet.Cells[i, "C"];
+                excelCells.Value2 = womanExtOrpo_95[i - 2];
+                excelCells.Borders.ColorIndex = 1;
+            }
 
-            //for (int i = 2; i <= ageGroups.Count + 1; i++)
-            //{
-            //    excelCells = (Excel.Range)excelWorksheet.Cells[i, "A"];
-            //    excelCells.Value2 = ageGroups[i - 2];
-            //    excelCells.Borders.ColorIndex = 1;
-            //    excelCells = (Excel.Range)excelWorksheet.Cells[i, "B"];
-            //    excelCells.Value2 = womanOrpoExt[i - 2];  
-            //    excelCells.Borders.ColorIndex = 1;
-            //    excelCells = (Excel.Range)excelWorksheet.Cells[i, "C"];
-            //    excelCells.Value2 = womanOrpoExt_95[i - 2];
-            //    excelCells.Borders.ColorIndex = 1;
-            //}
+            excelWorksheet = (Excel.Worksheet)excelWorkbook.Worksheets.get_Item(4);
+            excelWorksheet.Name = "Женщины, ОРПО внут.";
 
-            //excelWorksheet = (Excel.Worksheet)excelWorkbook.Worksheets.get_Item(4);
-            //excelWorksheet.Name = "Женщины, ОРПО внут.";
+            /*-----Описываем ячейку А1 на странице-----*/
+            excelCells = excelWorksheet.get_Range("A1");
+            excelCells.VerticalAlignment = Excel.Constants.xlCenter;
+            excelCells.HorizontalAlignment = Excel.Constants.xlCenter;
+            excelCells.Borders.Weight = Excel.XlBorderWeight.xlThick;
+            excelCells.Value2 = "Возрастные группы";
 
-            ///*-----Описываем ячейку А1 на странице-----*/
-            //excelCells = excelWorksheet.get_Range("A1");
-            //excelCells.VerticalAlignment = Excel.Constants.xlCenter;
-            //excelCells.HorizontalAlignment = Excel.Constants.xlCenter;
-            //excelCells.Borders.Weight = Excel.XlBorderWeight.xlThick;
-            //excelCells.Value2 = "Возрастные группы";
+            /*-----Описываем ячейку B1 на странице-----*/
+            excelCells = excelWorksheet.get_Range("B1");
+            excelCells.VerticalAlignment = Excel.Constants.xlCenter;
+            excelCells.HorizontalAlignment = Excel.Constants.xlCenter;
+            excelCells.Borders.Weight = Excel.XlBorderWeight.xlThick;
+            excelCells.Value2 = "ОРПО";
 
-            ///*-----Описываем ячейку B1 на странице-----*/
-            //excelCells = excelWorksheet.get_Range("B1");
-            //excelCells.VerticalAlignment = Excel.Constants.xlCenter;
-            //excelCells.HorizontalAlignment = Excel.Constants.xlCenter;
-            //excelCells.Borders.Weight = Excel.XlBorderWeight.xlThick;
-            //excelCells.Value2 = "ОРПО";
+            /*-----Описываем ячейку C1 на странице-----*/
+            excelCells = excelWorksheet.get_Range("C1");
+            excelCells.VerticalAlignment = Excel.Constants.xlCenter;
+            excelCells.HorizontalAlignment = Excel.Constants.xlCenter;
+            excelCells.Borders.Weight = Excel.XlBorderWeight.xlThick;
+            excelCells.Value2 = "ОРПО_95";
 
-            ///*-----Описываем ячейку C1 на странице-----*/
-            //excelCells = excelWorksheet.get_Range("C1");
-            //excelCells.VerticalAlignment = Excel.Constants.xlCenter;
-            //excelCells.HorizontalAlignment = Excel.Constants.xlCenter;
-            //excelCells.Borders.Weight = Excel.XlBorderWeight.xlThick;
-            //excelCells.Value2 = "ОРПО_95";
+            for (int i = 2; i <= womanIntOrpo.Length + 1; i++)
+            {
+                excelCells = (Excel.Range)excelWorksheet.Cells[i, "A"];
+                excelCells.Value2 = ageGroups[i - 2];
+                excelCells.Borders.ColorIndex = 1;
+                excelCells = (Excel.Range)excelWorksheet.Cells[i, "B"];
+                excelCells.Value2 = womanIntOrpo[i - 2];
+                excelCells.Borders.ColorIndex = 1;
+                excelCells = (Excel.Range)excelWorksheet.Cells[i, "C"];
+                excelCells.Value2 = womanIntOrpo_95[i - 2];
+                excelCells.Borders.ColorIndex = 1;
+            }
 
-            //for (int i = 2; i <= ageGroups.Count + 1; i++)
-            //{
-            //    excelCells = (Excel.Range)excelWorksheet.Cells[i, "A"];
-            //    excelCells.Value2 = ageGroups[i - 2];
-            //    excelCells.Borders.ColorIndex = 1;
-            //    excelCells = (Excel.Range)excelWorksheet.Cells[i, "B"];
-            //    excelCells.Value2 = womanOrpoInt[i - 2];    
-            //    excelCells.Borders.ColorIndex = 1;
-            //    excelCells = (Excel.Range)excelWorksheet.Cells[i, "C"];
-            //    excelCells.Value2 = womanOrpoInt_95[i - 2];
-            //    excelCells.Borders.ColorIndex = 1;
-            //}
 
-            //testTextBox.Text = (manAmountOfAverExtDoses[Convert.ToInt32(textBox1.Text)] / manValueOfSubgroups[Convert.ToInt32(textBox1.Text)]).ToString();//getOrpo(getManExtLar(manAgeAmountOfGroup[Convert.ToInt32(textBox1.Text)] / manAmountOfSubgroupCounts[Convert.ToInt32(textBox1.Text)]), (manAmountOfAverExtDoses[Convert.ToInt32(textBox1.Text)] / manValueOfSubgroups[Convert.ToInt32(textBox1.Text)])).ToString();
-            //resultTextBox.Text = (manAmountOfAverIntDoses[Convert.ToInt32(textBox1.Text)] / manValueOfSubgroups[Convert.ToInt32(textBox1.Text)]).ToString();
+            excelWorkbook.SaveAs(@Path.GetDirectoryName(Application.ExecutablePath) + "\\ОРПО",  //object Filename
+                    Type.Missing,                       //object FileFormat
+                    Type.Missing,                       //object Password 
+                    Type.Missing,                       //object WriteResPassword  
+                    Type.Missing,                       //object ReadOnlyRecommended
+                    Type.Missing,                       //object CreateBackup
+                    Excel.XlSaveAsAccessMode.xlNoChange,//XlSaveAsAccessMode AccessMode
+                    Type.Missing,                       //object ConflictResolution
+                    Type.Missing,                       //object AddToMru 
+                    Type.Missing,                       //object TextCodepage
+                    Type.Missing,                       //object TextVisualLayout
+                    Type.Missing);                      //object Local
         }
 
         private void getIbpoButton_Click(object sender, EventArgs e)
@@ -723,7 +511,7 @@ namespace TVELtest
             OleDbConnection connection = new OleDbConnection(connectionString);
             connection.Open();
 
-            /*-----Из таблицы Final в эту таблицу считываются поля, указанные в запросе; Выборка для МСК (shop = r3)-----*/
+            /*-----Из таблицы Final в эту таблицу считываются поля, указанные в запросе-----*/
             OleDbDataAdapter adapter = new OleDbDataAdapter("SELECT [ID], [Dose], [DoseInt], [Year], [Gender], [BirthYear], [AgeAtExp] FROM [Final] WHERE [Shop]='r3'", connectionString);//Выбор нужных столбцов из нужной таблицы
             DataSet dataSet = new DataSet();
             adapter.Fill(dataSet, "Final");
@@ -960,82 +748,17 @@ namespace TVELtest
                 womanIntIbpo[i] = getIbpo(womanLarIntArray[i], womanIntOrpo[i]);
             }
 
-            //testTextBox.Text = "ИБПО! " + Math.Pow(Convert.ToInt32(textBox2.Text), -2);//manLarExtArray[Convert.ToInt32(textBox2.Text)][Convert.ToInt32(textBox1.Text)].ToString();//manIdRecordsArray[Convert.ToInt32(textBox2.Text)][Convert.ToInt32(textBox1.Text)].getId();//manIdRecordsArray.Length + " " + test.Count;//shit[1].Count;//count;//womanDoseHistoryList[0][Convert.ToInt32(textBox1.Text)].LungDoseInmGy;//manIdRecordsArray[0][Convert.ToInt32(textBox1.Text)].getDoseInt();//manUniqueIdList.Count;
-            //resultTextBox.Text = "ИБПО! " + manLarIntArray[Convert.ToInt32(textBox2.Text)][Convert.ToInt32(textBox1.Text)].ToString();//manIdRecordsArray[Convert.ToInt32(textBox2.Text)][Convert.ToInt32(textBox1.Text)].getYear();//womanIdRecordsArray.Length;//womanDoseHistoryList[0][Convert.ToInt32(textBox1.Text)].AllSolidDoseInmGy;//womanIdRecordsArray[0][Convert.ToInt32(textBox1.Text)].getDoseInt();//womanUniqueIdList.Count;
-            //label1.Text = manLarExtArray[Convert.ToInt32(textBox2.Text)].Count.ToString();//manIdRecordsArray[Convert.ToInt32(textBox2.Text)].Count.ToString();
-
-            ///*-----Вывод в Excel-файл-----*/
-            ///*-----Инициализация Excel-файла-----*/
-            //Excel.Application excelApp = new Excel.Application();
-            //excelApp.Visible = true;
-            //excelApp.DisplayAlerts = true;
-            //excelApp.StandardFont = "Times-New-Roman";
-            //excelApp.StandardFontSize = 12;
-
-            ///*-----Создание рабочей книги с 4 страницами, в которые будет выводиться информация-----*/
-            //excelApp.Workbooks.Add(Type.Missing);
-            //Excel.Workbook excelWorkbook = excelApp.Workbooks[1];
-            //excelApp.SheetsInNewWorkbook = 4;
-            //Excel.Worksheet excelWorksheet = null;
-            //Excel.Range excelCells = null;
-
-            ///*-----Вывод в столбцы-----*/
-            //excelWorksheet = (Excel.Worksheet)excelWorkbook.Worksheets.get_Item(1);
-            //excelWorksheet.Name = "Чушь";
-
-            ///*-----Описываем ячейку А1 на странице-----*/
-            //excelCells = excelWorksheet.get_Range("A1");
-            //excelCells.VerticalAlignment = Excel.Constants.xlCenter;
-            //excelCells.HorizontalAlignment = Excel.Constants.xlCenter;
-            //excelCells.Borders.Weight = Excel.XlBorderWeight.xlThick;
-            //excelCells.Value2 = "id";
-
-            ///*-----Описываем ячейку B1 на странице-----*/
-            //excelCells = excelWorksheet.get_Range("B1");
-            //excelCells.VerticalAlignment = Excel.Constants.xlCenter;
-            //excelCells.HorizontalAlignment = Excel.Constants.xlCenter;
-            //excelCells.Borders.Weight = Excel.XlBorderWeight.xlThick;
-            //excelCells.Value2 = "последние годы наблюдения";
-
-            ////for (int i = 0; i < manIdRecordsArray.Length; i++)
-            ////    for (int k = 0; k < manIdRecordsArray[i].Count; k++)
-            //        for (int l = 2; l <= test.Count + 1; l++)
-            ////            if (manList[l - 2] == manIdRecordsArray[i][k])
-            //            {
-            //                excelCells = (Excel.Range)excelWorksheet.Cells[l, "A"];
-            //                excelCells.Value2 = test[l-2];//shit[0][i - 2];
-            //                excelCells.Borders.ColorIndex = 1;
-            //                //excelCells = (Excel.Range)excelWorksheet.Cells[l, "B"];
-            //                //excelCells.Value2 = manIdRecordsArray[i][k].getYear();//shit1[0][i - 2];
-            //                //excelCells.Borders.ColorIndex = 1;
-            //            }
-
-
         }
 
-        private void testTextBox_TextChanged(object sender, EventArgs e)
-        {
-
+        string filePath = "";
+        private void openFileButton_Click(object sender, EventArgs e)
+        {        
+            OpenFileDialog ofd = new OpenFileDialog();
+            if (ofd.ShowDialog() == DialogResult.OK)
+            {
+                filePath = ofd.FileName;
+            }
         }
 
-        private void resultTextBox_TextChanged(object sender, EventArgs e)
-        {
-
-        }
-
-        private void testLabel_Click(object sender, EventArgs e)
-        {
-
-        }
-
-        private void resultLabel_Click(object sender, EventArgs e)
-        {
-
-        }
-
-        private void textBox1_TextChanged(object sender, EventArgs e)
-        {
-
-        }
     }
 }
