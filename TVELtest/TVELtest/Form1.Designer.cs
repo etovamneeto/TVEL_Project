@@ -28,9 +28,9 @@
         /// </summary>
         private void InitializeComponent()
         {
+            this.openFileButton = new System.Windows.Forms.Button();
             this.getOrpoButton = new System.Windows.Forms.Button();
             this.getIbpoButton = new System.Windows.Forms.Button();
-            this.openFileButton = new System.Windows.Forms.Button();
             this.orpoGroupBox = new System.Windows.Forms.GroupBox();
             this.womanIntOrpoBox95 = new System.Windows.Forms.TextBox();
             this.womanExtOrpoBox95 = new System.Windows.Forms.TextBox();
@@ -69,6 +69,16 @@
             this.ibpoGroupBox.SuspendLayout();
             this.SuspendLayout();
             // 
+            // openFileButton
+            // 
+            this.openFileButton.Location = new System.Drawing.Point(12, 12);
+            this.openFileButton.Name = "openFileButton";
+            this.openFileButton.Size = new System.Drawing.Size(468, 43);
+            this.openFileButton.TabIndex = 12;
+            this.openFileButton.Text = "Шаг 1: Выберите базу данных";
+            this.openFileButton.UseVisualStyleBackColor = true;
+            this.openFileButton.Click += new System.EventHandler(this.openFileButton_Click);
+            // 
             // getOrpoButton
             // 
             this.getOrpoButton.Location = new System.Drawing.Point(12, 61);
@@ -88,16 +98,6 @@
             this.getIbpoButton.Text = "Шаг 3: Рассчитать ИБПО";
             this.getIbpoButton.UseVisualStyleBackColor = true;
             this.getIbpoButton.Click += new System.EventHandler(this.getIbpoButton_Click);
-            // 
-            // openFileButton
-            // 
-            this.openFileButton.Location = new System.Drawing.Point(12, 12);
-            this.openFileButton.Name = "openFileButton";
-            this.openFileButton.Size = new System.Drawing.Size(468, 43);
-            this.openFileButton.TabIndex = 12;
-            this.openFileButton.Text = "Шаг 1: Выберите файл";
-            this.openFileButton.UseVisualStyleBackColor = true;
-            this.openFileButton.Click += new System.EventHandler(this.openFileButton_Click);
             // 
             // orpoGroupBox
             // 
@@ -429,9 +429,9 @@
 
         #endregion
 
+        private System.Windows.Forms.Button openFileButton;
         private System.Windows.Forms.Button getOrpoButton;
         private System.Windows.Forms.Button getIbpoButton;
-        private System.Windows.Forms.Button openFileButton;
         private System.Windows.Forms.GroupBox orpoGroupBox;
         private System.Windows.Forms.TextBox womanIntOrpoBox95;
         private System.Windows.Forms.TextBox womanExtOrpoBox95;
