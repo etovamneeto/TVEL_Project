@@ -580,25 +580,34 @@ namespace TVELtest
 
                 try
                 {
-                    /*-----Списки ID людей, у которых есть записи в 2012 году-----*/
-                    List<dbObject> manIbpoId = new List<dbObject>();
-                    List<dbObject> womanIbpoId = new List<dbObject>();
+                    List<dbObject>[] manIbpoArray = new List<dbObject>[ageGroups.Count];
+                    List<dbObject>[] womanIbpoArray = new List<dbObject>[ageGroups.Count];
 
-                    for (int i = 0; i < dbRecords.Count; i++)
+                    for (int i = 0; i < ageGroups.Count; i++)
                     {
-                        if (dbRecords[i].getYear() == 2012)
-                        {
-                            if (dbRecords[i].getSex() == sexMale)
-                                manIbpoId.Add(dbRecords[i]);
-                            if (dbRecords[i].getSex() == sexFemale)
-                                womanIbpoId.Add(dbRecords[i]);
-                        }
+                        manIbpoArray[i] = new List<dbObject>();
+                        womanIbpoArray[i] = new List<dbObject>();
                     }
 
+                    for (int i = 0; i < ageGroups.Count; i++)
+                        for (int k = 0; k < dbRecords.Count; k++)
+                        {
+                            if (dbRecords[k].getSex() == sexMale && dbRecords[k].getYear() == 2012)
+                                if (dbRecords[k].getAgeAtExp() >= ageLowerBound[i] && dbRecords[k].getAgeAtExp() <= ageUpperBound[i])
+                                {
+                                    manIbpoArray[i].Add(dbRecords[k]);
+                                }
+                            if (dbRecords[k].getSex() == sexFemale && dbRecords[k].getYear() == 2012)
+                                if (dbRecords[k].getAgeAtExp() >= ageLowerBound[i] && dbRecords[k].getAgeAtExp() <= ageUpperBound[i])
+                                {
+                                    womanIbpoArray[i].Add(dbRecords[k]);
+                                }
+                        }
 
 
-                    manExtIbpoBox.Text = "Мужчинки " + manIbpoId.Count;
-                    manIntIbpoBox.Text = "Тетьки " + womanIbpoId.Count;
+
+                    manExtIbpoBox.Text = "Мужчинки " + manIbpoArray[Convert.ToInt32(manExtIbpoBox95.Text)].Count;
+                    manIntIbpoBox.Text = "Тетьки " + womanIbpoArray[Convert.ToInt32(manExtIbpoBox95.Text)].Count;
                 }
                 catch
                 {
