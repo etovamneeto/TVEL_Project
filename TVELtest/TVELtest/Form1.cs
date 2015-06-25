@@ -142,29 +142,32 @@ namespace TVELtest
             RiskCalculatorLib.RiskCalculator.FillData(ref libPath);
         }
 
-        /*-----Массивы, хранящие ОРПО для половозрастных групп-----*/
-        double[] manExtOrpo;
-        double[] manIntOrpo;
-        double[] womanExtOrpo;
-        double[] womanIntOrpo;
-
-        double[] manExtOrpo_95;
-        double[] manIntOrpo_95;
-        double[] womanExtOrpo_95;
-        double[] womanIntOrpo_95;
-
         /*-----Список, в котором хранятся строковые параметры, инентифицирующие возрастные группы-----*/
-        List<String> ageGroups;
+        List<String> ageGroups = null;
         /*-----Список, в котором хранятся нижние границы возрастов для возрастных групп-----*/
-        List<int> ageLowerBound;
+        List<int> ageLowerBound = null;
         /*-----Список, в котором хранятся верхние границы возрастов для возрастных групп-----*/
-        List<int> ageUpperBound;
+        List<int> ageUpperBound = null;
         /*-----Список объектов; достаем все необходимое для расчетов: id, dose, doseInt, ageAtExp, gender-----*/
-        List<dbObject> dbRecords;
+        List<dbObject> dbRecords = null;
         /*-----Строка подключения к выбранной базе данных-----*/
-        String connectionString;
+        String connectionString = "";
+        /*-----Переменные, отвечающие за пол-----*/
+        byte sexMale = 0;
+        byte sexFemale = 0;
         /*-----Определение пути до базы данных-----*/
         String dbPath = "";
+        /*-----Массивы, хранящие ОРПО для половозрастных групп-----*/
+        double[] manExtOrpo = null;
+        double[] manIntOrpo = null;
+        double[] womanExtOrpo = null;
+        double[] womanIntOrpo = null;
+
+        double[] manExtOrpo_95 = null;
+        double[] manIntOrpo_95 = null;
+        double[] womanExtOrpo_95 = null;
+        double[] womanIntOrpo_95 = null;
+
         private void openFileButton_Click(object sender, EventArgs e)
         {
             OpenFileDialog ofd = new OpenFileDialog();
@@ -242,8 +245,8 @@ namespace TVELtest
                     dbSex.Add(dbRecords[i].getSex());
 
                 /*-----Определение пола; Меньшая цифра пола - М, большая - Ж-----*/
-                byte sexMale = dbSex.Min();
-                byte sexFemale = dbSex.Max();
+                sexMale = dbSex.Min();
+                sexFemale = dbSex.Max();
 
                 /*-----Счетчики, определяющие количество мужских и женских записей-----*/
                 double dbMan = 0;
@@ -570,10 +573,32 @@ namespace TVELtest
             try
             {
                 connection.Open();
+                OleDbDataAdapter adapter = new OleDbDataAdapter("SELECT [ID], [Year], [Dose], [DoseInt] FROM [Dose]", connectionString);
+                DataSet dataSet = new DataSet();
+                adapter.Fill(dataSet, "Dose");
+                DataTable table = dataSet.Tables[0];
+
                 try
                 {
-                    manExtIbpoBox.Text = manExtOrpo.Length.ToString();
-                    manIntIbpoBox.Text = ageGroups.Count.ToString();
+                    /*-----Списки ID людей, у которых есть записи в 2012 году-----*/
+                    List<dbObject> manIbpoId = new List<dbObject>();
+                    List<dbObject> womanIbpoId = new List<dbObject>();
+
+                    for (int i = 0; i < dbRecords.Count; i++)
+                    {
+                        if (dbRecords[i].getYear() == 2012)
+                        {
+                            if (dbRecords[i].getSex() == sexMale)
+                                manIbpoId.Add(dbRecords[i]);
+                            if (dbRecords[i].getSex() == sexFemale)
+                                womanIbpoId.Add(dbRecords[i]);
+                        }
+                    }
+
+
+
+                    manExtIbpoBox.Text = "Мужчинки " + manIbpoId.Count;
+                    manIntIbpoBox.Text = "Тетьки " + womanIbpoId.Count;
                 }
                 catch
                 {
@@ -588,65 +613,8 @@ namespace TVELtest
                 }
 
         }
-            //String dbPath = Path.GetDirectoryName(Application.ExecutablePath) + "\\dbTvel.mdb";
-            //String connectionString = @"Provider=Microsoft.Jet.OLEDB.4.0; Data Source=" + dbPath;
-            //OleDbConnection connection = new OleDbConnection(connectionString);
-            //connection.Open();
 
-            ///*-----Из таблицы Final в эту таблицу считываются поля, указанные в запросе-----*/
-            //OleDbDataAdapter adapter = new OleDbDataAdapter("SELECT [ID], [Dose], [DoseInt], [Year], [Gender], [BirthYear], [AgeAtExp] FROM [Final] WHERE [Shop]='r3'", connectionString);//Выбор нужных столбцов из нужной таблицы
-            //DataSet dataSet = new DataSet();
-            //adapter.Fill(dataSet, "Final");
-            //DataTable table = dataSet.Tables[0];
-
-            ///*-----Заполнение списка ключей возрастных групп-----*/
-            //List<String> ageGroups = new List<string>();
-            //ageGroups.Add("18-24");
-            //ageGroups.Add("25-29");
-            //ageGroups.Add("30-34");
-            //ageGroups.Add("35-39");
-            //ageGroups.Add("40-44");
-            //ageGroups.Add("45-49");
-            //ageGroups.Add("50-54");
-            //ageGroups.Add("55-59");
-            //ageGroups.Add("60-64");
-            //ageGroups.Add("65-69");
-            //ageGroups.Add("70+");
-
-            ///*-----Список, в котором хранятся нижние границы возрастов для возрастных групп-----*/
-            //List<int> ageLowerBound = new List<int>();
-            //ageLowerBound.Add(18);
-            //ageLowerBound.Add(25);
-            //ageLowerBound.Add(30);
-            //ageLowerBound.Add(35);
-            //ageLowerBound.Add(40);
-            //ageLowerBound.Add(45);
-            //ageLowerBound.Add(50);
-            //ageLowerBound.Add(55);
-            //ageLowerBound.Add(60);
-            //ageLowerBound.Add(65);
-            //ageLowerBound.Add(70);
-
-            ///*-----Список, в котором хранятся верхние границы возрастов для возрастных групп-----*/
-            //List<int> ageUpperBound = new List<int>();
-            //ageUpperBound.Add(24);
-            //ageUpperBound.Add(29);
-            //ageUpperBound.Add(34);
-            //ageUpperBound.Add(39);
-            //ageUpperBound.Add(44);
-            //ageUpperBound.Add(49);
-            //ageUpperBound.Add(54);
-            //ageUpperBound.Add(59);
-            //ageUpperBound.Add(64);
-            //ageUpperBound.Add(69);
-            //ageUpperBound.Add(100);
-
-            ///*-----Список объектов; достаем все необходимое для расчетов: id, dose, doseInt, ageAtExp, gender-----*/
-            //List<dbObject> dbRecord = new List<dbObject>();
-            //for (int i = 0; i < table.Rows.Count; i++)
-            //{
-            //    dbRecord.Add(new dbObject(Convert.ToInt32(table.Rows[i]["id"]), Convert.ToByte(table.Rows[i]["gender"]), Convert.ToInt32(table.Rows[i]["year"]), Convert.ToInt16(table.Rows[i]["ageatexp"]), Convert.ToDouble(table.Rows[i]["dose"]) / 1000, Convert.ToDouble(table.Rows[i]["doseint"]) / 1000));
-            //}
+           
 
             ///*-----Список, в котором хранится пол-----*/
             //List<byte> dbSex = new List<byte>();
