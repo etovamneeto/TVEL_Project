@@ -27,12 +27,22 @@ namespace TVELtest
             private byte sex = 0;
             private int year = 0;
 
+            public dbObject() { }
+
             public dbObject(int id, byte sex, int year, short ageAtExp, double dose, double doseInt)
             {
                 this.id = id;
                 this.sex = sex;
                 this.year = year;
                 this.ageAtExp = ageAtExp;
+                this.dose = dose;
+                this.doseInt = doseInt;
+            }
+
+            public dbObject(int id, int year, double dose, double doseInt)
+            {
+                this.id = id;
+                this.year = year;
                 this.dose = dose;
                 this.doseInt = doseInt;
             }
@@ -148,8 +158,10 @@ namespace TVELtest
         List<int> ageLowerBound = null;
         /*-----Список, в котором хранятся верхние границы возрастов для возрастных групп-----*/
         List<int> ageUpperBound = null;
-        /*-----Список объектов; достаем все необходимое для расчетов: id, dose, doseInt, ageAtExp, gender-----*/
-        List<dbObject> dbRecords = null;
+        /*-----Список объектов из базы Final; достаем все необходимое для расчетов-----*/
+        List<dbObject> dbFinalRecords = null;
+        /*-----Список объектов из базы Dose; достаем все необходимое для расчетов-----*/
+        List<dbObject> dbDoseRecords = null;
         /*-----Строка подключения к выбранной базе данных-----*/
         String connectionString = "";
         /*-----Переменные, отвечающие за пол-----*/
@@ -233,16 +245,16 @@ namespace TVELtest
                 ageUpperBound.Add(100);
 
                 /*-----Список объектов; достаем все необходимое для расчетов: id, dose, doseInt, ageAtExp, gender-----*/
-                dbRecords = new List<dbObject>();
+                dbFinalRecords = new List<dbObject>();
                 for (int i = 0; i < table.Rows.Count; i++)
                 {
-                    dbRecords.Add(new dbObject(Convert.ToInt32(table.Rows[i]["id"]), Convert.ToByte(table.Rows[i]["gender"]), Convert.ToInt32(table.Rows[i]["year"]), Convert.ToInt16(table.Rows[i]["ageatexp"]), Convert.ToDouble(table.Rows[i]["dose"]) / 1000, Convert.ToDouble(table.Rows[i]["doseint"]) / 1000));
+                    dbFinalRecords.Add(new dbObject(Convert.ToInt32(table.Rows[i]["id"]), Convert.ToByte(table.Rows[i]["gender"]), Convert.ToInt32(table.Rows[i]["year"]), Convert.ToInt16(table.Rows[i]["ageatexp"]), Convert.ToDouble(table.Rows[i]["dose"]) / 1000, Convert.ToDouble(table.Rows[i]["doseint"]) / 1000));
                 }
 
                 /*-----Список, в котором хранится пол-----*/
                 List<byte> dbSex = new List<byte>();
-                for (int i = 0; i < dbRecords.Count; i++)
-                    dbSex.Add(dbRecords[i].getSex());
+                for (int i = 0; i < dbFinalRecords.Count; i++)
+                    dbSex.Add(dbFinalRecords[i].getSex());
 
                 /*-----Определение пола; Меньшая цифра пола - М, большая - Ж-----*/
                 sexMale = dbSex.Min();
@@ -250,13 +262,13 @@ namespace TVELtest
 
                 /*-----Счетчики, определяющие количество мужских и женских записей-----*/
                 double dbMan = 0;
-                for (int i = 0; i < dbRecords.Count; i++)
-                    if (dbRecords[i].getSex() == sexMale)
+                for (int i = 0; i < dbFinalRecords.Count; i++)
+                    if (dbFinalRecords[i].getSex() == sexMale)
                         dbMan++;
 
                 double dbWoman = 0;
-                for (int i = 0; i < dbRecords.Count; i++)
-                    if (dbRecords[i].getSex() == sexFemale)
+                for (int i = 0; i < dbFinalRecords.Count; i++)
+                    if (dbFinalRecords[i].getSex() == sexFemale)
                         dbWoman++;
 
                 /*-----Массивы списков для мужчин и для женщин, в каждом из которых хранятся дозы (внешние и внутренние) для соответствующий половозрастной группы-----*/
@@ -281,21 +293,21 @@ namespace TVELtest
                 }
 
                 for (int i = 0; i < ageGroups.Count; i++)
-                    for (int k = 0; k < dbRecords.Count; k++)
+                    for (int k = 0; k < dbFinalRecords.Count; k++)
                     {
-                        if (dbRecords[k].getSex() == sexMale)
-                            if (dbRecords[k].getAgeAtExp() >= ageLowerBound[i] && dbRecords[k].getAgeAtExp() <= ageUpperBound[i])
+                        if (dbFinalRecords[k].getSex() == sexMale)
+                            if (dbFinalRecords[k].getAgeAtExp() >= ageLowerBound[i] && dbFinalRecords[k].getAgeAtExp() <= ageUpperBound[i])
                             {
-                                manSadExtArray[i].Add(dbRecords[k].getDose() - dbRecords[k].getDoseInt());
-                                manSadIntArray[i].Add(dbRecords[k].getDoseInt());
-                                manYearsArray[i].Add(dbRecords[k].getAgeAtExp());
+                                manSadExtArray[i].Add(dbFinalRecords[k].getDose() - dbFinalRecords[k].getDoseInt());
+                                manSadIntArray[i].Add(dbFinalRecords[k].getDoseInt());
+                                manYearsArray[i].Add(dbFinalRecords[k].getAgeAtExp());
                             }
-                        if (dbRecords[k].getSex() == sexFemale)
-                            if (dbRecords[k].getAgeAtExp() >= ageLowerBound[i] && dbRecords[k].getAgeAtExp() <= ageUpperBound[i])
+                        if (dbFinalRecords[k].getSex() == sexFemale)
+                            if (dbFinalRecords[k].getAgeAtExp() >= ageLowerBound[i] && dbFinalRecords[k].getAgeAtExp() <= ageUpperBound[i])
                             {
-                                womanSadExtArray[i].Add(dbRecords[k].getDose() - dbRecords[k].getDoseInt());
-                                womanSadIntArray[i].Add(dbRecords[k].getDoseInt());
-                                womanYearsArray[i].Add(dbRecords[k].getAgeAtExp());
+                                womanSadExtArray[i].Add(dbFinalRecords[k].getDose() - dbFinalRecords[k].getDoseInt());
+                                womanSadIntArray[i].Add(dbFinalRecords[k].getDoseInt());
+                                womanYearsArray[i].Add(dbFinalRecords[k].getAgeAtExp());
                             }
                     }
 
@@ -558,6 +570,7 @@ namespace TVELtest
                 //        Type.Missing,                       //object TextVisualLayout
                 //        Type.Missing);                      //object Local
                 //excelApp.Quit();
+                connection.Close();
             }
 
             catch/*(OleDbException ex)*/
@@ -580,30 +593,58 @@ namespace TVELtest
 
                 try
                 {
-                    List<dbObject>[] manIbpoArray = new List<dbObject>[ageGroups.Count];
-                    List<dbObject>[] womanIbpoArray = new List<dbObject>[ageGroups.Count];
-
+                    List<int> manIbpoArray = new List<int>();
+                    List<int> womanIbpoArray = new List<int>();
                     for (int i = 0; i < ageGroups.Count; i++)
-                    {
-                        manIbpoArray[i] = new List<dbObject>();
-                        womanIbpoArray[i] = new List<dbObject>();
-                    }
-
-                    for (int i = 0; i < ageGroups.Count; i++)
-                        for (int k = 0; k < dbRecords.Count; k++)
+                        for (int k = 0; k < dbFinalRecords.Count; k++)
                         {
-                            if (dbRecords[k].getSex() == sexMale && dbRecords[k].getYear() == 2012)
-                                if (dbRecords[k].getAgeAtExp() >= ageLowerBound[i] && dbRecords[k].getAgeAtExp() <= ageUpperBound[i])
+                            if (dbFinalRecords[k].getSex() == sexMale && dbFinalRecords[k].getYear() == 2012)
+                                if (dbFinalRecords[k].getAgeAtExp() >= ageLowerBound[i] && dbFinalRecords[k].getAgeAtExp() <= ageUpperBound[i])
                                 {
-                                    manIbpoArray[i].Add(dbRecords[k]);
+                                    manIbpoArray.Add(dbFinalRecords[k].getId());
                                 }
-                            if (dbRecords[k].getSex() == sexFemale && dbRecords[k].getYear() == 2012)
-                                if (dbRecords[k].getAgeAtExp() >= ageLowerBound[i] && dbRecords[k].getAgeAtExp() <= ageUpperBound[i])
+                            if (dbFinalRecords[k].getSex() == sexFemale && dbFinalRecords[k].getYear() == 2012)
+                                if (dbFinalRecords[k].getAgeAtExp() >= ageLowerBound[i] && dbFinalRecords[k].getAgeAtExp() <= ageUpperBound[i])
                                 {
-                                    womanIbpoArray[i].Add(dbRecords[k]);
+                                    womanIbpoArray.Add(dbFinalRecords[k].getId());
                                 }
                         }
+/*--------------------------------НУ И ЧУШЬ----------------------------------*/
+                    dbDoseRecords = new List<dbObject>();
+                    for (int i = 0; i < table.Rows.Count; i++)
+                        for (int k = 0; k < dbFinalRecords.Count; k++)
+                            if (dbFinalRecords[k].getId() == Convert.ToInt32(table.Rows[i]["id"]))
+                        {
+                            dbDoseRecords.Add(new dbObject(Convert.ToInt32(table.Rows[i]["id"]), Convert.ToInt32(table.Rows[i]["year"]), Convert.ToDouble(table.Rows[i]["dose"]) / 1000, Convert.ToDouble(table.Rows[i]["doseint"]) / 1000));
+                        }
+                        //List<dbObject>[] manIbpoArray = new List<dbObject>[ageGroups.Count];
+                        //List<dbObject>[] womanIbpoArray = new List<dbObject>[ageGroups.Count];
 
+                        //for (int i = 0; i < ageGroups.Count; i++)
+                        //{
+                        //    manIbpoArray[i] = new List<dbObject>();
+                        //    womanIbpoArray[i] = new List<dbObject>();
+                        //}
+
+                        //for (int i = 0; i < ageGroups.Count; i++)
+                        //    for (int k = 0; k < dbRecords.Count; k++)
+                        //    {
+                        //        if (dbRecords[k].getSex() == sexMale && dbRecords[k].getYear() == 2012)
+                        //            if (dbRecords[k].getAgeAtExp() >= ageLowerBound[i] && dbRecords[k].getAgeAtExp() <= ageUpperBound[i])
+                        //            {
+                        //                manIbpoArray[i].Add(dbRecords[k]);
+                        //            }
+                        //        if (dbRecords[k].getSex() == sexFemale && dbRecords[k].getYear() == 2012)
+                        //            if (dbRecords[k].getAgeAtExp() >= ageLowerBound[i] && dbRecords[k].getAgeAtExp() <= ageUpperBound[i])
+                        //            {
+                        //                womanIbpoArray[i].Add(dbRecords[k]);
+                        //            }
+                        //    }
+
+                    manExtIbpoBox.Text = "Мужчинки " + dbDoseRecords.Count;
+                    //manIntIbpoBox.Text = "Тетьки " + womanIbpoArray.Count;
+
+                        connection.Close();
                     ///*-----Создание пустого списка дозовых историй мужчин; для каждого уникального ID своя дозовая история (по сути, это ячейки, которые надо заполнить)-----*/
                     //List<RiskCalculator.DoseHistoryRecord[]> manDoseHistoryList = new List<RiskCalculator.DoseHistoryRecord[]>();
                     //for (int i = 0; i < manIdRecordsArray.Length; i++)
@@ -650,9 +691,6 @@ namespace TVELtest
                     //        womanDoseHistoryList[i][k].LeukaemiaDoseInmGy = womanIdRecordsArray[i][k].getDose() - womanIdRecordsArray[i][k].getDoseInt();
                     //        womanDoseHistoryList[i][k].LungDoseInmGy = womanIdRecordsArray[i][k].getDoseInt() / wLung;
                     //    }
-
-                    manExtIbpoBox.Text = "Мужчинки " + manIbpoArray[Convert.ToInt32(manExtIbpoBox95.Text)].Count;
-                    manIntIbpoBox.Text = "Тетьки " + womanIbpoArray[Convert.ToInt32(manExtIbpoBox95.Text)].Count;
                 }
                 catch
                 {
