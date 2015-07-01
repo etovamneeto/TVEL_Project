@@ -151,6 +151,7 @@ namespace TVELtest
         {
             RiskCalculatorLib.RiskCalculator.FillData(ref libPath);
             manExtIbpoBox.Text = "0";
+            manIntIbpoBox.Text = "0";
         }
 
         /*-----Список, в котором хранятся строковые параметры, инентифицирующие возрастные группы-----*/
@@ -602,109 +603,167 @@ namespace TVELtest
                     }
 
                     /*-----Списки id, у которых есть записи в 2012 году-----*/
-                    List<int> manIbpoIdList = new List<int>();
-                    List<int> womanIbpoIdList = new List<int>();
+                    List<dbObject> manIbpoIdList = new List<dbObject>();
+                    List<dbObject> womanIbpoIdList = new List<dbObject>();
                     for (int i = 0; i < dbFinalRecords.Count; i++)
                     {
                         if (dbFinalRecords[i].getSex() == sexMale && dbFinalRecords[i].getYear() == 2012)
-                            manIbpoIdList.Add(dbFinalRecords[i].getId());
+                            manIbpoIdList.Add(dbFinalRecords[i]);
                         if (dbFinalRecords[i].getSex() == sexFemale && dbFinalRecords[i].getYear() == 2012)
-                            womanIbpoIdList.Add(dbFinalRecords[i].getId());
+                            womanIbpoIdList.Add(dbFinalRecords[i]);
                     }
 
+                    List<dbObject>[] manIbpoArray = new List<dbObject>[manIbpoIdList.Count];
+                    for (int i = 0; i < manIbpoArray.Length; i++)
+                        manIbpoArray[i] = new List<dbObject>();
+                    List<dbObject>[] womanIbpoArray = new List<dbObject>[womanIbpoIdList.Count];
+                    for (int i = 0; i < womanIbpoArray.Length; i++)
+                        womanIbpoArray[i] = new List<dbObject>();
+
+                    List<dbObject> buffer = null;
+                    for (int i = 0; i < manIbpoArray.Length; i++)
+                    {
+                        buffer = new List<dbObject>();
+                        for (int k = 0; k < dbDoseRecords.Count; k++)
+                        {
+                            if (manIbpoIdList[i].getId() == dbDoseRecords[k].getId())
+                            {
+                                dbDoseRecords[k].setSex(sexMale);
+                                dbDoseRecords[k].setAgeAtExp(Convert.ToInt16(manIbpoIdList[i].getAgeAtExp() - (manIbpoIdList[i].getYear() - dbDoseRecords[k].getYear())));
+                                buffer.Add(dbDoseRecords[k]);
+                            }
+                        }
+                        manIbpoArray[i] = buffer;
+                    }
+                    for (int i = 0; i < womanIbpoArray.Length; i++)
+                    {
+                        buffer = new List<dbObject>();
+                        for (int k = 0; k < dbDoseRecords.Count; k++)
+                        {
+                            if (womanIbpoIdList[i].getId() == dbDoseRecords[k].getId())
+                            {
+                                dbDoseRecords[k].setSex(sexFemale);
+                                dbDoseRecords[k].setAgeAtExp(Convert.ToInt16(womanIbpoIdList[i].getAgeAtExp() - (womanIbpoIdList[i].getYear() - dbDoseRecords[k].getYear())));
+                                buffer.Add(dbDoseRecords[k]);
+                            }
+                        }
+                        womanIbpoArray[i] = buffer;
+                    }
+
+                    manExtIbpoBox95.Text = "Элементов " + manIbpoArray[Convert.ToInt32(manExtIbpoBox.Text)].Count.ToString();
+                    manIntIbpoBox95.Text = "Элементы " + manIbpoArray[Convert.ToInt32(manExtIbpoBox.Text)][Convert.ToInt32(manIntIbpoBox.Text)].getDose().ToString();
+                    womanExtIbpoBox.Text = "id " + manIbpoArray[Convert.ToInt32(manExtIbpoBox.Text)][Convert.ToInt32(manIntIbpoBox.Text)].getId().ToString();
+                    womanIntIbpoBox.Text = "Длина " + manIbpoArray.Length.ToString();
+                    womanExtIbpoBox95.Text = "Пол " + manIbpoArray[Convert.ToInt32(manExtIbpoBox.Text)][Convert.ToInt32(manIntIbpoBox.Text)].getSex().ToString();
+                    womanIntIbpoBox95.Text = "ВозПриОб " + manIbpoArray[Convert.ToInt32(manExtIbpoBox.Text)][Convert.ToInt32(manIntIbpoBox.Text)].getAgeAtExp().ToString();
+
+                    connection.Close();
+                            //int[] array = new int[manIbpoIdList.Count];//Живучая идея для заполнения индивидуальных доз, но потом надо их по группам распихать
+                            //int buffer = 0;
+                            //for (int i = 0; i < manIbpoIdList.Count; i++)
+                            //{
+                            //    buffer = 0;
+                            //    for (int k = 0; k < dbDoseRecords.Count; k++)
+                            //    {
+
+                            //        if (manIbpoIdList[i] == dbDoseRecords[k].getId())
+                            //        {
+                            //            buffer++;
+                            //        }
+                            //        array[i] = buffer;
+                            //    }
+                            //}
 
 
-                        /*-----Это годный вариант заполнения и разбиения на п/в группы, но как заполнять дозовые истории?!-----*/
-                        ///*-----Массивы списков, в которых хранятся записи из базы Final для п/в групп в 2012 году-----*/
-                        //List<dbObject>[] manIbpoArray = new List<dbObject>[ageGroups.Count];
-                        //List<dbObject>[] womanIbpoArray = new List<dbObject>[ageGroups.Count];
 
-                        //for (int i = 0; i < ageGroups.Count; i++)
-                        //{
-                        //    manIbpoArray[i] = new List<dbObject>();
-                        //    womanIbpoArray[i] = new List<dbObject>();
-                        //}
+                            /*-----Это годный вариант заполнения и разбиения на п/в группы, но как заполнять дозовые истории?!-----*/
+                            ///*-----Массивы списков, в которых хранятся записи из базы Final для п/в групп в 2012 году-----*/
+                            //List<dbObject>[] manIbpoArray = new List<dbObject>[ageGroups.Count];
+                            //List<dbObject>[] womanIbpoArray = new List<dbObject>[ageGroups.Count];
 
-                        //for (int i = 0; i < ageGroups.Count; i++)
-                        //    for (int k = 0; k < dbFinalRecords.Count; k++)
-                        //    {
-                        //        if (dbFinalRecords[k].getSex() == sexMale && dbFinalRecords[k].getYear() == 2012)
-                        //            if (dbFinalRecords[k].getAgeAtExp() >= ageLowerBound[i] && dbFinalRecords[k].getAgeAtExp() <= ageUpperBound[i])
-                        //            {
-                        //                manIbpoArray[i].Add(dbFinalRecords[k]);
-                        //            }
-                        //        if (dbFinalRecords[k].getSex() == sexFemale && dbFinalRecords[k].getYear() == 2012)
-                        //            if (dbFinalRecords[k].getAgeAtExp() >= ageLowerBound[i] && dbFinalRecords[k].getAgeAtExp() <= ageUpperBound[i])
-                        //            {
-                        //                womanIbpoArray[i].Add(dbFinalRecords[k]);
-                        //            }
-                        //    }
+                            //for (int i = 0; i < ageGroups.Count; i++)
+                            //{
+                            //    manIbpoArray[i] = new List<dbObject>();
+                            //    womanIbpoArray[i] = new List<dbObject>();
+                            //}
 
-                        /*-----Сложный скелет для заполнения дозовых историй-----*/
-                        //List<int> array = new List<int>();//Живучая идея для заполнения индивидуальных доз, но потом надо их по группам распихать
-                        //int buffer = 0;
-                        //for (int i = 0; i < ageGroups.Count; i++)
-                        //{
-                        //    for (int k = 0; k < manIbpoArray[i].Count; k++)
-                        //    {
-                        //        buffer = 0;
-                        //        for (int m = 0; m < dbDoseRecords.Count; m++)
-                        //        {
-                        //            if (manIbpoArray[i][k].getId() == dbDoseRecords[i].getId())
-                        //            {
-                        //                buffer++;
-                        //                //Здесь как-то должно быть столько массивов дозовых историй, сколько счетчик К пробегает
-                        //                //А всего 11 групп, как всегда
-                        //            }
-                        //            array.Add(buffer);
-                        //        }
-                        //    }
-                        //}
-                        //int[] array = new int[manIbpoIdList.Count];//Живучая идея для заполнения индивидуальных доз, но потом надо их по группам распихать
-                        //int buffer = 0;
-                        //for (int i = 0; i < manIbpoIdList.Count; i++)
-                        //{
-                        //    buffer = 0;
-                        //    for (int k = 0; k < dbDoseRecords.Count; k++)
-                        //    {
+                            //for (int i = 0; i < ageGroups.Count; i++)
+                            //    for (int k = 0; k < dbFinalRecords.Count; k++)
+                            //    {
+                            //        if (dbFinalRecords[k].getSex() == sexMale && dbFinalRecords[k].getYear() == 2012)
+                            //            if (dbFinalRecords[k].getAgeAtExp() >= ageLowerBound[i] && dbFinalRecords[k].getAgeAtExp() <= ageUpperBound[i])
+                            //            {
+                            //                manIbpoArray[i].Add(dbFinalRecords[k]);
+                            //            }
+                            //        if (dbFinalRecords[k].getSex() == sexFemale && dbFinalRecords[k].getYear() == 2012)
+                            //            if (dbFinalRecords[k].getAgeAtExp() >= ageLowerBound[i] && dbFinalRecords[k].getAgeAtExp() <= ageUpperBound[i])
+                            //            {
+                            //                womanIbpoArray[i].Add(dbFinalRecords[k]);
+                            //            }
+                            //    }
 
-                        //        if (manIbpoIdList[i] == dbDoseRecords[k].getId())
-                        //        {
-                        //            buffer++;
-                        //        }
-                        //        array[i] = buffer;
-                        //    }
-                        //}
-                        //List<dbObject>[] manIbpoArray = new List<dbObject>[ageGroups.Count];
-                        //List<dbObject>[] womanIbpoArray = new List<dbObject>[ageGroups.Count];
+                            /*-----Сложный скелет для заполнения дозовых историй-----*/
+                            //List<int> array = new List<int>();//Живучая идея для заполнения индивидуальных доз, но потом надо их по группам распихать
+                            //int buffer = 0;
+                            //for (int i = 0; i < ageGroups.Count; i++)
+                            //{
+                            //    for (int k = 0; k < manIbpoArray[i].Count; k++)
+                            //    {
+                            //        buffer = 0;
+                            //        for (int m = 0; m < dbDoseRecords.Count; m++)
+                            //        {
+                            //            if (manIbpoArray[i][k].getId() == dbDoseRecords[i].getId())
+                            //            {
+                            //                buffer++;
+                            //                //Здесь как-то должно быть столько массивов дозовых историй, сколько счетчик К пробегает
+                            //                //А всего 11 групп, как всегда
+                            //            }
+                            //            array.Add(buffer);
+                            //        }
+                            //    }
+                            //}
+                            //int[] array = new int[manIbpoIdList.Count];//Живучая идея для заполнения индивидуальных доз, но потом надо их по группам распихать
+                            //int buffer = 0;
+                            //for (int i = 0; i < manIbpoIdList.Count; i++)
+                            //{
+                            //    buffer = 0;
+                            //    for (int k = 0; k < dbDoseRecords.Count; k++)
+                            //    {
 
-                        //for (int i = 0; i < ageGroups.Count; i++)
-                        //{
-                        //    manIbpoArray[i] = new List<dbObject>();
-                        //    womanIbpoArray[i] = new List<dbObject>();
-                        //}
+                            //        if (manIbpoIdList[i] == dbDoseRecords[k].getId())
+                            //        {
+                            //            buffer++;
+                            //        }
+                            //        array[i] = buffer;
+                            //    }
+                            //}
+                            //List<dbObject>[] manIbpoArray = new List<dbObject>[ageGroups.Count];
+                            //List<dbObject>[] womanIbpoArray = new List<dbObject>[ageGroups.Count];
 
-                        //for (int i = 0; i < ageGroups.Count; i++)
-                        //    for (int k = 0; k < dbRecords.Count; k++)
-                        //    {
-                        //        if (dbRecords[k].getSex() == sexMale && dbRecords[k].getYear() == 2012)
-                        //            if (dbRecords[k].getAgeAtExp() >= ageLowerBound[i] && dbRecords[k].getAgeAtExp() <= ageUpperBound[i])
-                        //            {
-                        //                manIbpoArray[i].Add(dbRecords[k]);
-                        //            }
-                        //        if (dbRecords[k].getSex() == sexFemale && dbRecords[k].getYear() == 2012)
-                        //            if (dbRecords[k].getAgeAtExp() >= ageLowerBound[i] && dbRecords[k].getAgeAtExp() <= ageUpperBound[i])
-                        //            {
-                        //                womanIbpoArray[i].Add(dbRecords[k]);
-                        //            }
-                        //    }
+                            //for (int i = 0; i < ageGroups.Count; i++)
+                            //{
+                            //    manIbpoArray[i] = new List<dbObject>();
+                            //    womanIbpoArray[i] = new List<dbObject>();
+                            //}
+
+                            //for (int i = 0; i < ageGroups.Count; i++)
+                            //    for (int k = 0; k < dbRecords.Count; k++)
+                            //    {
+                            //        if (dbRecords[k].getSex() == sexMale && dbRecords[k].getYear() == 2012)
+                            //            if (dbRecords[k].getAgeAtExp() >= ageLowerBound[i] && dbRecords[k].getAgeAtExp() <= ageUpperBound[i])
+                            //            {
+                            //                manIbpoArray[i].Add(dbRecords[k]);
+                            //            }
+                            //        if (dbRecords[k].getSex() == sexFemale && dbRecords[k].getYear() == 2012)
+                            //            if (dbRecords[k].getAgeAtExp() >= ageLowerBound[i] && dbRecords[k].getAgeAtExp() <= ageUpperBound[i])
+                            //            {
+                            //                womanIbpoArray[i].Add(dbRecords[k]);
+                            //            }
+                            //    }
 
 
-                    
-                    manExtIbpoBox95.Text = "Мужчинки " + manIbpoIdList.Count.ToString();
-                    manIntIbpoBox95.Text = "Тетьки " + womanIbpoIdList.Count.ToString();
 
-                        connection.Close();
+
                     ///*-----Создание пустого списка дозовых историй мужчин; для каждого уникального ID своя дозовая история (по сути, это ячейки, которые надо заполнить)-----*/
                     //List<RiskCalculator.DoseHistoryRecord[]> manDoseHistoryList = new List<RiskCalculator.DoseHistoryRecord[]>();
                     //for (int i = 0; i < manIdRecordsArray.Length; i++)
