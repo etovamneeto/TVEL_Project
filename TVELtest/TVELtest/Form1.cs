@@ -696,6 +696,26 @@ namespace TVELtest
                             womanDoseHistoryList[i][k].LungDoseInmGy = womanIbpoArray[i][k].getDoseInt() / wLung;
                         }
 
+                    /*-----Здесь пример использования калькулятора-----*/
+                    ////Создание словаря, где ключ - возраст, а значение - LAR
+                    //Dictionary<short, double> ageLar = new Dictionary<short, double>();
+                    //for (int i = 0; i <= ages; i++)
+                    //{
+                    //    RiskCalculator.DoseHistoryRecord[] record = listOfDoseHistories[i];
+                    //    if (externalRB.Checked)
+                    //    {
+                    //        RiskCalculatorLib.RiskCalculator calculator = new RiskCalculatorLib.RiskCalculator(sex, listOfDoseHistories[i][0].AgeAtExposure, ref record, true);
+                    //        ageLar.Add(listOfDoseHistories[i][0].AgeAtExposure, calculator.getLAR(false, true).AllCancers);
+                    //        sheetName = sexName + " Внешнее";
+                    //    }
+                    //    else if (internalRB.Checked)
+                    //    {
+                    //        RiskCalculatorLib.RiskCalculator calculator = new RiskCalculatorLib.RiskCalculator(sex, listOfDoseHistories[i][0].AgeAtExposure, ref record, true);
+                    //        ageLar.Add(listOfDoseHistories[i][0].AgeAtExposure, calculator.getLAR(false, true).Lung);
+                    //        sheetName = sexName + " Внутреннее";
+                    //    }
+                    //}
+
                     
 
                     manExtIbpoBox95.Text = "Элементов " + manIbpoArray[Convert.ToInt32(manExtIbpoBox.Text)].Count.ToString();
