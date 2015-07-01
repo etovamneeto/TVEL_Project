@@ -650,6 +650,54 @@ namespace TVELtest
                         womanIbpoArray[i] = buffer;
                     }
 
+                    /*-----Задание весовых коэффициентов для тканей (в нашем случае учитывается только влияние на лёгкие)-----*/
+                    double wLung = 0.12;
+
+                    /*-----Создание пустого списка дозовых историй мужчин; для каждого уникального ID своя дозовая история (по сути, это ячейки, которые надо заполнить)-----*/
+                    List<RiskCalculator.DoseHistoryRecord[]> manDoseHistoryList = new List<RiskCalculator.DoseHistoryRecord[]>();
+                    for (int i = 0; i < manIbpoArray.Length; i++)
+                    {
+                        manDoseHistoryList.Add(new RiskCalculator.DoseHistoryRecord[manIbpoArray[i].Count]);
+                    }
+                    foreach (RiskCalculator.DoseHistoryRecord[] note in manDoseHistoryList)
+                    {
+                        for (int i = 0; i < note.Length; i++)
+                            note[i] = new RiskCalculator.DoseHistoryRecord();
+                    }
+
+                    /*-----Создание аналогичного списка дозовых историй для женщин-----*/
+                    List<RiskCalculator.DoseHistoryRecord[]> womanDoseHistoryList = new List<RiskCalculator.DoseHistoryRecord[]>();
+                    for (int i = 0; i < womanIbpoArray.Length; i++)
+                    {
+                        womanDoseHistoryList.Add(new RiskCalculator.DoseHistoryRecord[womanIbpoArray[i].Count]);
+                    }
+                    foreach (RiskCalculator.DoseHistoryRecord[] note in womanDoseHistoryList)
+                    {
+                        for (int i = 0; i < note.Length; i++)
+                            note[i] = new RiskCalculator.DoseHistoryRecord();
+                    }
+                    
+                    /*-----Заполнение дозовых историй мужчин-----*/
+                    for (int i = 0; i < manIbpoArray.Length; i++)
+                        for (int k = 0; k < manIbpoArray[i].Count; k++)
+                        {
+                            manDoseHistoryList[i][k].AgeAtExposure = manIbpoArray[i][k].getAgeAtExp();
+                            manDoseHistoryList[i][k].AllSolidDoseInmGy = manIbpoArray[i][k].getDose() - manIbpoArray[i][k].getDoseInt();
+                            manDoseHistoryList[i][k].LeukaemiaDoseInmGy = manIbpoArray[i][k].getDose() - manIbpoArray[i][k].getDoseInt();
+                            manDoseHistoryList[i][k].LungDoseInmGy = manIbpoArray[i][k].getDoseInt() / wLung;
+                        }
+                    /*-----Заполнение дозовых историй женщин-----*/
+                    for (int i = 0; i < womanIbpoArray.Length; i++)
+                        for (int k = 0; k < womanIbpoArray[i].Count; k++)
+                        {
+                            womanDoseHistoryList[i][k].AgeAtExposure = womanIbpoArray[i][k].getAgeAtExp();
+                            womanDoseHistoryList[i][k].AllSolidDoseInmGy = womanIbpoArray[i][k].getDose() - womanIbpoArray[i][k].getDoseInt();
+                            womanDoseHistoryList[i][k].LeukaemiaDoseInmGy = womanIbpoArray[i][k].getDose() - womanIbpoArray[i][k].getDoseInt();
+                            womanDoseHistoryList[i][k].LungDoseInmGy = womanIbpoArray[i][k].getDoseInt() / wLung;
+                        }
+
+                    
+
                     manExtIbpoBox95.Text = "Элементов " + manIbpoArray[Convert.ToInt32(manExtIbpoBox.Text)].Count.ToString();
                     manIntIbpoBox95.Text = "Элементы " + manIbpoArray[Convert.ToInt32(manExtIbpoBox.Text)][Convert.ToInt32(manIntIbpoBox.Text)].getDose().ToString();
                     womanExtIbpoBox.Text = "id " + manIbpoArray[Convert.ToInt32(manExtIbpoBox.Text)][Convert.ToInt32(manIntIbpoBox.Text)].getId().ToString();
@@ -658,21 +706,7 @@ namespace TVELtest
                     womanIntIbpoBox95.Text = "ВозПриОб " + manIbpoArray[Convert.ToInt32(manExtIbpoBox.Text)][Convert.ToInt32(manIntIbpoBox.Text)].getAgeAtExp().ToString();
 
                     connection.Close();
-                            //int[] array = new int[manIbpoIdList.Count];//Живучая идея для заполнения индивидуальных доз, но потом надо их по группам распихать
-                            //int buffer = 0;
-                            //for (int i = 0; i < manIbpoIdList.Count; i++)
-                            //{
-                            //    buffer = 0;
-                            //    for (int k = 0; k < dbDoseRecords.Count; k++)
-                            //    {
 
-                            //        if (manIbpoIdList[i] == dbDoseRecords[k].getId())
-                            //        {
-                            //            buffer++;
-                            //        }
-                            //        array[i] = buffer;
-                            //    }
-                            //}
 
 
 
