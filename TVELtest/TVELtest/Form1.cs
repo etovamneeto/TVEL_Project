@@ -318,7 +318,7 @@ namespace TVELtest
                             }
                     }
 
-                /*-----Инициализация массиво, хранящих ОРПО для половозрастных групп-----*/
+                /*-----Инициализация массивов, хранящих ОРПО для половозрастных групп-----*/
                 manExtOrpo = new double[ageGroups.Count];
                 manIntOrpo = new double[ageGroups.Count];
                 womanExtOrpo = new double[ageGroups.Count];
@@ -710,18 +710,18 @@ namespace TVELtest
                      * каждый элемент массива - список LAR-ов п/в группы.
                      * Это массивы LAR от внешнего облучения.
                      * Для внутреннего отдельно надо-----*/
-                    List<double>[] manLarArray = new List<double>[ageGroups.Count];
-                    for (int i = 0; i < manLarArray.Length; i++)
-                        manLarArray[i] = new List<double>();
+                    List<double>[] manExtLarArray = new List<double>[ageGroups.Count];
+                    for (int i = 0; i < manExtLarArray.Length; i++)
+                        manExtLarArray[i] = new List<double>();
                     /*-----Создание аналогичного массива для женщин-----*/
-                    List<double>[] womanLarArray = new List<double>[ageGroups.Count];
-                    for (int i = 0; i < womanLarArray.Length; i++)
-                        womanLarArray[i] = new List<double>();
+                    List<double>[] womanExtLarArray = new List<double>[ageGroups.Count];
+                    for (int i = 0; i < womanExtLarArray.Length; i++)
+                        womanExtLarArray[i] = new List<double>();
 
                     /*-----Заполнение этих массивов-----*/
                     RiskCalculator.DoseHistoryRecord[] record = null;
                     RiskCalculatorLib.RiskCalculator calculator = null;
-                    for (int i = 0; i < manLarArray.Length; i++)
+                    for (int i = 0; i < manExtLarArray.Length; i++)
                         for (int k = 0; k < manDoseHistoryList.Count; k++)
                         {
                             if (manRecordsList[k].getAgeAtExp() == manDoseHistoryList[k][manDoseHistoryList[k].Length - 1].AgeAtExposure)
@@ -729,10 +729,10 @@ namespace TVELtest
                                 {
                                     record = manDoseHistoryList[k];
                                     calculator = new RiskCalculatorLib.RiskCalculator(RiskCalculator.SEX_MALE, manDoseHistoryList[k][0].AgeAtExposure, ref record, true);
-                                    manLarArray[i].Add(calculator.getLAR(false, true).AllCancers);//Кажется, здесь считается LAR...
+                                    manExtLarArray[i].Add(calculator.getLAR(false, true).AllCancers);//Кажется, здесь считается LAR...
                                 }
                         }
-                    for (int i = 0; i < womanLarArray.Length; i++)
+                    for (int i = 0; i < womanExtLarArray.Length; i++)
                         for (int k = 0; k < womanDoseHistoryList.Count; k++)
                         {
                             if (womanRecordsList[k].getAgeAtExp() == womanDoseHistoryList[k][womanDoseHistoryList[k].Length - 1].AgeAtExposure)
@@ -740,33 +740,64 @@ namespace TVELtest
                                 {
                                     record = womanDoseHistoryList[k];
                                     calculator = new RiskCalculatorLib.RiskCalculator(RiskCalculator.SEX_FEMALE, womanDoseHistoryList[k][0].AgeAtExposure, ref record, true);
-                                    womanLarArray[i].Add(calculator.getLAR(false, true).AllCancers);//в этой строчке должен вычисляться LAR и записываться в этот список
+                                    womanExtLarArray[i].Add(calculator.getLAR(false, true).AllCancers);//в этой строчке должен вычисляться LAR и записываться в этот список
                                 }
                         }
-                            /*-----Здесь пример использования калькулятора-----*/
-                            ////Создание словаря, где ключ - возраст, а значение - LAR
-                            //Dictionary<short, double> ageLar = new Dictionary<short, double>();
-                            //for (int i = 0; i <= ages; i++)
-                            //{
-                            //    RiskCalculator.DoseHistoryRecord[] record = listOfDoseHistories[i];
-                            //    if (externalRB.Checked)
-                            //    {
-                            //        RiskCalculatorLib.RiskCalculator calculator = new RiskCalculatorLib.RiskCalculator(sex, listOfDoseHistories[i][0].AgeAtExposure, ref record, true);
-                            //        ageLar.Add(listOfDoseHistories[i][0].AgeAtExposure, calculator.getLAR(false, true).AllCancers);
-                            //        sheetName = sexName + " Внешнее";
-                            //    }
-                            //    else if (internalRB.Checked)
-                            //    {
-                            //        RiskCalculatorLib.RiskCalculator calculator = new RiskCalculatorLib.RiskCalculator(sex, listOfDoseHistories[i][0].AgeAtExposure, ref record, true);
-                            //        ageLar.Add(listOfDoseHistories[i][0].AgeAtExposure, calculator.getLAR(false, true).Lung);
-                            //        sheetName = sexName + " Внутреннее";
-                            //    }
-                            //}
 
-                    manExtIbpoBox95.Text = "Элементов " + manLarArray[Convert.ToInt32(manExtIbpoBox.Text)].Count.ToString();
-                    manIntIbpoBox95.Text = "Элементы " + manLarArray[Convert.ToInt32(manExtIbpoBox.Text)][Convert.ToInt32(manIntIbpoBox.Text)].ToString();
+                    double[] manExtIbpo = new double[ageGroups.Count];
+                    double[] womanExtIbpo = new double[ageGroups.Count];
+                    double[] manExtIbpo_95 = new double[ageGroups.Count];
+                    double[] womanExtIbpo_95 = new double[ageGroups.Count];
+                    for (int i = 0; i < ageGroups.Count; i++)
+                    {
+                        if (manExtLarArray[i].Count > 0)
+                        {
+                            manExtIbpo[i] = getIbpo(manExtLarArray[i], manExtOrpo[i]);
+                            manExtIbpo_95[i] = getIbpo(manExtLarArray[i], manExtOrpo_95[i]);
+                        }
+
+                        //if (manSadIntArray[i].Count > 0)
+                        //{
+                        //    manIntOrpo[i] = getOrpo(getManIntLar(manYearsArray[i].Average()), manSadIntArray[i].Average());
+                        //    manIntOrpo_95[i] = getOrpo_95(getManIntLar(manYearsArray[i].Average()), manSadIntArray[i].Average(), getDeviation(manSadIntArray[i]));
+                        //}
+
+                        if (womanExtLarArray[i].Count > 0)
+                        {
+                            womanExtIbpo[i] = getIbpo(womanExtLarArray[i], womanExtOrpo[i]);
+                            womanExtIbpo_95[i] = getIbpo(womanExtLarArray[i], womanExtOrpo_95[i]);
+                        }
+
+                        //if (womanSadIntArray[i].Count > 0)
+                        //{
+                        //    womanIntOrpo[i] = getOrpo(getWomanIntLar(womanYearsArray[i].Average()), womanSadIntArray[i].Average());
+                        //    womanIntOrpo_95[i] = getOrpo_95(getWomanIntLar(womanYearsArray[i].Average()), womanSadIntArray[i].Average(), getDeviation(womanSadIntArray[i]));
+                        //}
+                    }
+                        /*-----Здесь пример использования калькулятора-----*/
+                        ////Создание словаря, где ключ - возраст, а значение - LAR
+                        //Dictionary<short, double> ageLar = new Dictionary<short, double>();
+                        //for (int i = 0; i <= ages; i++)
+                        //{
+                        //    RiskCalculator.DoseHistoryRecord[] record = listOfDoseHistories[i];
+                        //    if (externalRB.Checked)
+                        //    {
+                        //        RiskCalculatorLib.RiskCalculator calculator = new RiskCalculatorLib.RiskCalculator(sex, listOfDoseHistories[i][0].AgeAtExposure, ref record, true);
+                        //        ageLar.Add(listOfDoseHistories[i][0].AgeAtExposure, calculator.getLAR(false, true).AllCancers);
+                        //        sheetName = sexName + " Внешнее";
+                        //    }
+                        //    else if (internalRB.Checked)
+                        //    {
+                        //        RiskCalculatorLib.RiskCalculator calculator = new RiskCalculatorLib.RiskCalculator(sex, listOfDoseHistories[i][0].AgeAtExposure, ref record, true);
+                        //        ageLar.Add(listOfDoseHistories[i][0].AgeAtExposure, calculator.getLAR(false, true).Lung);
+                        //        sheetName = sexName + " Внутреннее";
+                        //    }
+                        //}
+
+                        manExtIbpoBox95.Text = "Элементов " + manExtLarArray[Convert.ToInt32(manExtIbpoBox.Text)].Count.ToString();
+                    manIntIbpoBox95.Text = "Элементы " + manExtLarArray[Convert.ToInt32(manExtIbpoBox.Text)][Convert.ToInt32(manIntIbpoBox.Text)].ToString();
                     //womanExtIbpoBox.Text = "id " + manIbpoArray[Convert.ToInt32(manExtIbpoBox.Text)][Convert.ToInt32(manIntIbpoBox.Text)].getId().ToString();
-                    womanIntIbpoBox.Text = "Длина " + manLarArray.Length.ToString();
+                    womanIntIbpoBox.Text = "Длина " + manExtLarArray.Length.ToString();
                     //womanExtIbpoBox95.Text = "Пол " + womanDoseHistoryList.Count;//manIbpoArray[Convert.ToInt32(manExtIbpoBox.Text)][Convert.ToInt32(manIntIbpoBox.Text)].getSex().ToString();
                     //womanIntIbpoBox95.Text = "ВозПриОб " + womanIbpoIdList.Count;//manIbpoArray[Convert.ToInt32(manExtIbpoBox.Text)][Convert.ToInt32(manIntIbpoBox.Text)].getAgeAtExp().ToString();
 
