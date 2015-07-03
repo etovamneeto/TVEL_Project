@@ -711,17 +711,26 @@ namespace TVELtest
                      * Это массивы LAR от внешнего облучения.
                      * Для внутреннего отдельно надо-----*/
                     List<double>[] manExtLarArray = new List<double>[ageGroups.Count];
-                    for (int i = 0; i < manExtLarArray.Length; i++)
+                    List<double>[] manIntLarArray = new List<double>[ageGroups.Count];
+                    for (int i = 0; i < ageGroups.Count; i++)
+                    {
                         manExtLarArray[i] = new List<double>();
+                        manIntLarArray[i] = new List<double>();
+                    }
+                        
                     /*-----Создание аналогичного массива для женщин-----*/
                     List<double>[] womanExtLarArray = new List<double>[ageGroups.Count];
-                    for (int i = 0; i < womanExtLarArray.Length; i++)
+                    List<double>[] womanIntLarArray = new List<double>[ageGroups.Count];
+                    for (int i = 0; i < ageGroups.Count; i++)
+                    {
                         womanExtLarArray[i] = new List<double>();
+                        womanIntLarArray[i] = new List<double>();
+                    }
 
                     /*-----Заполнение этих массивов-----*/
                     RiskCalculator.DoseHistoryRecord[] record = null;
                     RiskCalculatorLib.RiskCalculator calculator = null;
-                    for (int i = 0; i < manExtLarArray.Length; i++)
+                    for (int i = 0; i < ageGroups.Count; i++)
                         for (int k = 0; k < manDoseHistoryList.Count; k++)
                         {
                             if (manRecordsList[k].getAgeAtExp() == manDoseHistoryList[k][manDoseHistoryList[k].Length - 1].AgeAtExposure)
@@ -730,9 +739,10 @@ namespace TVELtest
                                     record = manDoseHistoryList[k];
                                     calculator = new RiskCalculatorLib.RiskCalculator(RiskCalculator.SEX_MALE, manDoseHistoryList[k][0].AgeAtExposure, ref record, true);
                                     manExtLarArray[i].Add(calculator.getLAR(false, true).AllCancers);//Кажется, здесь считается LAR...
+                                    manIntLarArray[i].Add(calculator.getLAR(false, true).Lung);
                                 }
                         }
-                    for (int i = 0; i < womanExtLarArray.Length; i++)
+                    for (int i = 0; i < ageGroups.Count; i++)
                         for (int k = 0; k < womanDoseHistoryList.Count; k++)
                         {
                             if (womanRecordsList[k].getAgeAtExp() == womanDoseHistoryList[k][womanDoseHistoryList[k].Length - 1].AgeAtExposure)
@@ -741,13 +751,24 @@ namespace TVELtest
                                     record = womanDoseHistoryList[k];
                                     calculator = new RiskCalculatorLib.RiskCalculator(RiskCalculator.SEX_FEMALE, womanDoseHistoryList[k][0].AgeAtExposure, ref record, true);
                                     womanExtLarArray[i].Add(calculator.getLAR(false, true).AllCancers);//в этой строчке должен вычисляться LAR и записываться в этот список
+                                    womanIntLarArray[i].Add(calculator.getLAR(false, true).Lung);
                                 }
                         }
 
                     double[] manExtIbpo = new double[ageGroups.Count];
-                    double[] womanExtIbpo = new double[ageGroups.Count];
                     double[] manExtIbpo_95 = new double[ageGroups.Count];
+
+                    double[] manIntIbpo = new double[ageGroups.Count];
+                    double[] manIntIbpo_95 = new double[ageGroups.Count];
+                    
+                    
+                    double[] womanExtIbpo = new double[ageGroups.Count];
                     double[] womanExtIbpo_95 = new double[ageGroups.Count];
+
+                    double[] womanIntIbpo = new double[ageGroups.Count];
+                    double[] womanIntIbpo_95 = new double[ageGroups.Count];
+                    
+                    
                     for (int i = 0; i < ageGroups.Count; i++)
                     {
                         if (manExtLarArray[i].Count > 0)
@@ -756,11 +777,11 @@ namespace TVELtest
                             manExtIbpo_95[i] = getIbpo(manExtLarArray[i], manExtOrpo_95[i]);
                         }
 
-                        //if (manSadIntArray[i].Count > 0)
-                        //{
-                        //    manIntOrpo[i] = getOrpo(getManIntLar(manYearsArray[i].Average()), manSadIntArray[i].Average());
-                        //    manIntOrpo_95[i] = getOrpo_95(getManIntLar(manYearsArray[i].Average()), manSadIntArray[i].Average(), getDeviation(manSadIntArray[i]));
-                        //}
+                        if (manIntLarArray[i].Count > 0)
+                        {
+                            manIntIbpo[i] = getIbpo(manIntLarArray[i], manIntOrpo[i]);
+                            manIntIbpo_95[i] = getIbpo(manIntLarArray[i], manIntOrpo_95[i]);
+                        }
 
                         if (womanExtLarArray[i].Count > 0)
                         {
@@ -768,11 +789,11 @@ namespace TVELtest
                             womanExtIbpo_95[i] = getIbpo(womanExtLarArray[i], womanExtOrpo_95[i]);
                         }
 
-                        //if (womanSadIntArray[i].Count > 0)
-                        //{
-                        //    womanIntOrpo[i] = getOrpo(getWomanIntLar(womanYearsArray[i].Average()), womanSadIntArray[i].Average());
-                        //    womanIntOrpo_95[i] = getOrpo_95(getWomanIntLar(womanYearsArray[i].Average()), womanSadIntArray[i].Average(), getDeviation(womanSadIntArray[i]));
-                        //}
+                        if (womanIntLarArray[i].Count > 0)
+                        {
+                            womanIntIbpo[i] = getIbpo(womanIntLarArray[i], womanIntOrpo[i]);
+                            womanIntIbpo_95[i] = getIbpo(womanIntLarArray[i], womanIntOrpo_95[i]);
+                        }
                     }
                         /*-----Здесь пример использования калькулятора-----*/
                         ////Создание словаря, где ключ - возраст, а значение - LAR
@@ -794,10 +815,10 @@ namespace TVELtest
                         //    }
                         //}
 
-                        manExtIbpoBox95.Text = "Элементов " + manExtLarArray[Convert.ToInt32(manExtIbpoBox.Text)].Count.ToString();
-                    manIntIbpoBox95.Text = "Элементы " + manExtLarArray[Convert.ToInt32(manExtIbpoBox.Text)][Convert.ToInt32(manIntIbpoBox.Text)].ToString();
-                    //womanExtIbpoBox.Text = "id " + manIbpoArray[Convert.ToInt32(manExtIbpoBox.Text)][Convert.ToInt32(manIntIbpoBox.Text)].getId().ToString();
-                    womanIntIbpoBox.Text = "Длина " + manExtLarArray.Length.ToString();
+                    manExtIbpoBox95.Text = "МужичкиВнеш " + manExtIbpo[Convert.ToInt32(manExtIbpoBox.Text)];//"Элементов " + manExtLarArray[Convert.ToInt32(manExtIbpoBox.Text)].Count.ToString();
+                    manIntIbpoBox95.Text = "МужичкиВнут " + manIntIbpo[Convert.ToInt32(manIntIbpoBox.Text)];//"Элементы " + manExtLarArray[Convert.ToInt32(manExtIbpoBox.Text)][Convert.ToInt32(manIntIbpoBox.Text)].ToString();
+                    womanExtIbpoBox.Text = "МужичкиВнеш95 " + manExtIbpo_95[Convert.ToInt32(manExtIbpoBox.Text)];//"id " + manIbpoArray[Convert.ToInt32(manExtIbpoBox.Text)][Convert.ToInt32(manIntIbpoBox.Text)].getId().ToString();
+                    womanIntIbpoBox.Text = "МужичкиВнут95 " + manIntIbpo_95[Convert.ToInt32(manIntIbpoBox.Text)];//"Длина " + manExtLarArray.Length.ToString();
                     //womanExtIbpoBox95.Text = "Пол " + womanDoseHistoryList.Count;//manIbpoArray[Convert.ToInt32(manExtIbpoBox.Text)][Convert.ToInt32(manIntIbpoBox.Text)].getSex().ToString();
                     //womanIntIbpoBox95.Text = "ВозПриОб " + womanIbpoIdList.Count;//manIbpoArray[Convert.ToInt32(manExtIbpoBox.Text)][Convert.ToInt32(manIntIbpoBox.Text)].getAgeAtExp().ToString();
 
@@ -809,7 +830,7 @@ namespace TVELtest
                     string elapsedTime = String.Format("{0:00}:{1:00}:{2:00}.{3:00}",
                     ts.Hours, ts.Minutes, ts.Seconds,
                     ts.Milliseconds / 10);
-                    womanExtIbpoBox.Text = "Время " + elapsedTime;
+                    womanExtIbpoBox95.Text = "Время " + elapsedTime;
 
 
 
