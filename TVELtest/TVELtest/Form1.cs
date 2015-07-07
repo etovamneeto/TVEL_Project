@@ -195,6 +195,48 @@ namespace TVELtest
                 dbPath = ofd.FileName;
                 connectionString = @"Provider=Microsoft.Jet.OLEDB.4.0; Data Source=" + dbPath;
             }
+
+            /*-----Список, в котором хранятся строковые параметры, инентифицирующие возрастные группы-----*/
+            ageGroups = new List<string>();//Строки, в которых указаны возростные группы. Это ключи для дальнейшей связи через словари.
+            ageGroups.Add("18-24");
+            ageGroups.Add("25-29");
+            ageGroups.Add("30-34");
+            ageGroups.Add("35-39");
+            ageGroups.Add("40-44");
+            ageGroups.Add("45-49");
+            ageGroups.Add("50-54");
+            ageGroups.Add("55-59");
+            ageGroups.Add("60-64");
+            ageGroups.Add("65-69");
+            ageGroups.Add("70+");
+
+            /*-----Список, в котором хранятся нижние границы возрастов для возрастных групп-----*/
+            ageLowerBound = new List<int>();
+            ageLowerBound.Add(18);
+            ageLowerBound.Add(25);
+            ageLowerBound.Add(30);
+            ageLowerBound.Add(35);
+            ageLowerBound.Add(40);
+            ageLowerBound.Add(45);
+            ageLowerBound.Add(50);
+            ageLowerBound.Add(55);
+            ageLowerBound.Add(60);
+            ageLowerBound.Add(65);
+            ageLowerBound.Add(70);
+
+            /*-----Список, в котором хранятся верхние границы возрастов для возрастных групп-----*/
+            ageUpperBound = new List<int>();
+            ageUpperBound.Add(24);
+            ageUpperBound.Add(29);
+            ageUpperBound.Add(34);
+            ageUpperBound.Add(39);
+            ageUpperBound.Add(44);
+            ageUpperBound.Add(49);
+            ageUpperBound.Add(54);
+            ageUpperBound.Add(59);
+            ageUpperBound.Add(64);
+            ageUpperBound.Add(69);
+            ageUpperBound.Add(100);
         }
 
         private void getOrpoButton_Click(object sender, EventArgs e)
@@ -208,48 +250,6 @@ namespace TVELtest
                 DataSet dataSet = new DataSet();
                 adapter.Fill(dataSet, "Final");
                 DataTable table = dataSet.Tables[0];//Из Final в эту таблицу считываются поля, указанные в запросе; Выборка для МСК (shop = r3)
-
-                /*-----Список, в котором хранятся строковые параметры, инентифицирующие возрастные группы-----*/
-                ageGroups = new List<string>();//Строки, в которых указаны возростные группы. Это ключи для дальнейшей связи через словари.
-                ageGroups.Add("18-24");
-                ageGroups.Add("25-29");
-                ageGroups.Add("30-34");
-                ageGroups.Add("35-39");
-                ageGroups.Add("40-44");
-                ageGroups.Add("45-49");
-                ageGroups.Add("50-54");
-                ageGroups.Add("55-59");
-                ageGroups.Add("60-64");
-                ageGroups.Add("65-69");
-                ageGroups.Add("70+");
-
-                /*-----Список, в котором хранятся нижние границы возрастов для возрастных групп-----*/
-                ageLowerBound = new List<int>();
-                ageLowerBound.Add(18);
-                ageLowerBound.Add(25);
-                ageLowerBound.Add(30);
-                ageLowerBound.Add(35);
-                ageLowerBound.Add(40);
-                ageLowerBound.Add(45);
-                ageLowerBound.Add(50);
-                ageLowerBound.Add(55);
-                ageLowerBound.Add(60);
-                ageLowerBound.Add(65);
-                ageLowerBound.Add(70);
-
-                /*-----Список, в котором хранятся верхние границы возрастов для возрастных групп-----*/
-                ageUpperBound = new List<int>();
-                ageUpperBound.Add(24);
-                ageUpperBound.Add(29);
-                ageUpperBound.Add(34);
-                ageUpperBound.Add(39);
-                ageUpperBound.Add(44);
-                ageUpperBound.Add(49);
-                ageUpperBound.Add(54);
-                ageUpperBound.Add(59);
-                ageUpperBound.Add(64);
-                ageUpperBound.Add(69);
-                ageUpperBound.Add(100);
 
                 /*-----Список объектов; достаем все необходимое для расчетов: id, dose, doseInt, ageAtExp, gender-----*/
                 dbFinalRecords = new List<dbObject>();
@@ -795,6 +795,21 @@ namespace TVELtest
                             womanIntIbpo_95[i] = getIbpo(womanIntLarArray[i], womanIntOrpo_95[i]);
                         }
                     }
+
+                    /*-----Подсчет взвешенных величин-----*/
+                    //List<double> Extern = new List<double>();
+                    //List<double> Intern = new List<double>();
+                    //for (int i = 0; i < ageGroups.Count; i++)
+                    //{
+                    //    Extern.Add(manExtIbpo[i] * manExtLarArray[i].Count);
+                    //    Intern.Add(manIntIbpo[i] * manIntLarArray[i].Count);
+                    //}
+
+                    //double itogExt = 0;
+                    //double itogInt = 0;
+
+                    //    itogExt = Extern.Sum() / manRecordsList.Count;
+                    //    itogInt = Intern.Sum() / manRecordsList.Count;
                         /*-----Здесь пример использования калькулятора-----*/
                         ////Создание словаря, где ключ - возраст, а значение - LAR
                         //Dictionary<short, double> ageLar = new Dictionary<short, double>();
