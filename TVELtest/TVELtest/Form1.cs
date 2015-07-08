@@ -676,82 +676,138 @@ namespace TVELtest
                 //            }
                 //    }
 /*-------------------------------------------------------------------------------------------------------------------------------------------------*/
-                //Задание весовых коэффициентов для тканей (в нашем случае учитывается только влияние на лёгкие)
-                double wLung = 0.12;
+                /*-----Массивы списков для мужчин и для женщин, в каждом из которых хранятся дозы (внешние и внутренние) для соответствующий половозрастной группы-----*/
+                List<double>[] manSadExtArray = new List<double>[ageGroups.Count];//SAD - SexAgeDose
+                List<double>[] manSadIntArray = new List<double>[ageGroups.Count];
+                List<double>[] womanSadExtArray = new List<double>[ageGroups.Count];
+                List<double>[] womanSadIntArray = new List<double>[ageGroups.Count];
 
                 /*-----Массив списоков, через которые будут вычесляться средние возроста половозрастных групп-----*/
                 List<int>[] manYearsArray = new List<int>[ageGroups.Count];
                 List<int>[] womanYearsArray = new List<int>[ageGroups.Count];
+
                 for (int i = 0; i < ageGroups.Count; i++)
                 {
-                    //manSadExtArray[i] = new List<double>();
-                    //manSadIntArray[i] = new List<double>();
-                    //womanSadExtArray[i] = new List<double>();
-                    //womanSadIntArray[i] = new List<double>();
+                    manSadExtArray[i] = new List<double>();
+                    manSadIntArray[i] = new List<double>();
+                    womanSadExtArray[i] = new List<double>();
+                    womanSadIntArray[i] = new List<double>();
 
                     manYearsArray[i] = new List<int>();
                     womanYearsArray[i] = new List<int>();
                 }
+                
 
-                List<RiskCalculator.DoseHistoryRecord[]> manDoseHistoryList = new List<RiskCalculator.DoseHistoryRecord[]>();
+                /*-----Создание массивов, храящих LAR п/в групп-----*/
+                List<double>[] manExtLarArray = new List<double>[ageGroups.Count];
+                List<double>[] manIntLarArray = new List<double>[ageGroups.Count];
                 for (int i = 0; i < ageGroups.Count; i++)
                 {
-                    manDoseHistoryList.Add(new RiskCalculator.DoseHistoryRecord[1]);
-                }
-                foreach (RiskCalculator.DoseHistoryRecord[] record in manDoseHistoryList)
-                {
-                    for (int i = 0; i < record.Length; i++)
-                        record[i] = new RiskCalculator.DoseHistoryRecord();
+                    manExtLarArray[i] = new List<double>();
+                    manIntLarArray[i] = new List<double>();
                 }
 
-                List<RiskCalculator.DoseHistoryRecord[]> womanDoseHistoryList = new List<RiskCalculator.DoseHistoryRecord[]>();
+                List<double>[] womanExtLarArray = new List<double>[ageGroups.Count];
+                List<double>[] womanIntLarArray = new List<double>[ageGroups.Count];
                 for (int i = 0; i < ageGroups.Count; i++)
                 {
-                    womanDoseHistoryList.Add(new RiskCalculator.DoseHistoryRecord[1]);
-                }
-                foreach (RiskCalculator.DoseHistoryRecord[] record in womanDoseHistoryList)
-                {
-                    for (int i = 0; i < record.Length; i++)
-                        record[i] = new RiskCalculator.DoseHistoryRecord();
+                    womanExtLarArray[i] = new List<double>();
+                    womanIntLarArray[i] = new List<double>();
                 }
 
+                ///*-----Заполнение этих массивов-----*/
+                //RiskCalculator.DoseHistoryRecord[] record = null;
+                //RiskCalculatorLib.RiskCalculator calculator = null;
+
+                /*-----Заполнение массива списков доз-----*/
                 for (int i = 0; i < ageGroups.Count; i++)
                     for (int k = 0; k < dbFinalRecords.Count; k++)
                     {
                         if (dbFinalRecords[k].getSex() == sexMale)
                             if (dbFinalRecords[k].getAgeAtExp() >= ageLowerBound[i] && dbFinalRecords[k].getAgeAtExp() <= ageUpperBound[i])
                             {
-                                //manSadExtArray[i].Add(dbFinalRecords[k].getDose() - dbFinalRecords[k].getDoseInt());
-                                //manSadIntArray[i].Add(dbFinalRecords[k].getDoseInt());
-                                //manYearsArray[i].Add(dbFinalRecords[k].getAgeAtExp());
-
-                                manDoseHistoryList[i][0].AgeAtExposure = dbFinalRecords[k].getAgeAtExp();
-                                manDoseHistoryList[i][0].AllSolidDoseInmGy = dbFinalRecords[k].getDose() - dbFinalRecords[k].getDoseInt();
-                                manDoseHistoryList[i][0].LeukaemiaDoseInmGy = 1000;
-                                manDoseHistoryList[i][0].LungDoseInmGy = dbFinalRecords[k].getDoseInt() / wLung;
+                                manSadExtArray[i].Add(dbFinalRecords[k].getDose() - dbFinalRecords[k].getDoseInt());
+                                manSadIntArray[i].Add(dbFinalRecords[k].getDoseInt());
                                 manYearsArray[i].Add(dbFinalRecords[k].getAgeAtExp());
                             }
                         if (dbFinalRecords[k].getSex() == sexFemale)
                             if (dbFinalRecords[k].getAgeAtExp() >= ageLowerBound[i] && dbFinalRecords[k].getAgeAtExp() <= ageUpperBound[i])
                             {
-                                //womanSadExtArray[i].Add(dbFinalRecords[k].getDose() - dbFinalRecords[k].getDoseInt());
-                                //womanSadIntArray[i].Add(dbFinalRecords[k].getDoseInt());
-                                //womanYearsArray[i].Add(dbFinalRecords[k].getAgeAtExp());
-                                womanDoseHistoryList[i][0].AgeAtExposure = dbFinalRecords[k].getAgeAtExp();
-                                womanDoseHistoryList[i][0].AllSolidDoseInmGy = dbFinalRecords[k].getDose() - dbFinalRecords[k].getDoseInt();
-                                womanDoseHistoryList[i][0].LeukaemiaDoseInmGy = 1000;
-                                womanDoseHistoryList[i][0].LungDoseInmGy = dbFinalRecords[k].getDoseInt() / wLung;
+                                womanSadExtArray[i].Add(dbFinalRecords[k].getDose() - dbFinalRecords[k].getDoseInt());
+                                womanSadIntArray[i].Add(dbFinalRecords[k].getDoseInt());
                                 womanYearsArray[i].Add(dbFinalRecords[k].getAgeAtExp());
                             }
                     }
 
-                //for (int i = 0; i <= ages; i++)
-                //{
-                //    listOfDoseHistories[i][0].AgeAtExposure = Convert.ToInt16(Convert.ToInt32(minAgeBox.Text) + i);
-                //    listOfDoseHistories[i][0].AllSolidDoseInmGy = 1000;
-                //    listOfDoseHistories[i][0].LeukaemiaDoseInmGy = 1000;
-                //    listOfDoseHistories[i][0].LungDoseInmGy = 1000 / wLung;
-                //}
+                //Задание весовых коэффициентов для тканей (в нашем случае учитывается только влияние на лёгкие)
+                double wLung = 0.12;
+
+                /*-----Создание дозовых историй-----*/
+                List<RiskCalculator.DoseHistoryRecord[]>[] manDoseHistoryList = new List<RiskCalculator.DoseHistoryRecord[]>[ageGroups.Count];
+                List<RiskCalculator.DoseHistoryRecord[]>[] womanDoseHistoryList = new List<RiskCalculator.DoseHistoryRecord[]>[ageGroups.Count];
+                for (int i = 0; i < ageGroups.Count; i++)
+                {
+                    manDoseHistoryList[i] = new List<RiskCalculator.DoseHistoryRecord[]>();
+                    womanDoseHistoryList[i] = new List<RiskCalculator.DoseHistoryRecord[]>();
+                }
+                for (int i = 0; i < ageGroups.Count; i++)
+                    for (int k = 0; k < manSadExtArray[i].Count; k++)
+                    {
+                        manDoseHistoryList[i].Add(new RiskCalculator.DoseHistoryRecord[1]);
+                    }
+                for (int i = 0; i < ageGroups.Count; i++)
+                    for (int k = 0; k < manSadExtArray[i].Count; k++)
+                    {
+                        womanDoseHistoryList[i].Add(new RiskCalculator.DoseHistoryRecord[1]);
+                    }
+/*----------------------------ВОТ ЗДЕСЬ НАДО ПРИДУМАТЬ ЗАПОЛНЕНИЕ!!!-------------------------------------*/                
+                /*-----Заполнение ДИ-----*/
+                for (int i = 0; i < ageGroups.Count; i++)
+                    for (int k = 0; k < manDoseHistoryList[i].Count; k++)
+                    {
+                        //manDoseHistoryList[i][k][0].AgeAtExposure = (short)manYearsArray[i][k];
+                        //manDoseHistoryList[i][k][0].AllSolidDoseInmGy = manSadExtArray[i][k];
+                        //manDoseHistoryList[i][k][0].LeukaemiaDoseInmGy = manSadExtArray[i][k];
+                        //manDoseHistoryList[i][k][0].LungDoseInmGy = manSadIntArray[i][k] / wLung;
+                    }
+                for (int i = 0; i < ageGroups.Count; i++)
+                    for (int k = 0; k < womanDoseHistoryList[i].Count; k++)
+                    {
+                        //womanDoseHistoryList[i][k][0].AgeAtExposure = (short)womanYearsArray[i][k];
+                        //womanDoseHistoryList[i][k][0].AllSolidDoseInmGy = womanSadExtArray[i][k];
+                        //womanDoseHistoryList[i][k][0].LeukaemiaDoseInmGy = womanSadExtArray[i][k];
+                        //womanDoseHistoryList[i][k][0].LungDoseInmGy = womanSadIntArray[i][k] / wLung;
+                    }
+                        //manYearsArray[i].Add(dbFinalRecords[k].getAgeAtExp());
+
+                        //manDoseHistoryList[k][0].AgeAtExposure = dbFinalRecords[k].getAgeAtExp();
+                        //manDoseHistoryList[k][0].AllSolidDoseInmGy = dbFinalRecords[k].getDose() - dbFinalRecords[k].getDoseInt();
+                        //manDoseHistoryList[k][0].LeukaemiaDoseInmGy = 1000;
+                        //manDoseHistoryList[k][0].LungDoseInmGy = dbFinalRecords[k].getDoseInt() / wLung;
+
+                        //record = manDoseHistoryList[k];
+                        //calculator = new RiskCalculatorLib.RiskCalculator(RiskCalculator.SEX_MALE, manDoseHistoryList[k][0].AgeAtExposure, ref record, true);
+                        //manExtLarArray[k].Add(calculator.getLAR(false, true).AllCancers);//Кажется, здесь считается LAR...
+                        //manIntLarArray[k].Add(calculator.getLAR(false, true).Lung);
+
+                        //manYearsArray[i].Add(dbFinalRecords[k].getAgeAtExp());
+
+
+                        //womanYearsArray[i].Add(dbFinalRecords[k].getAgeAtExp());
+
+                        //womanDoseHistoryList[i][0].AgeAtExposure = dbFinalRecords[k].getAgeAtExp();
+                        //womanDoseHistoryList[i][0].AllSolidDoseInmGy = dbFinalRecords[k].getDose() - dbFinalRecords[k].getDoseInt();
+                        //womanDoseHistoryList[i][0].LeukaemiaDoseInmGy = 1000;
+                        //womanDoseHistoryList[i][0].LungDoseInmGy = dbFinalRecords[k].getDoseInt() / wLung;
+
+                        //record = womanDoseHistoryList[i];
+                        //calculator = new RiskCalculatorLib.RiskCalculator(RiskCalculator.SEX_FEMALE, womanDoseHistoryList[i][0].AgeAtExposure, ref record, true);
+                        //womanExtLarArray[i].Add(calculator.getLAR(false, true).AllCancers);//Кажется, здесь считается LAR...
+                        //womanIntLarArray[i].Add(calculator.getLAR(false, true).Lung);
+
+                        //womanYearsArray[i].Add(dbFinalRecords[k].getAgeAtExp());
+
+                        manExtOrpoBox.Text = "WorkOut!";
 /*-------------------------------------------------------------------------------------------------------------------------------------------------*/
 
                 ///*-----Инициализация массивов, хранящих ОРПО для половозрастных групп-----*/
