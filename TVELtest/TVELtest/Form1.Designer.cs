@@ -29,7 +29,7 @@
         private void InitializeComponent()
         {
             this.openFileButton = new System.Windows.Forms.Button();
-            this.getOrpoButton = new System.Windows.Forms.Button();
+            this.getOrpoAverDoseButton = new System.Windows.Forms.Button();
             this.getIbpoButton = new System.Windows.Forms.Button();
             this.orpoGroupBox = new System.Windows.Forms.GroupBox();
             this.womanIntOrpoBox95 = new System.Windows.Forms.TextBox();
@@ -65,6 +65,7 @@
             this.manExtIbpoBox = new System.Windows.Forms.TextBox();
             this.ibpoBoxManIntLabel = new System.Windows.Forms.Label();
             this.ibpoBoxManExtLabel = new System.Windows.Forms.Label();
+            this.getOrpoAverLarButton = new System.Windows.Forms.Button();
             this.orpoGroupBox.SuspendLayout();
             this.ibpoGroupBox.SuspendLayout();
             this.SuspendLayout();
@@ -79,15 +80,15 @@
             this.openFileButton.UseVisualStyleBackColor = true;
             this.openFileButton.Click += new System.EventHandler(this.openFileButton_Click);
             // 
-            // getOrpoButton
+            // getOrpoAverDoseButton
             // 
-            this.getOrpoButton.Location = new System.Drawing.Point(12, 61);
-            this.getOrpoButton.Name = "getOrpoButton";
-            this.getOrpoButton.Size = new System.Drawing.Size(468, 43);
-            this.getOrpoButton.TabIndex = 0;
-            this.getOrpoButton.Text = "Шаг 2: Рассчитать ОРПО";
-            this.getOrpoButton.UseVisualStyleBackColor = true;
-            this.getOrpoButton.Click += new System.EventHandler(this.getOrpoButton_Click);
+            this.getOrpoAverDoseButton.Location = new System.Drawing.Point(12, 61);
+            this.getOrpoAverDoseButton.Name = "getOrpoAverDoseButton";
+            this.getOrpoAverDoseButton.Size = new System.Drawing.Size(234, 43);
+            this.getOrpoAverDoseButton.TabIndex = 0;
+            this.getOrpoAverDoseButton.Text = "Шаг 2-а: Рассчитать ОРПО (Ср. доза)";
+            this.getOrpoAverDoseButton.UseVisualStyleBackColor = true;
+            this.getOrpoAverDoseButton.Click += new System.EventHandler(this.getOrpoAverDoseButton_Click);
             // 
             // getIbpoButton
             // 
@@ -405,16 +406,27 @@
             this.ibpoBoxManExtLabel.TabIndex = 0;
             this.ibpoBoxManExtLabel.Text = "Мужчины, внеш.";
             // 
+            // getOrpoAverLarButton
+            // 
+            this.getOrpoAverLarButton.Location = new System.Drawing.Point(246, 61);
+            this.getOrpoAverLarButton.Name = "getOrpoAverLarButton";
+            this.getOrpoAverLarButton.Size = new System.Drawing.Size(234, 43);
+            this.getOrpoAverLarButton.TabIndex = 15;
+            this.getOrpoAverLarButton.Text = "Шаг 2-б: Рассчитать ОРПО (Ср. LAR)";
+            this.getOrpoAverLarButton.UseVisualStyleBackColor = true;
+            this.getOrpoAverLarButton.Click += new System.EventHandler(this.getOrpoAverLarButton_Click);
+            // 
             // Form1
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(492, 473);
+            this.Controls.Add(this.getOrpoAverLarButton);
             this.Controls.Add(this.ibpoGroupBox);
             this.Controls.Add(this.orpoGroupBox);
             this.Controls.Add(this.openFileButton);
             this.Controls.Add(this.getIbpoButton);
-            this.Controls.Add(this.getOrpoButton);
+            this.Controls.Add(this.getOrpoAverDoseButton);
             this.Name = "Form1";
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
             this.Text = "Form1";
@@ -430,7 +442,7 @@
         #endregion
 
         private System.Windows.Forms.Button openFileButton;
-        private System.Windows.Forms.Button getOrpoButton;
+        private System.Windows.Forms.Button getOrpoAverDoseButton;
         private System.Windows.Forms.Button getIbpoButton;
         private System.Windows.Forms.GroupBox orpoGroupBox;
         private System.Windows.Forms.TextBox womanIntOrpoBox95;
@@ -466,6 +478,7 @@
         private System.Windows.Forms.TextBox manExtIbpoBox;
         private System.Windows.Forms.Label ibpoBoxManIntLabel;
         private System.Windows.Forms.Label ibpoBoxManExtLabel;
+        private System.Windows.Forms.Button getOrpoAverLarButton;
 
 
     }
