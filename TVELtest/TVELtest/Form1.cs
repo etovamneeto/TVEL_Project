@@ -333,7 +333,7 @@ namespace TVELtest
                 manIntOrpo_95 = new double[ageGroups.Count];
                 womanExtOrpo_95 = new double[ageGroups.Count];
                 womanIntOrpo_95 = new double[ageGroups.Count];
-                /*-----СОРТИРОВКИ!!!!-----*/
+
                 for (int i = 0; i < ageGroups.Count; i++)
                 {
                     if (manSadExtArray[i].Count > 0)
@@ -636,25 +636,83 @@ namespace TVELtest
                     if (dbFinalRecords[i].getSex() == sexFemale)
                         dbWoman++;
 
-                /*-----Массивы списков для мужчин и для женщин, в каждом из которых хранятся дозы (внешние и внутренние) для соответствующий половозрастной группы-----*/
-                List<double>[] manSadExtArray = new List<double>[ageGroups.Count];//SAD - SexAgeDose
-                List<double>[] manSadIntArray = new List<double>[ageGroups.Count];
-                List<double>[] womanSadExtArray = new List<double>[ageGroups.Count];
-                List<double>[] womanSadIntArray = new List<double>[ageGroups.Count];
+                ///*-----Массивы списков для мужчин и для женщин, в каждом из которых хранятся дозы (внешние и внутренние) для соответствующий половозрастной группы-----*/
+                //List<double>[] manSadExtArray = new List<double>[ageGroups.Count];//SAD - SexAgeDose
+                //List<double>[] manSadIntArray = new List<double>[ageGroups.Count];
+                //List<double>[] womanSadExtArray = new List<double>[ageGroups.Count];
+                //List<double>[] womanSadIntArray = new List<double>[ageGroups.Count];
+
+                ///*-----Массив списоков, через которые будут вычесляться средние возроста половозрастных групп-----*/
+                //List<int>[] manYearsArray = new List<int>[ageGroups.Count];
+                //List<int>[] womanYearsArray = new List<int>[ageGroups.Count];
+
+                //for (int i = 0; i < ageGroups.Count; i++)
+                //{
+                //    manSadExtArray[i] = new List<double>();
+                //    manSadIntArray[i] = new List<double>();
+                //    womanSadExtArray[i] = new List<double>();
+                //    womanSadIntArray[i] = new List<double>();
+
+                //    manYearsArray[i] = new List<int>();
+                //    womanYearsArray[i] = new List<int>();
+                //}
+
+                //for (int i = 0; i < ageGroups.Count; i++)
+                //    for (int k = 0; k < dbFinalRecords.Count; k++)
+                //    {
+                //        if (dbFinalRecords[k].getSex() == sexMale)
+                //            if (dbFinalRecords[k].getAgeAtExp() >= ageLowerBound[i] && dbFinalRecords[k].getAgeAtExp() <= ageUpperBound[i])
+                //            {
+                //                manSadExtArray[i].Add(dbFinalRecords[k].getDose() - dbFinalRecords[k].getDoseInt());
+                //                manSadIntArray[i].Add(dbFinalRecords[k].getDoseInt());
+                //                manYearsArray[i].Add(dbFinalRecords[k].getAgeAtExp());
+                //            }
+                //        if (dbFinalRecords[k].getSex() == sexFemale)
+                //            if (dbFinalRecords[k].getAgeAtExp() >= ageLowerBound[i] && dbFinalRecords[k].getAgeAtExp() <= ageUpperBound[i])
+                //            {
+                //                womanSadExtArray[i].Add(dbFinalRecords[k].getDose() - dbFinalRecords[k].getDoseInt());
+                //                womanSadIntArray[i].Add(dbFinalRecords[k].getDoseInt());
+                //                womanYearsArray[i].Add(dbFinalRecords[k].getAgeAtExp());
+                //            }
+                //    }
+/*-------------------------------------------------------------------------------------------------------------------------------------------------*/
+                //Задание весовых коэффициентов для тканей (в нашем случае учитывается только влияние на лёгкие)
+                double wLung = 0.12;
 
                 /*-----Массив списоков, через которые будут вычесляться средние возроста половозрастных групп-----*/
                 List<int>[] manYearsArray = new List<int>[ageGroups.Count];
                 List<int>[] womanYearsArray = new List<int>[ageGroups.Count];
-
                 for (int i = 0; i < ageGroups.Count; i++)
                 {
-                    manSadExtArray[i] = new List<double>();
-                    manSadIntArray[i] = new List<double>();
-                    womanSadExtArray[i] = new List<double>();
-                    womanSadIntArray[i] = new List<double>();
+                    //manSadExtArray[i] = new List<double>();
+                    //manSadIntArray[i] = new List<double>();
+                    //womanSadExtArray[i] = new List<double>();
+                    //womanSadIntArray[i] = new List<double>();
 
                     manYearsArray[i] = new List<int>();
                     womanYearsArray[i] = new List<int>();
+                }
+
+                List<RiskCalculator.DoseHistoryRecord[]> manDoseHistoryList = new List<RiskCalculator.DoseHistoryRecord[]>();
+                for (int i = 0; i < ageGroups.Count; i++)
+                {
+                    manDoseHistoryList.Add(new RiskCalculator.DoseHistoryRecord[1]);
+                }
+                foreach (RiskCalculator.DoseHistoryRecord[] record in manDoseHistoryList)
+                {
+                    for (int i = 0; i < record.Length; i++)
+                        record[i] = new RiskCalculator.DoseHistoryRecord();
+                }
+
+                List<RiskCalculator.DoseHistoryRecord[]> womanDoseHistoryList = new List<RiskCalculator.DoseHistoryRecord[]>();
+                for (int i = 0; i < ageGroups.Count; i++)
+                {
+                    womanDoseHistoryList.Add(new RiskCalculator.DoseHistoryRecord[1]);
+                }
+                foreach (RiskCalculator.DoseHistoryRecord[] record in womanDoseHistoryList)
+                {
+                    for (int i = 0; i < record.Length; i++)
+                        record[i] = new RiskCalculator.DoseHistoryRecord();
                 }
 
                 for (int i = 0; i < ageGroups.Count; i++)
@@ -663,191 +721,116 @@ namespace TVELtest
                         if (dbFinalRecords[k].getSex() == sexMale)
                             if (dbFinalRecords[k].getAgeAtExp() >= ageLowerBound[i] && dbFinalRecords[k].getAgeAtExp() <= ageUpperBound[i])
                             {
-                                manSadExtArray[i].Add(dbFinalRecords[k].getDose() - dbFinalRecords[k].getDoseInt());
-                                manSadIntArray[i].Add(dbFinalRecords[k].getDoseInt());
+                                //manSadExtArray[i].Add(dbFinalRecords[k].getDose() - dbFinalRecords[k].getDoseInt());
+                                //manSadIntArray[i].Add(dbFinalRecords[k].getDoseInt());
+                                //manYearsArray[i].Add(dbFinalRecords[k].getAgeAtExp());
+
+                                manDoseHistoryList[i][0].AgeAtExposure = dbFinalRecords[k].getAgeAtExp();
+                                manDoseHistoryList[i][0].AllSolidDoseInmGy = dbFinalRecords[k].getDose() - dbFinalRecords[k].getDoseInt();
+                                manDoseHistoryList[i][0].LeukaemiaDoseInmGy = 1000;
+                                manDoseHistoryList[i][0].LungDoseInmGy = dbFinalRecords[k].getDoseInt() / wLung;
                                 manYearsArray[i].Add(dbFinalRecords[k].getAgeAtExp());
                             }
                         if (dbFinalRecords[k].getSex() == sexFemale)
                             if (dbFinalRecords[k].getAgeAtExp() >= ageLowerBound[i] && dbFinalRecords[k].getAgeAtExp() <= ageUpperBound[i])
                             {
-                                womanSadExtArray[i].Add(dbFinalRecords[k].getDose() - dbFinalRecords[k].getDoseInt());
-                                womanSadIntArray[i].Add(dbFinalRecords[k].getDoseInt());
+                                //womanSadExtArray[i].Add(dbFinalRecords[k].getDose() - dbFinalRecords[k].getDoseInt());
+                                //womanSadIntArray[i].Add(dbFinalRecords[k].getDoseInt());
+                                //womanYearsArray[i].Add(dbFinalRecords[k].getAgeAtExp());
+                                womanDoseHistoryList[i][0].AgeAtExposure = dbFinalRecords[k].getAgeAtExp();
+                                womanDoseHistoryList[i][0].AllSolidDoseInmGy = dbFinalRecords[k].getDose() - dbFinalRecords[k].getDoseInt();
+                                womanDoseHistoryList[i][0].LeukaemiaDoseInmGy = 1000;
+                                womanDoseHistoryList[i][0].LungDoseInmGy = dbFinalRecords[k].getDoseInt() / wLung;
                                 womanYearsArray[i].Add(dbFinalRecords[k].getAgeAtExp());
                             }
                     }
 
-                /*-----Задание весовых коэффициентов для тканей (в нашем случае учитывается только влияние на лёгкие)-----*/
-                double wLung = 0.12;
-
-                ///*-----Создание пустого списка дозовых историй мужчин; для каждого уникального ID своя дозовая история (по сути, это ячейки, которые надо заполнить)-----*/
-                //List<RiskCalculator.DoseHistoryRecord[]> manDoseHistoryList = new List<RiskCalculator.DoseHistoryRecord[]>();
-                //for (int i = 0; i < manGroupedRecordsArray.Length; i++)
+                //for (int i = 0; i <= ages; i++)
                 //{
-                //    manDoseHistoryList.Add(new RiskCalculator.DoseHistoryRecord[manGroupedRecordsArray[i].Count]);
+                //    listOfDoseHistories[i][0].AgeAtExposure = Convert.ToInt16(Convert.ToInt32(minAgeBox.Text) + i);
+                //    listOfDoseHistories[i][0].AllSolidDoseInmGy = 1000;
+                //    listOfDoseHistories[i][0].LeukaemiaDoseInmGy = 1000;
+                //    listOfDoseHistories[i][0].LungDoseInmGy = 1000 / wLung;
                 //}
-                //foreach (RiskCalculator.DoseHistoryRecord[] note in manDoseHistoryList)
-                //{
-                //    for (int i = 0; i < note.Length; i++)
-                //        note[i] = new RiskCalculator.DoseHistoryRecord();
-                //}
+/*-------------------------------------------------------------------------------------------------------------------------------------------------*/
 
-                ///*-----Создание аналогичного списка дозовых историй для женщин-----*/
-                //List<RiskCalculator.DoseHistoryRecord[]> womanDoseHistoryList = new List<RiskCalculator.DoseHistoryRecord[]>();
-                //for (int i = 0; i < womanGroupedRecordsArray.Length; i++)
-                //{
-                //    womanDoseHistoryList.Add(new RiskCalculator.DoseHistoryRecord[womanGroupedRecordsArray[i].Count]);
-                //}
-                //foreach (RiskCalculator.DoseHistoryRecord[] note in womanDoseHistoryList)
-                //{
-                //    for (int i = 0; i < note.Length; i++)
-                //        note[i] = new RiskCalculator.DoseHistoryRecord();
-                //}
+                ///*-----Инициализация массивов, хранящих ОРПО для половозрастных групп-----*/
+                //manExtOrpo = new double[ageGroups.Count];
+                //manIntOrpo = new double[ageGroups.Count];
+                //womanExtOrpo = new double[ageGroups.Count];
+                //womanIntOrpo = new double[ageGroups.Count];
 
-                ///*-----Заполнение дозовых историй мужчин-----*/
-                //for (int i = 0; i < manGroupedRecordsArray.Length; i++)
-                //    for (int k = 0; k < manGroupedRecordsArray[i].Count; k++)
-                //    {
-                //        manDoseHistoryList[i][k].AgeAtExposure = manGroupedRecordsArray[i][k].getAgeAtExp();
-                //        manDoseHistoryList[i][k].AllSolidDoseInmGy = manGroupedRecordsArray[i][k].getDose() - manGroupedRecordsArray[i][k].getDoseInt();
-                //        manDoseHistoryList[i][k].LeukaemiaDoseInmGy = manGroupedRecordsArray[i][k].getDose() - manGroupedRecordsArray[i][k].getDoseInt();
-                //        manDoseHistoryList[i][k].LungDoseInmGy = manGroupedRecordsArray[i][k].getDoseInt() / wLung;
-                //    }
-                ///*-----Заполнение дозовых историй женщин-----*/
-                //for (int i = 0; i < womanGroupedRecordsArray.Length; i++)
-                //    for (int k = 0; k < womanGroupedRecordsArray[i].Count; k++)
-                //    {
-                //        womanDoseHistoryList[i][k].AgeAtExposure = womanGroupedRecordsArray[i][k].getAgeAtExp();
-                //        womanDoseHistoryList[i][k].AllSolidDoseInmGy = womanGroupedRecordsArray[i][k].getDose() - womanGroupedRecordsArray[i][k].getDoseInt();
-                //        womanDoseHistoryList[i][k].LeukaemiaDoseInmGy = womanGroupedRecordsArray[i][k].getDose() - womanGroupedRecordsArray[i][k].getDoseInt();
-                //        womanDoseHistoryList[i][k].LungDoseInmGy = womanGroupedRecordsArray[i][k].getDoseInt() / wLung;
-                //    }
+                //manExtOrpo_95 = new double[ageGroups.Count];
+                //manIntOrpo_95 = new double[ageGroups.Count];
+                //womanExtOrpo_95 = new double[ageGroups.Count];
+                //womanIntOrpo_95 = new double[ageGroups.Count];
 
-                ///*-----Создание массива списков для п/в групп мужчин, хранящих LAR п/в группы;
-                // * каждый элемент массива - список LAR-ов п/в группы.
-                // * Это массивы LAR от внешнего облучения.
-                // * Для внутреннего отдельно надо-----*/
-                //List<double>[] manExtLarArray = new List<double>[ageGroups.Count];
-                //List<double>[] manIntLarArray = new List<double>[ageGroups.Count];
                 //for (int i = 0; i < ageGroups.Count; i++)
                 //{
-                //    manExtLarArray[i] = new List<double>();
-                //    manIntLarArray[i] = new List<double>();
+                //    if (manSadExtArray[i].Count > 0)
+                //    {
+                //        manExtOrpo[i] = getOrpo(getManExtLar(manYearsArray[i].Average()), manSadExtArray[i].Average());
+                //        //manExtOrpo_95[i] = getOrpo_95(getManExtLar(manYearsArray[i].Average()), manSadExtArray[i].Average(), getDeviation(manSadExtArray[i]));
+                //        manSadExtArray[i].Sort();
+                //        manExtOrpo_95[i] = getOrpo_95(getManExtLar(manYearsArray[i].Average()), manSadExtArray[i][manSadExtArray[i].Count * 95 / 100 - 1]);
+                //    }
+
+                //    if (manSadIntArray[i].Count > 0)
+                //    {
+                //        manIntOrpo[i] = getOrpo(getManIntLar(manYearsArray[i].Average()), manSadIntArray[i].Average());
+                //        // manIntOrpo_95[i] = getOrpo_95(getManIntLar(manYearsArray[i].Average()), manSadIntArray[i].Average(), getDeviation(manSadIntArray[i]));
+                //        manSadIntArray[i].Sort();
+                //        manIntOrpo_95[i] = getOrpo_95(getManIntLar(manYearsArray[i].Average()), manSadIntArray[i][manSadIntArray[i].Count * 95 / 100 - 1]);
+                //    }
+
+                //    if (womanSadExtArray[i].Count > 0)
+                //    {
+                //        womanExtOrpo[i] = getOrpo(getWomanExtLar(womanYearsArray[i].Average()), womanSadExtArray[i].Average());
+                //        //womanExtOrpo_95[i] = getOrpo_95(getWomanExtLar(womanYearsArray[i].Average()), womanSadExtArray[i].Average(), getDeviation(womanSadExtArray[i]));
+                //        womanSadExtArray[i].Sort();
+                //        womanExtOrpo_95[i] = getOrpo_95(getWomanExtLar(womanYearsArray[i].Average()), womanSadExtArray[i][womanSadExtArray[i].Count * 95 / 100 - 1]);
+                //    }
+
+                //    if (womanSadIntArray[i].Count > 0)
+                //    {
+                //        womanIntOrpo[i] = getOrpo(getWomanIntLar(womanYearsArray[i].Average()), womanSadIntArray[i].Average());
+                //        //womanIntOrpo_95[i] = getOrpo_95(getWomanIntLar(womanYearsArray[i].Average()), womanSadIntArray[i].Average(), getDeviation(womanSadIntArray[i]));
+                //        womanSadIntArray[i].Sort();
+                //        womanIntOrpo_95[i] = getOrpo_95(getWomanIntLar(womanYearsArray[i].Average()), womanSadIntArray[i][womanSadIntArray[i].Count * 95 / 100 - 1]);
+                //    }
                 //}
 
-                ///*-----Создание аналогичного массива для женщин-----*/
-                //List<double>[] womanExtLarArray = new List<double>[ageGroups.Count];
-                //List<double>[] womanIntLarArray = new List<double>[ageGroups.Count];
+                //List<double> manWeightedExtOrpo = new List<double>();
+                //List<double> manWeightedIntOrpo = new List<double>();
+                //List<double> womanWeightedExtOrpo = new List<double>();
+                //List<double> womanWeightedIntOrpo = new List<double>();
+
+                //List<double> manWeightedExtOrpo_95 = new List<double>();
+                //List<double> manWeightedIntOrpo_95 = new List<double>();
+                //List<double> womanWeightedExtOrpo_95 = new List<double>();
+                //List<double> womanWeightedIntOrpo_95 = new List<double>();
                 //for (int i = 0; i < ageGroups.Count; i++)
                 //{
-                //    womanExtLarArray[i] = new List<double>();
-                //    womanIntLarArray[i] = new List<double>();
+                //    manWeightedExtOrpo.Add(manExtOrpo[i] * manSadExtArray[i].Count);
+                //    manWeightedIntOrpo.Add(manIntOrpo[i] * manSadIntArray[i].Count);
+                //    womanWeightedExtOrpo.Add(womanExtOrpo[i] * womanSadExtArray[i].Count);
+                //    womanWeightedIntOrpo.Add(womanIntOrpo[i] * womanSadIntArray[i].Count);
+
+                //    manWeightedExtOrpo_95.Add(manExtOrpo_95[i] * manSadExtArray[i].Count);
+                //    manWeightedIntOrpo_95.Add(manIntOrpo_95[i] * manSadIntArray[i].Count);
+                //    womanWeightedExtOrpo_95.Add(womanExtOrpo_95[i] * womanSadExtArray[i].Count);
+                //    womanWeightedIntOrpo_95.Add(womanIntOrpo_95[i] * womanSadIntArray[i].Count);
                 //}
 
-                ///*-----Заполнение этих массивов-----*/
-                //RiskCalculator.DoseHistoryRecord[] record = null;
-                //RiskCalculatorLib.RiskCalculator calculator = null;
-                //for (int i = 0; i < ageGroups.Count; i++)
-                //    for (int k = 0; k < manDoseHistoryList.Count; k++)
-                //    {
-                //        if (manRecordsList[k].getAgeAtExp() == manDoseHistoryList[k][manDoseHistoryList[k].Length - 1].AgeAtExposure)
-                //            if (manRecordsList[k].getAgeAtExp() >= ageLowerBound[i] && manRecordsList[k].getAgeAtExp() <= ageUpperBound[i])
-                //            {
-                //                record = manDoseHistoryList[k];
-                //                calculator = new RiskCalculatorLib.RiskCalculator(RiskCalculator.SEX_MALE, manDoseHistoryList[k][0].AgeAtExposure, ref record, true);
-                //                manExtLarArray[i].Add(calculator.getLAR(false, true).AllCancers);//Кажется, здесь считается LAR...
-                //                manIntLarArray[i].Add(calculator.getLAR(false, true).Lung);
-                //            }
-                //    }
-                //for (int i = 0; i < ageGroups.Count; i++)
-                //    for (int k = 0; k < womanDoseHistoryList.Count; k++)
-                //    {
-                //        if (womanRecordsList[k].getAgeAtExp() == womanDoseHistoryList[k][womanDoseHistoryList[k].Length - 1].AgeAtExposure)
-                //            if (womanRecordsList[k].getAgeAtExp() >= ageLowerBound[i] && womanRecordsList[k].getAgeAtExp() <= ageUpperBound[i])
-                //            {
-                //                record = womanDoseHistoryList[k];
-                //                calculator = new RiskCalculatorLib.RiskCalculator(RiskCalculator.SEX_FEMALE, womanDoseHistoryList[k][0].AgeAtExposure, ref record, true);
-                //                womanExtLarArray[i].Add(calculator.getLAR(false, true).AllCancers);//в этой строчке должен вычисляться LAR и записываться в этот список
-                //                womanIntLarArray[i].Add(calculator.getLAR(false, true).Lung);
-                //            }
-                //    }
+                //manExtOrpoBox.Text = "2-б) " + Math.Round(manWeightedExtOrpo.Sum() / dbMan, 7).ToString();
+                //manIntOrpoBox.Text = "2-б) " + Math.Round(manWeightedIntOrpo.Sum() / dbMan, 7).ToString();
+                //womanExtOrpoBox.Text = "2-б) " + Math.Round(womanWeightedExtOrpo.Sum() / dbWoman, 7).ToString();
+                //womanIntOrpoBox.Text = "2-б) " + Math.Round(womanWeightedIntOrpo.Sum() / dbWoman, 7).ToString();
 
-                /*-----Инициализация массивов, хранящих ОРПО для половозрастных групп-----*/
-                manExtOrpo = new double[ageGroups.Count];
-                manIntOrpo = new double[ageGroups.Count];
-                womanExtOrpo = new double[ageGroups.Count];
-                womanIntOrpo = new double[ageGroups.Count];
-
-                manExtOrpo_95 = new double[ageGroups.Count];
-                manIntOrpo_95 = new double[ageGroups.Count];
-                womanExtOrpo_95 = new double[ageGroups.Count];
-                womanIntOrpo_95 = new double[ageGroups.Count];
-                /*-----СОРТИРОВКИ!!!!-----*/
-                for (int i = 0; i < ageGroups.Count; i++)
-                {
-                    if (manSadExtArray[i].Count > 0)
-                    {
-                        manExtOrpo[i] = getOrpo(getManExtLar(manYearsArray[i].Average()), manSadExtArray[i].Average());
-                        //manExtOrpo_95[i] = getOrpo_95(getManExtLar(manYearsArray[i].Average()), manSadExtArray[i].Average(), getDeviation(manSadExtArray[i]));
-                        manSadExtArray[i].Sort();
-                        manExtOrpo_95[i] = getOrpo_95(getManExtLar(manYearsArray[i].Average()), manSadExtArray[i][manSadExtArray[i].Count * 95 / 100 - 1]);
-                    }
-
-                    if (manSadIntArray[i].Count > 0)
-                    {
-                        manIntOrpo[i] = getOrpo(getManIntLar(manYearsArray[i].Average()), manSadIntArray[i].Average());
-                        // manIntOrpo_95[i] = getOrpo_95(getManIntLar(manYearsArray[i].Average()), manSadIntArray[i].Average(), getDeviation(manSadIntArray[i]));
-                        manSadIntArray[i].Sort();
-                        manIntOrpo_95[i] = getOrpo_95(getManIntLar(manYearsArray[i].Average()), manSadIntArray[i][manSadIntArray[i].Count * 95 / 100 - 1]);
-                    }
-
-                    if (womanSadExtArray[i].Count > 0)
-                    {
-                        womanExtOrpo[i] = getOrpo(getWomanExtLar(womanYearsArray[i].Average()), womanSadExtArray[i].Average());
-                        //womanExtOrpo_95[i] = getOrpo_95(getWomanExtLar(womanYearsArray[i].Average()), womanSadExtArray[i].Average(), getDeviation(womanSadExtArray[i]));
-                        womanSadExtArray[i].Sort();
-                        womanExtOrpo_95[i] = getOrpo_95(getWomanExtLar(womanYearsArray[i].Average()), womanSadExtArray[i][womanSadExtArray[i].Count * 95 / 100 - 1]);
-                    }
-
-                    if (womanSadIntArray[i].Count > 0)
-                    {
-                        womanIntOrpo[i] = getOrpo(getWomanIntLar(womanYearsArray[i].Average()), womanSadIntArray[i].Average());
-                        //womanIntOrpo_95[i] = getOrpo_95(getWomanIntLar(womanYearsArray[i].Average()), womanSadIntArray[i].Average(), getDeviation(womanSadIntArray[i]));
-                        womanSadIntArray[i].Sort();
-                        womanIntOrpo_95[i] = getOrpo_95(getWomanIntLar(womanYearsArray[i].Average()), womanSadIntArray[i][womanSadIntArray[i].Count * 95 / 100 - 1]);
-                    }
-                }
-
-                List<double> manWeightedExtOrpo = new List<double>();
-                List<double> manWeightedIntOrpo = new List<double>();
-                List<double> womanWeightedExtOrpo = new List<double>();
-                List<double> womanWeightedIntOrpo = new List<double>();
-
-                List<double> manWeightedExtOrpo_95 = new List<double>();
-                List<double> manWeightedIntOrpo_95 = new List<double>();
-                List<double> womanWeightedExtOrpo_95 = new List<double>();
-                List<double> womanWeightedIntOrpo_95 = new List<double>();
-                for (int i = 0; i < ageGroups.Count; i++)
-                {
-                    manWeightedExtOrpo.Add(manExtOrpo[i] * manSadExtArray[i].Count);
-                    manWeightedIntOrpo.Add(manIntOrpo[i] * manSadIntArray[i].Count);
-                    womanWeightedExtOrpo.Add(womanExtOrpo[i] * womanSadExtArray[i].Count);
-                    womanWeightedIntOrpo.Add(womanIntOrpo[i] * womanSadIntArray[i].Count);
-
-                    manWeightedExtOrpo_95.Add(manExtOrpo_95[i] * manSadExtArray[i].Count);
-                    manWeightedIntOrpo_95.Add(manIntOrpo_95[i] * manSadIntArray[i].Count);
-                    womanWeightedExtOrpo_95.Add(womanExtOrpo_95[i] * womanSadExtArray[i].Count);
-                    womanWeightedIntOrpo_95.Add(womanIntOrpo_95[i] * womanSadIntArray[i].Count);
-                }
-
-                manExtOrpoBox.Text = "2-б) " + Math.Round(manWeightedExtOrpo.Sum() / dbMan, 7).ToString();
-                manIntOrpoBox.Text = "2-б) " + Math.Round(manWeightedIntOrpo.Sum() / dbMan, 7).ToString();
-                womanExtOrpoBox.Text = "2-б) " + Math.Round(womanWeightedExtOrpo.Sum() / dbWoman, 7).ToString();
-                womanIntOrpoBox.Text = "2-б) " + Math.Round(womanWeightedIntOrpo.Sum() / dbWoman, 7).ToString();
-
-                manExtOrpoBox95.Text = "2-б) " + Math.Round(manWeightedExtOrpo_95.Sum() / dbMan, 7).ToString();
-                manIntOrpoBox95.Text = "2-б) " + Math.Round(manWeightedIntOrpo_95.Sum() / dbMan, 7).ToString();
-                womanExtOrpoBox95.Text = "2-б) " + Math.Round(womanWeightedExtOrpo_95.Sum() / dbWoman, 7).ToString();
-                womanIntOrpoBox95.Text = "2-б) " + Math.Round(womanWeightedIntOrpo_95.Sum() / dbWoman, 7).ToString();
+                //manExtOrpoBox95.Text = "2-б) " + Math.Round(manWeightedExtOrpo_95.Sum() / dbMan, 7).ToString();
+                //manIntOrpoBox95.Text = "2-б) " + Math.Round(manWeightedIntOrpo_95.Sum() / dbMan, 7).ToString();
+                //womanExtOrpoBox95.Text = "2-б) " + Math.Round(womanWeightedExtOrpo_95.Sum() / dbWoman, 7).ToString();
+                //womanIntOrpoBox95.Text = "2-б) " + Math.Round(womanWeightedIntOrpo_95.Sum() / dbWoman, 7).ToString();
 
 
                 ///*-----Вывод в Excel-файл-----*/
