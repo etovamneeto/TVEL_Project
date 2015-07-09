@@ -29,7 +29,7 @@
         private void InitializeComponent()
         {
             this.openFileButton = new System.Windows.Forms.Button();
-            this.getOrpoAverDoseButton = new System.Windows.Forms.Button();
+            this.getOrpoAverAgeButton = new System.Windows.Forms.Button();
             this.getIbpoButton = new System.Windows.Forms.Button();
             this.orpoGroupBox = new System.Windows.Forms.GroupBox();
             this.womanIntOrpoBox95 = new System.Windows.Forms.TextBox();
@@ -80,15 +80,15 @@
             this.openFileButton.UseVisualStyleBackColor = true;
             this.openFileButton.Click += new System.EventHandler(this.openFileButton_Click);
             // 
-            // getOrpoAverDoseButton
+            // getOrpoAverAgeButton
             // 
-            this.getOrpoAverDoseButton.Location = new System.Drawing.Point(12, 61);
-            this.getOrpoAverDoseButton.Name = "getOrpoAverDoseButton";
-            this.getOrpoAverDoseButton.Size = new System.Drawing.Size(234, 43);
-            this.getOrpoAverDoseButton.TabIndex = 0;
-            this.getOrpoAverDoseButton.Text = "Шаг 2-а: Рассчитать ОРПО (Ср. доза)";
-            this.getOrpoAverDoseButton.UseVisualStyleBackColor = true;
-            this.getOrpoAverDoseButton.Click += new System.EventHandler(this.getOrpoAverDoseButton_Click);
+            this.getOrpoAverAgeButton.Location = new System.Drawing.Point(12, 61);
+            this.getOrpoAverAgeButton.Name = "getOrpoAverAgeButton";
+            this.getOrpoAverAgeButton.Size = new System.Drawing.Size(234, 43);
+            this.getOrpoAverAgeButton.TabIndex = 0;
+            this.getOrpoAverAgeButton.Text = "Шаг 2-а: Рассчитать ОРПО (Ср. доза)";
+            this.getOrpoAverAgeButton.UseVisualStyleBackColor = true;
+            this.getOrpoAverAgeButton.Click += new System.EventHandler(this.getOrpoAverAgeButton_Click);
             // 
             // getIbpoButton
             // 
@@ -426,7 +426,7 @@
             this.Controls.Add(this.orpoGroupBox);
             this.Controls.Add(this.openFileButton);
             this.Controls.Add(this.getIbpoButton);
-            this.Controls.Add(this.getOrpoAverDoseButton);
+            this.Controls.Add(this.getOrpoAverAgeButton);
             this.Name = "Form1";
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
             this.Text = "Form1";
@@ -442,7 +442,7 @@
         #endregion
 
         private System.Windows.Forms.Button openFileButton;
-        private System.Windows.Forms.Button getOrpoAverDoseButton;
+        private System.Windows.Forms.Button getOrpoAverAgeButton;
         private System.Windows.Forms.Button getIbpoButton;
         private System.Windows.Forms.GroupBox orpoGroupBox;
         private System.Windows.Forms.TextBox womanIntOrpoBox95;

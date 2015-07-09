@@ -24,7 +24,6 @@ C:\Users\lovachev\Desktop\TVEL_Project\TVELtest\TVELtest\obj\x86\Debug\TVELtest.
 C:\Users\lovachev\Desktop\TVEL_Project\TVELtest\TVELtest\obj\x86\Debug\TVELtest.csproj.GenerateResource.Cache
 C:\Users\lovachev\Desktop\TVEL_Project\TVELtest\TVELtest\bin\Debug\TVELtest.exe
 C:\Users\lovachev\Desktop\TVEL_Project\TVELtest\TVELtest\bin\Debug\TVELtest.pdb
-C:\Users\lovachev\Desktop\TVEL_Project\TVELtest\TVELtest\bin\Debug\RiskCalculatorLib.dll
 C:\Users\Sergey\Desktop\TVEL_Project\TVELtest\TVELtest\obj\x86\Debug\TVELtest.exe
 C:\Users\Sergey\Desktop\TVEL_Project\TVELtest\TVELtest\obj\x86\Debug\TVELtest.pdb
 C:\Users\Sergey\Desktop\TVEL_Project\TVELtest\TVELtest\bin\Debug\TVELtest.exe
