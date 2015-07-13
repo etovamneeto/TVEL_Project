@@ -66,6 +66,8 @@
             this.ibpoBoxManIntLabel = new System.Windows.Forms.Label();
             this.ibpoBoxManExtLabel = new System.Windows.Forms.Label();
             this.getOrpoAverLarButton = new System.Windows.Forms.Button();
+            this.larRB = new System.Windows.Forms.RadioButton();
+            this.detRB = new System.Windows.Forms.RadioButton();
             this.orpoGroupBox.SuspendLayout();
             this.ibpoGroupBox.SuspendLayout();
             this.SuspendLayout();
@@ -74,7 +76,7 @@
             // 
             this.openFileButton.Location = new System.Drawing.Point(12, 12);
             this.openFileButton.Name = "openFileButton";
-            this.openFileButton.Size = new System.Drawing.Size(468, 43);
+            this.openFileButton.Size = new System.Drawing.Size(416, 43);
             this.openFileButton.TabIndex = 12;
             this.openFileButton.Text = "Шаг 1: Выберите базу данных";
             this.openFileButton.UseVisualStyleBackColor = true;
@@ -416,11 +418,35 @@
             this.getOrpoAverLarButton.UseVisualStyleBackColor = true;
             this.getOrpoAverLarButton.Click += new System.EventHandler(this.getOrpoAverLarButton_Click);
             // 
+            // larRB
+            // 
+            this.larRB.AutoSize = true;
+            this.larRB.Location = new System.Drawing.Point(434, 12);
+            this.larRB.Name = "larRB";
+            this.larRB.Size = new System.Drawing.Size(46, 17);
+            this.larRB.TabIndex = 16;
+            this.larRB.TabStop = true;
+            this.larRB.Text = "LAR";
+            this.larRB.UseVisualStyleBackColor = true;
+            // 
+            // detRB
+            // 
+            this.detRB.AutoSize = true;
+            this.detRB.Location = new System.Drawing.Point(434, 38);
+            this.detRB.Name = "detRB";
+            this.detRB.Size = new System.Drawing.Size(42, 17);
+            this.detRB.TabIndex = 17;
+            this.detRB.TabStop = true;
+            this.detRB.Text = "Det";
+            this.detRB.UseVisualStyleBackColor = true;
+            // 
             // Form1
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(492, 473);
+            this.Controls.Add(this.detRB);
+            this.Controls.Add(this.larRB);
             this.Controls.Add(this.getOrpoAverLarButton);
             this.Controls.Add(this.ibpoGroupBox);
             this.Controls.Add(this.orpoGroupBox);
@@ -436,6 +462,7 @@
             this.ibpoGroupBox.ResumeLayout(false);
             this.ibpoGroupBox.PerformLayout();
             this.ResumeLayout(false);
+            this.PerformLayout();
 
         }
 
@@ -479,6 +506,8 @@
         private System.Windows.Forms.Label ibpoBoxManIntLabel;
         private System.Windows.Forms.Label ibpoBoxManExtLabel;
         private System.Windows.Forms.Button getOrpoAverLarButton;
+        private System.Windows.Forms.RadioButton larRB;
+        private System.Windows.Forms.RadioButton detRB;
 
 
     }

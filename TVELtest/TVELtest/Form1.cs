@@ -69,14 +69,11 @@ namespace TVELtest
         {
             InitializeComponent();
             this.Text = title;
-
-            this.FormBorderStyle = FormBorderStyle.FixedDialog;
-            this.MaximizeBox = false;
         }
 
         String libPath = Path.GetDirectoryName(Application.ExecutablePath) + "\\DataRus2012";
 
-        /*-----Функции для расчета LAR, необходимых для расчета ОРПО*-----*/
+        /*-----Функции для расчета LAR, необходимых для расчета ОРПО-----*/
         public double getManExtLar(double meanAge)
         {
             double lar = 0;
@@ -113,6 +110,44 @@ namespace TVELtest
             return lar = secondPowerElement + firstPowerElement + constant;
         }
 
+        /*-----Функции для расчета Det, необходимых для расчета ОРПО-----*/
+        public double getManExtDet(double meanAge)
+        {
+            double lar = 0;
+            double secondPowerElement = 0;
+            double firstPowerElement = 0;
+            double constant = 0;
+            return lar = secondPowerElement + firstPowerElement + constant;
+        }
+
+        public double getManIntDet(double meanAge)
+        {
+            double lar = 0;
+            double secondPowerElement = 0;
+            double firstPowerElement = 0;
+            double constant = 0;
+            return lar = secondPowerElement + firstPowerElement + constant;
+        }
+
+        public double getWomanExtDet(double meanAge)
+        {
+            double lar = 0;
+            double secondPowerElement = 0;
+            double firstPowerElement = 0;
+            double constant = 0;
+            return lar = secondPowerElement + firstPowerElement + constant;
+        }
+
+        public double getWomanIntDet(double meanAge)
+        {
+            double lar = 0;
+            double secondPowerElement = 0;
+            double firstPowerElement = 0;
+            double constant = 0;
+            return lar = secondPowerElement + firstPowerElement + constant;
+        }
+
+        /*-----Функции для расчета ОРПО-----*/
         public double getOrpo(double lar, double averageDose)
         {
             double orpo = 0;
@@ -147,6 +182,7 @@ namespace TVELtest
             return deviation;
         }
 
+        /*-----Функция для расчета ИБПО-----*/
         public double getIbpo(List<double> groupedLar, double orpo)
         {
             //womanIntIbpo[i] = 100 / (1 + womanIntOrpo[i] / (2 * Math.Pow(10, -4) * (1 - ((womanLarIntArray[i].Sum() / womanLarIntArray[i].Count) / (4.1 * Math.Pow(10, -2))))));
@@ -159,9 +195,16 @@ namespace TVELtest
         private void Form1_Load(object sender, EventArgs e)
         {
             RiskCalculatorLib.RiskCalculator.FillData(ref libPath);
+
+            this.FormBorderStyle = FormBorderStyle.FixedDialog;
+            this.MaximizeBox = false;
+            larRB.Checked = true;
+            detRB.Checked = false;
         }
 
         /*-----Список глобальных переменных-----*/
+        /*-----Переменная для задания имени файла-----*/
+        String saveAs = "";
         /*-----Переменная для замера времени работы приложения-----*/
         Stopwatch stopWatch = new Stopwatch();
         /*-----Список, в котором хранятся строковые параметры, инентифицирующие возрастные группы-----*/
@@ -344,34 +387,73 @@ namespace TVELtest
                 {
                     if (manSadExtArray[i].Count > 0)
                     {
-                        manExtOrpo[i] = getOrpo(getManExtLar(manYearsArray[i].Average()), manSadExtArray[i].Average());
-                        //manExtOrpo_95[i] = getOrpo_95(getManExtLar(manYearsArray[i].Average()), manSadExtArray[i].Average(), getDeviation(manSadExtArray[i]));
-                        manSadExtArray[i].Sort();
-                        manExtOrpo_95[i] = getOrpo_95(getManExtLar(manYearsArray[i].Average()), manSadExtArray[i][manSadExtArray[i].Count * 95 / 100 - 1]);
+                        if (larRB.Checked)
+                        {
+                            manExtOrpo[i] = getOrpo(getManExtLar(manYearsArray[i].Average()), manSadExtArray[i].Average());
+                            //manExtOrpo_95[i] = getOrpo_95(getManExtLar(manYearsArray[i].Average()), manSadExtArray[i].Average(), getDeviation(manSadExtArray[i]));
+                            manSadExtArray[i].Sort();
+                            manExtOrpo_95[i] = getOrpo_95(getManExtLar(manYearsArray[i].Average()), manSadExtArray[i][manSadExtArray[i].Count * 95 / 100 - 1]);
+                        }
+                        if (detRB.Checked)
+                        {
+                            manExtOrpo[i] = getOrpo(getManExtDet(manYearsArray[i].Average()), manSadExtArray[i].Average());
+                            manSadExtArray[i].Sort();
+                            manExtOrpo_95[i] = getOrpo_95(getManExtDet(manYearsArray[i].Average()), manSadExtArray[i][manSadExtArray[i].Count * 95 / 100 - 1]);
+                        }
                     }
 
                     if (manSadIntArray[i].Count > 0)
                     {
-                        manIntOrpo[i] = getOrpo(getManIntLar(manYearsArray[i].Average()), manSadIntArray[i].Average());
-                        // manIntOrpo_95[i] = getOrpo_95(getManIntLar(manYearsArray[i].Average()), manSadIntArray[i].Average(), getDeviation(manSadIntArray[i]));
-                        manSadIntArray[i].Sort();
-                        manIntOrpo_95[i] = getOrpo_95(getManIntLar(manYearsArray[i].Average()), manSadIntArray[i][manSadIntArray[i].Count * 95 / 100 - 1]);
+                        if(larRB.Checked)
+                        {
+                            manIntOrpo[i] = getOrpo(getManIntLar(manYearsArray[i].Average()), manSadIntArray[i].Average());
+                            // manIntOrpo_95[i] = getOrpo_95(getManIntLar(manYearsArray[i].Average()), manSadIntArray[i].Average(), getDeviation(manSadIntArray[i]));
+                            manSadIntArray[i].Sort();
+                            manIntOrpo_95[i] = getOrpo_95(getManIntLar(manYearsArray[i].Average()), manSadIntArray[i][manSadIntArray[i].Count * 95 / 100 - 1]);
+                        }
+                        if (detRB.Checked)
+                        {
+                            manIntOrpo[i] = getOrpo(getManIntDet(manYearsArray[i].Average()), manSadIntArray[i].Average());
+                            // manIntOrpo_95[i] = getOrpo_95(getManIntLar(manYearsArray[i].Average()), manSadIntArray[i].Average(), getDeviation(manSadIntArray[i]));
+                            manSadIntArray[i].Sort();
+                            manIntOrpo_95[i] = getOrpo_95(getManIntDet(manYearsArray[i].Average()), manSadIntArray[i][manSadIntArray[i].Count * 95 / 100 - 1]);
+                        }                  
                     }
 
                     if (womanSadExtArray[i].Count > 0)
                     {
-                        womanExtOrpo[i] = getOrpo(getWomanExtLar(womanYearsArray[i].Average()), womanSadExtArray[i].Average());
-                        //womanExtOrpo_95[i] = getOrpo_95(getWomanExtLar(womanYearsArray[i].Average()), womanSadExtArray[i].Average(), getDeviation(womanSadExtArray[i]));
-                        womanSadExtArray[i].Sort();
-                        womanExtOrpo_95[i] = getOrpo_95(getWomanExtLar(womanYearsArray[i].Average()), womanSadExtArray[i][womanSadExtArray[i].Count * 95 / 100 - 1]);
+                        if (larRB.Checked)
+                        {
+                            womanExtOrpo[i] = getOrpo(getWomanExtLar(womanYearsArray[i].Average()), womanSadExtArray[i].Average());
+                            //womanExtOrpo_95[i] = getOrpo_95(getWomanExtLar(womanYearsArray[i].Average()), womanSadExtArray[i].Average(), getDeviation(womanSadExtArray[i]));
+                            womanSadExtArray[i].Sort();
+                            womanExtOrpo_95[i] = getOrpo_95(getWomanExtLar(womanYearsArray[i].Average()), womanSadExtArray[i][womanSadExtArray[i].Count * 95 / 100 - 1]);
+                        }
+                        if (detRB.Checked)
+                        {
+                            womanExtOrpo[i] = getOrpo(getWomanExtDet(womanYearsArray[i].Average()), womanSadExtArray[i].Average());
+                            //womanExtOrpo_95[i] = getOrpo_95(getWomanExtLar(womanYearsArray[i].Average()), womanSadExtArray[i].Average(), getDeviation(womanSadExtArray[i]));
+                            womanSadExtArray[i].Sort();
+                            womanExtOrpo_95[i] = getOrpo_95(getWomanExtDet(womanYearsArray[i].Average()), womanSadExtArray[i][womanSadExtArray[i].Count * 95 / 100 - 1]);
+                        }
                     }
 
                     if (womanSadIntArray[i].Count > 0)
                     {
-                        womanIntOrpo[i] = getOrpo(getWomanIntLar(womanYearsArray[i].Average()), womanSadIntArray[i].Average());
-                        //womanIntOrpo_95[i] = getOrpo_95(getWomanIntLar(womanYearsArray[i].Average()), womanSadIntArray[i].Average(), getDeviation(womanSadIntArray[i]));
-                        womanSadIntArray[i].Sort();
-                        womanIntOrpo_95[i] = getOrpo_95(getWomanIntLar(womanYearsArray[i].Average()), womanSadIntArray[i][womanSadIntArray[i].Count * 95 / 100 - 1]);
+                        if (larRB.Checked)
+                        {
+                            womanIntOrpo[i] = getOrpo(getWomanIntLar(womanYearsArray[i].Average()), womanSadIntArray[i].Average());
+                            //womanIntOrpo_95[i] = getOrpo_95(getWomanIntLar(womanYearsArray[i].Average()), womanSadIntArray[i].Average(), getDeviation(womanSadIntArray[i]));
+                            womanSadIntArray[i].Sort();
+                            womanIntOrpo_95[i] = getOrpo_95(getWomanIntLar(womanYearsArray[i].Average()), womanSadIntArray[i][womanSadIntArray[i].Count * 95 / 100 - 1]);
+                        }
+                        if (detRB.Checked)
+                        {
+                            womanIntOrpo[i] = getOrpo(getWomanIntDet(womanYearsArray[i].Average()), womanSadIntArray[i].Average());
+                            //womanIntOrpo_95[i] = getOrpo_95(getWomanIntLar(womanYearsArray[i].Average()), womanSadIntArray[i].Average(), getDeviation(womanSadIntArray[i]));
+                            womanSadIntArray[i].Sort();
+                            womanIntOrpo_95[i] = getOrpo_95(getWomanIntDet(womanYearsArray[i].Average()), womanSadIntArray[i][womanSadIntArray[i].Count * 95 / 100 - 1]);
+                        }
                     }
                 }
 
@@ -580,7 +662,12 @@ namespace TVELtest
                         timeNameBuffer[i] = '-';
                 }
 
-                excelWorkbook.SaveAs(@Path.GetDirectoryName(Application.ExecutablePath) + "\\ОРПО (Средний возраст)" + "(" + new string(timeNameBuffer) + ").xlsx",  //object Filename
+                if (larRB.Checked)
+                    saveAs = "ОПРО_LAR (Средний возраст)";
+                if (detRB.Checked)
+                    saveAs = "ОПРО_Det (Средний возраст)";
+
+                excelWorkbook.SaveAs(@Path.GetDirectoryName(Application.ExecutablePath) + "\\" + saveAs + "(" + new string(timeNameBuffer) + ").xlsx",  //object Filename
                         Excel.XlFileFormat.xlOpenXMLWorkbook,                       //object FileFormat
                         Type.Missing,                       //object Password 
                         Type.Missing,                       //object WriteResPassword  
@@ -728,6 +815,7 @@ namespace TVELtest
                 /*-----Заполнение ДИ-----*/
                 RiskCalculator.DoseHistoryRecord[] record = null;
                 RiskCalculatorLib.RiskCalculator calculator = null;
+                bool isIncidence = false;
                 for (int i = 0; i < ageGroups.Count; i++)
                     for (int k = 0; k < manSadExtArray[i].Count; k++)
                     {
@@ -739,8 +827,17 @@ namespace TVELtest
 
                         record = manDoseHistoryList[i][k];
                         calculator = new RiskCalculatorLib.RiskCalculator(RiskCalculator.SEX_MALE, manDoseHistoryList[i][k][0].AgeAtExposure, ref record, true);
-                        manExtLarArray[i].Add(calculator.getLAR(false, true).AllCancers);
-                        manIntLarArray[i].Add(calculator.getLAR(false, true).Lung);
+                        if (larRB.Checked)
+                        {
+                            manExtLarArray[i].Add(calculator.getLAR(false, true).AllCancers);
+                            manIntLarArray[i].Add(calculator.getLAR(false, true).Lung);
+                        }
+                        if (detRB.Checked)
+                        {
+                            calculator.createEARSamples(1, ref isIncidence);
+                            manExtLarArray[i].Add(calculator.getDetriment().Value.AllCancers);
+                            manIntLarArray[i].Add(calculator.getDetriment().Value.Lung);
+                        }
                     }
                 for (int i = 0; i < ageGroups.Count; i++)
                     for (int k = 0; k < womanSadExtArray[i].Count; k++)
@@ -753,12 +850,17 @@ namespace TVELtest
 
                         record = womanDoseHistoryList[i][k];
                         calculator = new RiskCalculatorLib.RiskCalculator(RiskCalculator.SEX_FEMALE, womanDoseHistoryList[i][k][0].AgeAtExposure, ref record, true);
-                        //bool changer = false;
-                        //calculator.createEARSamples(1, ref changer);
-                        //calculator.getDetriment().Value.Lung
-                        //manIntLarArray[i].Add(calculator.getDetriment().RightBound.AllCancers);
-                        womanExtLarArray[i].Add(calculator.getLAR(false, true).AllCancers);
-                        womanIntLarArray[i].Add(calculator.getLAR(false, true).Lung);
+                        if (larRB.Checked)
+                        {
+                            womanExtLarArray[i].Add(calculator.getLAR(false, true).AllCancers);
+                            womanIntLarArray[i].Add(calculator.getLAR(false, true).Lung);
+                        }
+                        if (detRB.Checked)
+                        {
+                            calculator.createEARSamples(1, ref isIncidence);
+                            womanExtLarArray[i].Add(calculator.getDetriment().Value.AllCancers);
+                            womanIntLarArray[i].Add(calculator.getDetriment().Value.Lung);
+                        }
                     }
 
                 /*-----Инициализация массивов, хранящих ОРПО для половозрастных групп-----*/
@@ -1022,7 +1124,12 @@ namespace TVELtest
                         timeNameBuffer[i] = '-';
                 }
 
-                excelWorkbook.SaveAs(@Path.GetDirectoryName(Application.ExecutablePath) + "\\ОРПО (Средний LAR)" + "(" + new string(timeNameBuffer) + ").xlsx",  //object Filename
+                if (larRB.Checked)
+                    saveAs = "ОПРО_LAR (Средний LAR)";
+                if (detRB.Checked)
+                    saveAs = "ОПРО_Det (Средний LAR)";
+
+                excelWorkbook.SaveAs(@Path.GetDirectoryName(Application.ExecutablePath) + "\\" + saveAs + "(" + new string(timeNameBuffer) + ").xlsx",  //object Filename
                         Excel.XlFileFormat.xlOpenXMLWorkbook,                       //object FileFormat
                         Type.Missing,                       //object Password 
                         Type.Missing,                       //object WriteResPassword  
