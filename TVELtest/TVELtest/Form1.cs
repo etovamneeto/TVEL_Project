@@ -123,27 +123,27 @@ namespace TVELtest
         public double getManIntDet(double meanAge)
         {
             double det = 0;
-            double secondPowerElement = 0;
-            double firstPowerElement = 0;
-            double constant = 0;
+            double secondPowerElement = (-3 * Math.Pow(10, -5)) * (Math.Pow(meanAge, 2));
+            double firstPowerElement = (26 * Math.Pow(10, -4)) * meanAge;
+            double constant = -1.53 * Math.Pow(10, -2);
             return det = secondPowerElement + firstPowerElement + constant;
         }
 
         public double getWomanExtDet(double meanAge)
         {
             double det = 0;
-            double secondPowerElement = 0;
-            double firstPowerElement = 0;
-            double constant = 0;
+            double secondPowerElement = (-1 * Math.Pow(10, -6)) * (Math.Pow(meanAge, 2));
+            double firstPowerElement = (-9 * Math.Pow(10, -4)) * meanAge;
+            double constant = 7.74 * Math.Pow(10, -2);
             return det = secondPowerElement + firstPowerElement + constant;
         }
 
         public double getWomanIntDet(double meanAge)
         {
             double det = 0;
-            double secondPowerElement = 0;
-            double firstPowerElement = 0;
-            double constant = 0;
+            double secondPowerElement = (-4 * Math.Pow(10, -5)) * (Math.Pow(meanAge, 2));
+            double firstPowerElement = (34 * Math.Pow(10, -4)) * meanAge;
+            double constant = 19 * Math.Pow(10, -4);
             return det = secondPowerElement + firstPowerElement + constant;
         }
 
