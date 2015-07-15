@@ -113,38 +113,38 @@ namespace TVELtest
         /*-----Функции для расчета Det, необходимых для расчета ОРПО-----*/
         public double getManExtDet(double meanAge)
         {
-            double lar = 0;
-            double secondPowerElement = 0;
-            double firstPowerElement = 0;
-            double constant = 0;
-            return lar = secondPowerElement + firstPowerElement + constant;
+            double det = 0;
+            double secondPowerElement = (4 * Math.Pow(10, -6))*(Math.Pow(meanAge, 2));
+            double firstPowerElement = (-11 * Math.Pow(10, -4)) * meanAge;
+            double constant = 6.63 * Math.Pow(10, -2);
+            return det = secondPowerElement + firstPowerElement + constant;
         }
 
         public double getManIntDet(double meanAge)
         {
-            double lar = 0;
+            double det = 0;
             double secondPowerElement = 0;
             double firstPowerElement = 0;
             double constant = 0;
-            return lar = secondPowerElement + firstPowerElement + constant;
+            return det = secondPowerElement + firstPowerElement + constant;
         }
 
         public double getWomanExtDet(double meanAge)
         {
-            double lar = 0;
+            double det = 0;
             double secondPowerElement = 0;
             double firstPowerElement = 0;
             double constant = 0;
-            return lar = secondPowerElement + firstPowerElement + constant;
+            return det = secondPowerElement + firstPowerElement + constant;
         }
 
         public double getWomanIntDet(double meanAge)
         {
-            double lar = 0;
+            double det = 0;
             double secondPowerElement = 0;
             double firstPowerElement = 0;
             double constant = 0;
-            return lar = secondPowerElement + firstPowerElement + constant;
+            return det = secondPowerElement + firstPowerElement + constant;
         }
 
         /*-----Функции для расчета ОРПО-----*/
