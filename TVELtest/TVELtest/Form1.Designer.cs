@@ -68,6 +68,8 @@
             this.getOrpoAverLarButton = new System.Windows.Forms.Button();
             this.larRB = new System.Windows.Forms.RadioButton();
             this.detRB = new System.Windows.Forms.RadioButton();
+            this.shopComboBox = new System.Windows.Forms.ComboBox();
+            this.shopNameLabel = new System.Windows.Forms.Label();
             this.orpoGroupBox.SuspendLayout();
             this.ibpoGroupBox.SuspendLayout();
             this.SuspendLayout();
@@ -76,7 +78,7 @@
             // 
             this.openFileButton.Location = new System.Drawing.Point(12, 12);
             this.openFileButton.Name = "openFileButton";
-            this.openFileButton.Size = new System.Drawing.Size(416, 43);
+            this.openFileButton.Size = new System.Drawing.Size(234, 43);
             this.openFileButton.TabIndex = 12;
             this.openFileButton.Text = "Шаг 1: Выберите базу данных";
             this.openFileButton.UseVisualStyleBackColor = true;
@@ -440,11 +442,37 @@
             this.detRB.Text = "Det";
             this.detRB.UseVisualStyleBackColor = true;
             // 
+            // shopComboBox
+            // 
+            this.shopComboBox.FormattingEnabled = true;
+            this.shopComboBox.Items.AddRange(new object[] {
+            "СХК",
+            "АЭХК",
+            "МСЗ",
+            "УЭХК",
+            "ПО ЭХЗ",
+            "ЧМЗ"});
+            this.shopComboBox.Location = new System.Drawing.Point(250, 34);
+            this.shopComboBox.Name = "shopComboBox";
+            this.shopComboBox.Size = new System.Drawing.Size(175, 21);
+            this.shopComboBox.TabIndex = 18;
+            // 
+            // shopNameLabel
+            // 
+            this.shopNameLabel.AutoSize = true;
+            this.shopNameLabel.Location = new System.Drawing.Point(253, 13);
+            this.shopNameLabel.Name = "shopNameLabel";
+            this.shopNameLabel.Size = new System.Drawing.Size(128, 13);
+            this.shopNameLabel.TabIndex = 19;
+            this.shopNameLabel.Text = "Выберите предприятие:";
+            // 
             // Form1
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(492, 473);
+            this.Controls.Add(this.shopNameLabel);
+            this.Controls.Add(this.shopComboBox);
             this.Controls.Add(this.detRB);
             this.Controls.Add(this.larRB);
             this.Controls.Add(this.getOrpoAverLarButton);
@@ -508,6 +536,8 @@
         private System.Windows.Forms.Button getOrpoAverLarButton;
         private System.Windows.Forms.RadioButton larRB;
         private System.Windows.Forms.RadioButton detRB;
+        private System.Windows.Forms.ComboBox shopComboBox;
+        private System.Windows.Forms.Label shopNameLabel;
 
 
     }
