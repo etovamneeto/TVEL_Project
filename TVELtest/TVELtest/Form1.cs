@@ -322,7 +322,7 @@ namespace TVELtest
                 try
                 {
                     OleDbDataAdapter adapter = new OleDbDataAdapter("SELECT [ID], [Dose], [Year], [DoseInt], [Gender], [AgeAtExp] FROM [Final] WHERE [Shop]='" + shopName + "'", connectionString);//Выбор нужных столбцов из нужной таблицы
-                    //OleDbDataAdapter adapter = new OleDbDataAdapter("SELECT [ID], [Dose], [Year], [DoseInt], [Gender], [AgeAtExp] FROM [Final] WHERE [Shop]='r5'", connectionString);//Выбор нужных столбцов из нужной таблицы
+                    //OleDbDataAdapter adapter = new OleDbDataAdapter("SELECT [ID], [Dose], [Year], [DoseInt], [Gender], [AgeAtExp] FROM [Final] WHERE [Shop]='r2'", connectionString);//Выбор нужных столбцов из нужной таблицы
                     DataSet dataSet = new DataSet();
                     adapter.Fill(dataSet, "Final");
 
@@ -437,9 +437,9 @@ namespace TVELtest
                                 manIntOrpo[i] = getOrpo(getManIntLar(manYearsArray[i].Average()), manSadIntArray[i].Average());
                                 // manIntOrpo_95[i] = getOrpo_95(getManIntLar(manYearsArray[i].Average()), manSadIntArray[i].Average(), getDeviation(manSadIntArray[i]));
                                 manSadIntArray[i].Sort();
-                                if (manSadExtArray[i].Count == 1)
+                                if (manSadIntArray[i].Count == 1)
                                     manIntOrpo_95[i] = getOrpo_95(getManIntLar(manYearsArray[i].Average()), manSadIntArray[i][0]);
-                                if (manSadExtArray[i].Count > 1)
+                                if (manSadIntArray[i].Count > 1)
                                     manIntOrpo_95[i] = getOrpo_95(getManIntLar(manYearsArray[i].Average()), manSadIntArray[i][manSadIntArray[i].Count * 95 / 100 - 1]);
                             }
                             if (detRB.Checked)
@@ -447,9 +447,9 @@ namespace TVELtest
                                 manIntOrpo[i] = getOrpo(getManIntDet(manYearsArray[i].Average()), manSadIntArray[i].Average());
                                 // manIntOrpo_95[i] = getOrpo_95(getManIntLar(manYearsArray[i].Average()), manSadIntArray[i].Average(), getDeviation(manSadIntArray[i]));
                                 manSadIntArray[i].Sort();
-                                if (manSadExtArray[i].Count == 1)
+                                if (manSadIntArray[i].Count == 1)
                                     manIntOrpo_95[i] = getOrpo_95(getManIntDet(manYearsArray[i].Average()), manSadIntArray[i][0]);
-                                if (manSadExtArray[i].Count > 1)
+                                if (manSadIntArray[i].Count > 1)
                                     manIntOrpo_95[i] = getOrpo_95(getManIntDet(manYearsArray[i].Average()), manSadIntArray[i][manSadIntArray[i].Count * 95 / 100 - 1]);
                             }
                         }
@@ -461,9 +461,9 @@ namespace TVELtest
                                 womanExtOrpo[i] = getOrpo(getWomanExtLar(womanYearsArray[i].Average()), womanSadExtArray[i].Average());
                                 //womanExtOrpo_95[i] = getOrpo_95(getWomanExtLar(womanYearsArray[i].Average()), womanSadExtArray[i].Average(), getDeviation(womanSadExtArray[i]));
                                 womanSadExtArray[i].Sort();
-                                if (manSadExtArray[i].Count == 1)
+                                if (womanSadExtArray[i].Count == 1)
                                     womanExtOrpo_95[i] = getOrpo_95(getWomanExtLar(womanYearsArray[i].Average()), womanSadExtArray[i][0]);
-                                if (manSadExtArray[i].Count > 1)
+                                if (womanSadExtArray[i].Count > 1)
                                     womanExtOrpo_95[i] = getOrpo_95(getWomanExtLar(womanYearsArray[i].Average()), womanSadExtArray[i][womanSadExtArray[i].Count * 95 / 100 - 1]);
                             }
                             if (detRB.Checked)
@@ -471,9 +471,9 @@ namespace TVELtest
                                 womanExtOrpo[i] = getOrpo(getWomanExtDet(womanYearsArray[i].Average()), womanSadExtArray[i].Average());
                                 //womanExtOrpo_95[i] = getOrpo_95(getWomanExtLar(womanYearsArray[i].Average()), womanSadExtArray[i].Average(), getDeviation(womanSadExtArray[i]));
                                 womanSadExtArray[i].Sort();
-                                if (manSadExtArray[i].Count == 1)
+                                if (womanSadExtArray[i].Count == 1)
                                     womanExtOrpo_95[i] = getOrpo_95(getWomanExtDet(womanYearsArray[i].Average()), womanSadExtArray[i][0]);
-                                if (manSadExtArray[i].Count > 1)
+                                if (womanSadExtArray[i].Count > 1)
                                     womanExtOrpo_95[i] = getOrpo_95(getWomanExtDet(womanYearsArray[i].Average()), womanSadExtArray[i][womanSadExtArray[i].Count * 95 / 100 - 1]);
                             }
                         }
@@ -485,9 +485,9 @@ namespace TVELtest
                                 womanIntOrpo[i] = getOrpo(getWomanIntLar(womanYearsArray[i].Average()), womanSadIntArray[i].Average());
                                 //womanIntOrpo_95[i] = getOrpo_95(getWomanIntLar(womanYearsArray[i].Average()), womanSadIntArray[i].Average(), getDeviation(womanSadIntArray[i]));
                                 womanSadIntArray[i].Sort();
-                                if (manSadExtArray[i].Count == 1)
+                                if (womanSadIntArray[i].Count == 1)
                                     womanIntOrpo_95[i] = getOrpo_95(getWomanIntLar(womanYearsArray[i].Average()), womanSadIntArray[i][0]);
-                                if (manSadExtArray[i].Count > 1)
+                                if (womanSadIntArray[i].Count > 1)
                                     womanIntOrpo_95[i] = getOrpo_95(getWomanIntLar(womanYearsArray[i].Average()), womanSadIntArray[i][womanSadIntArray[i].Count * 95 / 100 - 1]);
                             }
                             if (detRB.Checked)
@@ -495,18 +495,13 @@ namespace TVELtest
                                 womanIntOrpo[i] = getOrpo(getWomanIntDet(womanYearsArray[i].Average()), womanSadIntArray[i].Average());
                                 //womanIntOrpo_95[i] = getOrpo_95(getWomanIntLar(womanYearsArray[i].Average()), womanSadIntArray[i].Average(), getDeviation(womanSadIntArray[i]));
                                 womanSadIntArray[i].Sort();
-                                if (manSadExtArray[i].Count == 1)
+                                if (womanSadIntArray[i].Count == 1)
                                     womanIntOrpo_95[i] = getOrpo_95(getWomanIntDet(womanYearsArray[i].Average()), womanSadIntArray[i][0]);
-                                if (manSadExtArray[i].Count > 1)
+                                if (womanSadIntArray[i].Count > 1)
                                     womanIntOrpo_95[i] = getOrpo_95(getWomanIntDet(womanYearsArray[i].Average()), womanSadIntArray[i][womanSadIntArray[i].Count * 95 / 100 - 1]);
                             }
                         }
                     }
-
-                    //manExtOrpoBox.Text = "2-а) " + "пока работает";
-                    //manIntOrpoBox.Text = "95-ый = " + manSadExtArray[Convert.ToInt32(womanExtOrpoBox.Text)][manSadExtArray[Convert.ToInt32(womanExtOrpoBox.Text)].Count * 95 / 100 - 1];
-                    //womanIntOrpoBox.Text = "Count = " + manSadExtArray.Length;
-                    //manExtOrpoBox.Text = "CountКонкр = " + manSadExtArray[Convert.ToInt32(womanExtOrpoBox.Text)].Count;
 
                     List<double> manWeightedExtOrpo = new List<double>();
                     List<double> manWeightedIntOrpo = new List<double>();
@@ -529,6 +524,11 @@ namespace TVELtest
                         womanWeightedExtOrpo_95.Add(womanExtOrpo_95[i] * womanSadExtArray[i].Count);
                         womanWeightedIntOrpo_95.Add(womanIntOrpo_95[i] * womanSadIntArray[i].Count);
                     }
+
+                    //manExtOrpoBox.Text = "2-а) " + "пока работает";
+                    //manIntOrpoBox.Text = "95-ый = " + manSadExtArray[Convert.ToInt32(womanExtOrpoBox.Text)][manSadExtArray[Convert.ToInt32(womanExtOrpoBox.Text)].Count * 95 / 100 - 1];
+                    //womanIntOrpoBox.Text = "Count = " + manSadExtArray.Length;
+                    //manExtOrpoBox.Text = "CountКонкр = " + manSadExtArray[Convert.ToInt32(womanExtOrpoBox.Text)].Count;
 
                     manExtOrpoBox.Text = "2-а) " + Math.Round(manWeightedExtOrpo.Sum() / dbMan, 7).ToString();
                     manIntOrpoBox.Text = "2-а) " + Math.Round(manWeightedIntOrpo.Sum() / dbMan, 7).ToString();
