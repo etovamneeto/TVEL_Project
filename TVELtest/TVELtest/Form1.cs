@@ -903,8 +903,8 @@ namespace TVELtest
                             calculator = new RiskCalculatorLib.RiskCalculator(RiskCalculator.SEX_MALE, manDoseHistoryList[i][k][0].AgeAtExposure, ref record, true);
                             if (larRB.Checked)
                             {
-                                manExtLarArray[i].Add(calculator.getLAR(false, true).AllCancers);
-                                manIntLarArray[i].Add(calculator.getLAR(false, true).Lung);
+                                manExtLarArray[i].Add(calculator.getLAR(false, isIncidence).AllCancers);
+                                manIntLarArray[i].Add(calculator.getLAR(false, isIncidence).Lung);
                             }
                             if (detRB.Checked)
                             {
@@ -926,8 +926,8 @@ namespace TVELtest
                             calculator = new RiskCalculatorLib.RiskCalculator(RiskCalculator.SEX_FEMALE, womanDoseHistoryList[i][k][0].AgeAtExposure, ref record, true);
                             if (larRB.Checked)
                             {
-                                womanExtLarArray[i].Add(calculator.getLAR(false, true).AllCancers);
-                                womanIntLarArray[i].Add(calculator.getLAR(false, true).Lung);
+                                womanExtLarArray[i].Add(calculator.getLAR(false, isIncidence).AllCancers);
+                                womanIntLarArray[i].Add(calculator.getLAR(false, isIncidence).Lung);
                             }
                             if (detRB.Checked)
                             {
