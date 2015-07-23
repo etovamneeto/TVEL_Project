@@ -77,36 +77,36 @@ namespace TVELtest
         public double getManExtLar(double meanAge)
         {
             double lar = 0;
-            double secondPowerElement = (2 / Math.Pow(10, 6)) * Math.Pow(meanAge, 2);
-            double firstPowerElement = (-13 / Math.Pow(10, 4)) * meanAge;
-            double constant = 9.36 / Math.Pow(10, 2);
+            double secondPowerElement = 4 * Math.Pow(10, -6) * Math.Pow(meanAge, 2);
+            double firstPowerElement = -11 * Math.Pow(10, -4)  * meanAge;
+            double constant = 6.63 * Math.Pow(10, -2);
             return lar = secondPowerElement + firstPowerElement + constant;
         }
 
         public double getWomanExtLar(double meanAge)
         {
             double lar = 0;
-            double secondPowerElement = (1 / Math.Pow(10, 5)) * Math.Pow(meanAge, 2);
-            double firstPowerElement = (-31 / Math.Pow(10, 4)) * meanAge;
-            double constant = 17.42 / Math.Pow(10, 2);
+            double secondPowerElement = -1 * Math.Pow(10, -6) * Math.Pow(meanAge, 2);
+            double firstPowerElement = -9 * Math.Pow(10, -4) * meanAge;
+            double constant = 7.74 * Math.Pow(10, -2);
             return lar = secondPowerElement + firstPowerElement + constant;
         }
 
         public double getManIntLar(double meanAge)
         {
             double lar = 0;
-            double secondPowerElement = (-3 / Math.Pow(10, 5)) * Math.Pow(meanAge, 2);
-            double firstPowerElement = (23 / Math.Pow(10, 4)) * meanAge;
-            double constant = 1.15 / Math.Pow(10, 2);
+            double secondPowerElement = -3 * Math.Pow(10, -5) * Math.Pow(meanAge, 2);
+            double firstPowerElement = 22 * Math.Pow(10, -4) * meanAge;
+            double constant = 85 * Math.Pow(10, -4);
             return lar = secondPowerElement + firstPowerElement + constant;
         }
 
         public double getWomanIntLar(double meanAge)
         {
             double lar = 0;
-            double secondPowerElement = (-4 / Math.Pow(10, 5)) * Math.Pow(meanAge, 2);
-            double firstPowerElement = (27 / Math.Pow(10, 4)) * meanAge;
-            double constant = 5.02 / Math.Pow(10, 2);
+            double secondPowerElement = -3 * Math.Pow(10, -5) * Math.Pow(meanAge, 2);
+            double firstPowerElement = 24 * Math.Pow(10, -4) * meanAge;
+            double constant = 4.39 * Math.Pow(10, -2);
             return lar = secondPowerElement + firstPowerElement + constant;
         }
 
@@ -120,15 +120,6 @@ namespace TVELtest
             return det = secondPowerElement + firstPowerElement + constant;
         }
 
-        public double getManIntDet(double meanAge)
-        {
-            double det = 0;
-            double secondPowerElement = (-3 * Math.Pow(10, -5)) * (Math.Pow(meanAge, 2));
-            double firstPowerElement = (26 * Math.Pow(10, -4)) * meanAge;
-            double constant = -1.53 * Math.Pow(10, -2);
-            return det = secondPowerElement + firstPowerElement + constant;
-        }
-
         public double getWomanExtDet(double meanAge)
         {
             double det = 0;
@@ -138,6 +129,15 @@ namespace TVELtest
             return det = secondPowerElement + firstPowerElement + constant;
         }
 
+        public double getManIntDet(double meanAge)
+        {
+            double det = 0;
+            double secondPowerElement = (-3 * Math.Pow(10, -5)) * (Math.Pow(meanAge, 2));
+            double firstPowerElement = (26 * Math.Pow(10, -4)) * meanAge;
+            double constant = -1.53 * Math.Pow(10, -2);
+            return det = secondPowerElement + firstPowerElement + constant;
+        }
+       
         public double getWomanIntDet(double meanAge)
         {
             double det = 0;
@@ -530,15 +530,15 @@ namespace TVELtest
                     //womanIntOrpoBox.Text = "Count = " + manSadExtArray.Length;
                     //manExtOrpoBox.Text = "CountКонкр = " + manSadExtArray[Convert.ToInt32(womanExtOrpoBox.Text)].Count;
 
-                    manExtOrpoBox.Text = "2-а) " + Math.Round(manWeightedExtOrpo.Sum() / dbMan, 7).ToString();
-                    manIntOrpoBox.Text = "2-а) " + Math.Round(manWeightedIntOrpo.Sum() / dbMan, 7).ToString();
-                    womanExtOrpoBox.Text = "2-а) " + Math.Round(womanWeightedExtOrpo.Sum() / dbWoman, 7).ToString();
-                    womanIntOrpoBox.Text = "2-а) " + Math.Round(womanWeightedIntOrpo.Sum() / dbWoman, 7).ToString();
+                    manExtOrpoBox.Text = "2-а) " + Math.Round(manWeightedExtOrpo.Sum() / dbMan, 8).ToString();
+                    manIntOrpoBox.Text = "2-а) " + Math.Round(manWeightedIntOrpo.Sum() / dbMan, 8).ToString();
+                    womanExtOrpoBox.Text = "2-а) " + Math.Round(womanWeightedExtOrpo.Sum() / dbWoman, 8).ToString();
+                    womanIntOrpoBox.Text = "2-а) " + Math.Round(womanWeightedIntOrpo.Sum() / dbWoman, 8).ToString();
 
-                    manExtOrpoBox95.Text = "2-а) " + Math.Round(manWeightedExtOrpo_95.Sum() / dbMan, 7).ToString();
-                    manIntOrpoBox95.Text = "2-а) " + Math.Round(manWeightedIntOrpo_95.Sum() / dbMan, 7).ToString();
-                    womanExtOrpoBox95.Text = "2-а) " + Math.Round(womanWeightedExtOrpo_95.Sum() / dbWoman, 7).ToString();
-                    womanIntOrpoBox95.Text = "2-а) " + Math.Round(womanWeightedIntOrpo_95.Sum() / dbWoman, 7).ToString();
+                    manExtOrpoBox95.Text = "2-а) " + Math.Round(manWeightedExtOrpo_95.Sum() / dbMan, 8).ToString();
+                    manIntOrpoBox95.Text = "2-а) " + Math.Round(manWeightedIntOrpo_95.Sum() / dbMan, 8).ToString();
+                    womanExtOrpoBox95.Text = "2-а) " + Math.Round(womanWeightedExtOrpo_95.Sum() / dbWoman, 8).ToString();
+                    womanIntOrpoBox95.Text = "2-а) " + Math.Round(womanWeightedIntOrpo_95.Sum() / dbWoman, 8).ToString();
 
 
                     ///*-----Вывод в Excel-файл-----*/
