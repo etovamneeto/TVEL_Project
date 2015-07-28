@@ -382,14 +382,16 @@ namespace TVELtest
                                 if (dbFinalRecords[k].getAgeAtExp() >= ageLowerBound[i] && dbFinalRecords[k].getAgeAtExp() <= ageUpperBound[i])
                                 {
                                     manSadExtArray[i].Add(dbFinalRecords[k].getDose() - dbFinalRecords[k].getDoseInt());
-                                    manSadIntArray[i].Add(dbFinalRecords[k].getDoseInt());
+                                    if (dbFinalRecords[k].getDoseInt() > 0)
+                                        manSadIntArray[i].Add(dbFinalRecords[k].getDoseInt());
                                     manYearsArray[i].Add(dbFinalRecords[k].getAgeAtExp());
                                 }
                             if (dbFinalRecords[k].getSex() == sexFemale)
                                 if (dbFinalRecords[k].getAgeAtExp() >= ageLowerBound[i] && dbFinalRecords[k].getAgeAtExp() <= ageUpperBound[i])
                                 {
                                     womanSadExtArray[i].Add(dbFinalRecords[k].getDose() - dbFinalRecords[k].getDoseInt());
-                                    womanSadIntArray[i].Add(dbFinalRecords[k].getDoseInt());
+                                    if (dbFinalRecords[k].getDoseInt() > 0)
+                                        womanSadIntArray[i].Add(dbFinalRecords[k].getDoseInt());
                                     womanYearsArray[i].Add(dbFinalRecords[k].getAgeAtExp());
                                 }
                         }
@@ -514,7 +516,9 @@ namespace TVELtest
                     List<double> womanWeightedIntOrpo_95 = new List<double>();
                     for (int i = 0; i < ageGroups.Count; i++)
                     {
+                        //if (manSadExtArray[i].Count > 0)
                         manWeightedExtOrpo.Add(manExtOrpo[i] * manSadExtArray[i].Count);
+                        //if (manSadIntArray[i].Count > 0) 
                         manWeightedIntOrpo.Add(manIntOrpo[i] * manSadIntArray[i].Count);
                         womanWeightedExtOrpo.Add(womanExtOrpo[i] * womanSadExtArray[i].Count);
                         womanWeightedIntOrpo.Add(womanIntOrpo[i] * womanSadIntArray[i].Count);
@@ -539,7 +543,6 @@ namespace TVELtest
                     manIntOrpoBox95.Text = "2-а) " + Math.Round(manWeightedIntOrpo_95.Sum() / dbMan, 8).ToString();
                     womanExtOrpoBox95.Text = "2-а) " + Math.Round(womanWeightedExtOrpo_95.Sum() / dbWoman, 8).ToString();
                     womanIntOrpoBox95.Text = "2-а) " + Math.Round(womanWeightedIntOrpo_95.Sum() / dbWoman, 8).ToString();
-
 
                     ///*-----Вывод в Excel-файл-----*/
                     ///*-----Инициализация Excel-файла-----*/
@@ -904,13 +907,15 @@ namespace TVELtest
                             if (larRB.Checked)
                             {
                                 manExtLarArray[i].Add(calculator.getLAR(false, isIncidence).AllCancers);
-                                manIntLarArray[i].Add(calculator.getLAR(false, isIncidence).Lung);
+                                if (manDoseHistoryList[i][k][0].LungDoseInmGy > 0)
+                                    manIntLarArray[i].Add(calculator.getLAR(false, isIncidence).Lung);
                             }
                             if (detRB.Checked)
                             {
                                 calculator.createEARSamples(0, ref isIncidence);
                                 manExtLarArray[i].Add(calculator.getDetriment().Value.AllCancers);
-                                manIntLarArray[i].Add(calculator.getDetriment().Value.Lung);
+                                if (manDoseHistoryList[i][k][0].LungDoseInmGy > 0)
+                                    manIntLarArray[i].Add(calculator.getDetriment().Value.Lung);
                             }
                         }
                     for (int i = 0; i < ageGroups.Count; i++)
@@ -927,13 +932,15 @@ namespace TVELtest
                             if (larRB.Checked)
                             {
                                 womanExtLarArray[i].Add(calculator.getLAR(false, isIncidence).AllCancers);
-                                womanIntLarArray[i].Add(calculator.getLAR(false, isIncidence).Lung);
+                                if (womanDoseHistoryList[i][k][0].LungDoseInmGy != 0)
+                                    womanIntLarArray[i].Add(calculator.getLAR(false, isIncidence).Lung);
                             }
                             if (detRB.Checked)
                             {
                                 calculator.createEARSamples(0, ref isIncidence);
                                 womanExtLarArray[i].Add(calculator.getDetriment().Value.AllCancers);
-                                womanIntLarArray[i].Add(calculator.getDetriment().Value.Lung);
+                                if (womanDoseHistoryList[i][k][0].LungDoseInmGy != 0)
+                                    womanIntLarArray[i].Add(calculator.getDetriment().Value.Lung);
                             }
                         }
 
