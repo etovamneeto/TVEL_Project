@@ -721,7 +721,7 @@ namespace TVELtest
                     //if (detRB.Checked)
                     //    saveAs = "ОПРО_Det (Средний возраст)";
 
-                    //excelWorkbook.SaveAs(@Path.GetDirectoryName(Application.ExecutablePath) + "\\" + saveAs + "(" + new string(timeNameBuffer) + ").xlsx",  //object Filename
+                    //excelWorkbook.SaveAs(@Path.GetDirectoryName(Application.ExecutablePath) + "\\" + shopComboBox.SelectedItem + saveAs + "(" + new string(timeNameBuffer) + ").xlsx",  //object Filename
                     //        Excel.XlFileFormat.xlOpenXMLWorkbook,                       //object FileFormat
                     //        Type.Missing,                       //object Password 
                     //        Type.Missing,                       //object WriteResPassword  
@@ -1238,7 +1238,7 @@ namespace TVELtest
                     //if (detRB.Checked)
                     //    saveAs = "ОПРО_Det (Средний LAR(Det))";
 
-                    //excelWorkbook.SaveAs(@Path.GetDirectoryName(Application.ExecutablePath) + "\\" + saveAs + "(" + new string(timeNameBuffer) + ").xlsx",  //object Filename
+                    //excelWorkbook.SaveAs(@Path.GetDirectoryName(Application.ExecutablePath) + "\\" + shopComboBox.SelectedItem + saveAs + "(" + new string(timeNameBuffer) + ").xlsx",  //object Filename
                     //        Excel.XlFileFormat.xlOpenXMLWorkbook,                       //object FileFormat
                     //        Type.Missing,                       //object Password 
                     //        Type.Missing,                       //object WriteResPassword  
@@ -1702,7 +1702,7 @@ namespace TVELtest
                         //        saveAs = "ИБПО_Det";
 
                         //if (orpoButtonAverAge)
-                        //    excelWorkbook.SaveAs(@Path.GetDirectoryName(Application.ExecutablePath) + "\\" + saveAs + " (Средний возраст)" + "(" + new string(timeNameBuffer) + ").xlsx",  //object Filename
+                        //    excelWorkbook.SaveAs(@Path.GetDirectoryName(Application.ExecutablePath) + "\\" + shopComboBox.SelectedItem + saveAs + " (Средний возраст)" + "(" + new string(timeNameBuffer) + ").xlsx",  //object Filename
                         //            Excel.XlFileFormat.xlOpenXMLWorkbook,                       //object FileFormat
                         //            Type.Missing,                       //object Password 
                         //            Type.Missing,                       //object WriteResPassword  
