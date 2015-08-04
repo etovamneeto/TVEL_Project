@@ -652,21 +652,21 @@ namespace TVELtest
                     excelCells.VerticalAlignment = Excel.Constants.xlCenter;
                     excelCells.HorizontalAlignment = Excel.Constants.xlCenter;
                     excelCells.Borders.Weight = Excel.XlBorderWeight.xlThick;
-                    excelCells.Value2 = "Внешнее облучение";
+                    excelCells.Value2 = "Внешнее облучение (95%)";
 
                     /*-----Описываем ячейку C1 на странице-----*/
                     excelCells = excelWorksheet.get_Range("F1");
                     excelCells.VerticalAlignment = Excel.Constants.xlCenter;
                     excelCells.HorizontalAlignment = Excel.Constants.xlCenter;
                     excelCells.Borders.Weight = Excel.XlBorderWeight.xlThick;
-                    excelCells.Value2 = "Внутреннее облучение";
+                    excelCells.Value2 = "Внутреннее облучение (95%)";
 
                     /*-----Описываем ячейку C1 на странице-----*/
                     excelCells = excelWorksheet.get_Range("G1");
                     excelCells.VerticalAlignment = Excel.Constants.xlCenter;
                     excelCells.HorizontalAlignment = Excel.Constants.xlCenter;
                     excelCells.Borders.Weight = Excel.XlBorderWeight.xlThick;
-                    excelCells.Value2 = "Сумма";
+                    excelCells.Value2 = "Сумма (95%)";
 
                     for (int i = 2; i <= manExtOrpo.Length + 1; i++)
                     {
