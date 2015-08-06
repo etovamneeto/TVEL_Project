@@ -16,7 +16,7 @@ namespace TVELtest
         {
             Application.EnableVisualStyles();
             Application.SetCompatibleTextRenderingDefault(false);
-            Application.Run(new Form1("Калькулятор (от LAR)"));
+            Application.Run(new Form1("Калькулятор-уродец (тестовый)"));
         }
     }
 }

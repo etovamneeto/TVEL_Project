@@ -563,22 +563,28 @@ namespace TVELtest
                     for (int i = 0; i < ageGroups.Count; i++)
                     {
                         if (manSadExtArray[i].Count > 0)
-                        manWeightedExtOrpo.Add(manExtOrpo[i] * manSadExtArray[i].Count);
+                            manWeightedExtOrpo.Add(manExtOrpo[i] * manSadExtArray[i].Count);
+
                         if (manSadIntArray[i].Count > 0) 
-                        manWeightedIntOrpo.Add(manIntOrpo[i] * manSadIntArray[i].Count);
+                            manWeightedIntOrpo.Add(manIntOrpo[i] * manSadIntArray[i].Count);
+
                         if (womanSadExtArray[i].Count > 0) 
-                        womanWeightedExtOrpo.Add(womanExtOrpo[i] * womanSadExtArray[i].Count);
+                            womanWeightedExtOrpo.Add(womanExtOrpo[i] * womanSadExtArray[i].Count);
+
                         if (womanSadIntArray[i].Count > 0) 
-                        womanWeightedIntOrpo.Add(womanIntOrpo[i] * womanSadIntArray[i].Count);
+                            womanWeightedIntOrpo.Add(womanIntOrpo[i] * womanSadIntArray[i].Count);
 
                         if (manSadExtArray[i].Count > 0)
-                        manWeightedExtOrpo95.Add(manExtOrpo95[i] * manSadExtArray[i].Count);
+                            manWeightedExtOrpo95.Add(manExtOrpo95[i] * manSadExtArray[i].Count);
+
                         if (manSadIntArray[i].Count > 0)
-                        manWeightedIntOrpo95.Add(manIntOrpo95[i] * manSadIntArray[i].Count);
+                            manWeightedIntOrpo95.Add(manIntOrpo95[i] * manSadIntArray[i].Count);
+
                         if (womanSadExtArray[i].Count > 0)
-                        womanWeightedExtOrpo95.Add(womanExtOrpo95[i] * womanSadExtArray[i].Count);
+                            womanWeightedExtOrpo95.Add(womanExtOrpo95[i] * womanSadExtArray[i].Count);
+
                         if (womanSadIntArray[i].Count > 0)
-                        womanWeightedIntOrpo95.Add(womanIntOrpo95[i] * womanSadIntArray[i].Count);
+                            womanWeightedIntOrpo95.Add(womanIntOrpo95[i] * womanSadIntArray[i].Count);
                     }
 
                     //manExtOrpoBox.Text = "2-а) " + "пока работает";
@@ -596,6 +602,8 @@ namespace TVELtest
                     else
                         manIntOrpoBox.Text = "Внутреннего облучения нет!";
 
+                    manSumOrpoBox.Text = "2-а) " + Math.Round((manWeightedExtOrpo.Sum() / dbMan) + (manWeightedIntOrpo.Sum() / dbMan), 8);
+
                     if (womanWeightedExtOrpo.Sum() > 0)
                         womanExtOrpoBox.Text = "2-а) " + Math.Round(womanWeightedExtOrpo.Sum() / dbWoman, 8);
                     else
@@ -606,30 +614,31 @@ namespace TVELtest
                     else
                         womanIntOrpoBox.Text = "Внутреннего облучения нет!";
 
+                    womanSumOrpoBox.Text = "2-а) " + Math.Round((womanWeightedExtOrpo.Sum() / dbWoman) + (womanWeightedIntOrpo.Sum() / dbWoman), 8);
+
                     if (manWeightedExtOrpo95.Sum() > 0)
-                        manExtOrpoBox95.Text = "2-а) " + Math.Round(manWeightedExtOrpo.Sum() / dbMan, 8);
+                        manExtOrpoBox95.Text = "2-а) " + Math.Round(manWeightedExtOrpo95.Sum() / dbMan, 8);
                     else
                         manIntOrpoBox95.Text = "Внешнего облучения нет!";
 
                     if (manWeightedIntOrpo95.Sum() > 0)
-                        manIntOrpoBox95.Text = "2-а) " + Math.Round(manWeightedIntOrpo.Sum() / dbMan, 8);
+                        manIntOrpoBox95.Text = "2-а) " + Math.Round(manWeightedIntOrpo95.Sum() / dbMan, 8);
                     else
                         manIntOrpoBox95.Text = "Внутреннего облучения нет!";
 
+                    manSumOrpo95Box.Text = "2-а) " + Math.Round((manWeightedExtOrpo95.Sum() / dbMan) + (manWeightedIntOrpo95.Sum() / dbMan), 8);
+
                     if (womanWeightedExtOrpo95.Sum() > 0)
-                        womanExtOrpoBox95.Text = "2-а) " + Math.Round(womanWeightedExtOrpo.Sum() / dbWoman, 8);
+                        womanExtOrpoBox95.Text = "2-а) " + Math.Round(womanWeightedExtOrpo95.Sum() / dbWoman, 8);
                     else
                         womanExtOrpoBox95.Text = "Внешнего облучения нет!";
 
                     if (womanWeightedIntOrpo95.Sum() > 0)
-                        womanIntOrpoBox95.Text = "2-а) " + Math.Round(womanWeightedIntOrpo.Sum() / dbWoman, 8);
+                        womanIntOrpoBox95.Text = "2-а) " + Math.Round(womanWeightedIntOrpo95.Sum() / dbWoman, 8);
                     else
                         womanIntOrpoBox95.Text = "Внутреннего облучения нет!";
 
-                    //manExtOrpoBox95.Text = "2-а) " + Math.Round(manWeightedExtOrpo95.Sum() / dbMan, 8).ToString();
-                    //manIntOrpoBox95.Text = "2-а) " + Math.Round(manWeightedIntOrpo95.Sum() / dbMan, 8).ToString();
-                    //womanExtOrpoBox95.Text = "2-а) " + Math.Round(womanWeightedExtOrpo95.Sum() / dbWoman, 8).ToString();
-                    //womanIntOrpoBox95.Text = "2-а) " + Math.Round(womanWeightedIntOrpo95.Sum() / dbWoman, 8).ToString();
+                    womanSumOrpo95Box.Text = "2-а) " + Math.Round((womanWeightedExtOrpo95.Sum() / dbWoman) + (womanWeightedIntOrpo95.Sum() / dbWoman), 8);
 
                     /*-----Вывод в Excel-файл-----*/
                     /*-----Инициализация Excel-файла-----*/
@@ -711,7 +720,7 @@ namespace TVELtest
                         excelCells.Value2 = manIntOrpo[i - 2];
                         excelCells.Borders.ColorIndex = 1;
                         excelCells = (Excel.Range)excelWorksheet.Cells[i, "D"];
-                        excelCells.Value2 = manExtOrpo[i - 2] + manIntOrpo[i - 2];
+                        excelCells.Value2 = manSumOrpo[i - 2];//manExtOrpo[i - 2] + manIntOrpo[i - 2];
                         excelCells.Borders.ColorIndex = 1;
                         excelCells = (Excel.Range)excelWorksheet.Cells[i, "E"];
                         excelCells.Value2 = manExtOrpo95[i - 2];
@@ -720,7 +729,7 @@ namespace TVELtest
                         excelCells.Value2 = manIntOrpo95[i - 2];
                         excelCells.Borders.ColorIndex = 1;
                         excelCells = (Excel.Range)excelWorksheet.Cells[i, "G"];
-                        excelCells.Value2 = manExtOrpo95[i - 2] + manIntOrpo95[i - 2];
+                        excelCells.Value2 = manSumOrpo95[i - 2];//manExtOrpo95[i - 2] + manIntOrpo95[i - 2];
                         excelCells.Borders.ColorIndex = 1;
                     }
 
@@ -840,7 +849,7 @@ namespace TVELtest
                         excelCells.Borders.ColorIndex = 1;
 
                         excelCells = (Excel.Range)excelWorksheet.Cells[i, "D"];
-                        excelCells.Value2 = womanExtOrpo[i - 2] + womanIntOrpo[i - 2];
+                        excelCells.Value2 = womanSumOrpo[i - 2];//womanExtOrpo[i - 2] + womanIntOrpo[i - 2];
                         excelCells.Borders.ColorIndex = 1;
 
                         excelCells = (Excel.Range)excelWorksheet.Cells[i, "E"];
@@ -852,7 +861,7 @@ namespace TVELtest
                         excelCells.Borders.ColorIndex = 1;
 
                         excelCells = (Excel.Range)excelWorksheet.Cells[i, "G"];
-                        excelCells.Value2 = womanExtOrpo95[i - 2] + womanIntOrpo95[i - 2];
+                        excelCells.Value2 = womanSumOrpo95[i - 2];//womanExtOrpo95[i - 2] + womanIntOrpo95[i - 2];
                         excelCells.Borders.ColorIndex = 1;
                     }
 
@@ -1270,6 +1279,8 @@ namespace TVELtest
                     else
                         manIntOrpoBox.Text = "Внутреннего облучения нет!";
 
+                    manSumOrpoBox.Text = "2-б) " + Math.Round((manWeightedExtOrpo.Sum() / dbMan) + (manWeightedIntOrpo.Sum() / dbMan), 8);
+
                     if (womanWeightedExtOrpo.Sum() > 0)
                         womanExtOrpoBox.Text = "2-б) " + Math.Round(womanWeightedExtOrpo.Sum() / dbWoman, 8);
                     else
@@ -1280,25 +1291,31 @@ namespace TVELtest
                     else
                         womanIntOrpoBox.Text = "Внутреннего облучения нет!";
 
+                    womanSumOrpoBox.Text = "2-б) " + Math.Round((womanWeightedExtOrpo.Sum() / dbWoman) + (womanWeightedIntOrpo.Sum() / dbWoman), 8);
+
                     if (manWeightedExtOrpo95.Sum() > 0)
-                        manExtOrpoBox95.Text = "2-б) " + Math.Round(manWeightedExtOrpo.Sum() / dbMan, 8);
+                        manExtOrpoBox95.Text = "2-б) " + Math.Round(manWeightedExtOrpo95.Sum() / dbMan, 8);
                     else
                         manIntOrpoBox95.Text = "Внешнего облучения нет!";
 
                     if (manWeightedIntOrpo95.Sum() > 0)
-                        manIntOrpoBox95.Text = "2-б) " + Math.Round(manWeightedIntOrpo.Sum() / dbMan, 8);
+                        manIntOrpoBox95.Text = "2-б) " + Math.Round(manWeightedIntOrpo95.Sum() / dbMan, 8);
                     else
                         manIntOrpoBox95.Text = "Внутреннего облучения нет!";
 
+                    manSumOrpo95Box.Text = "2-а) " + Math.Round((manWeightedExtOrpo95.Sum() / dbMan) + (manWeightedIntOrpo95.Sum() / dbMan), 8);
+
                     if (womanWeightedExtOrpo95.Sum() > 0)
-                        womanExtOrpoBox95.Text = "2-б) " + Math.Round(womanWeightedExtOrpo.Sum() / dbWoman, 8);
+                        womanExtOrpoBox95.Text = "2-б) " + Math.Round(womanWeightedExtOrpo95.Sum() / dbWoman, 8);
                     else
                         womanExtOrpoBox95.Text = "Внешнего облучения нет!";
 
                     if (womanWeightedIntOrpo95.Sum() > 0)
-                        womanIntOrpoBox95.Text = "2-б) " + Math.Round(womanWeightedIntOrpo.Sum() / dbWoman, 8);
+                        womanIntOrpoBox95.Text = "2-б) " + Math.Round(womanWeightedIntOrpo95.Sum() / dbWoman, 8);
                     else
                         womanIntOrpoBox95.Text = "Внутреннего облучения нет!";
+
+                    womanSumOrpo95Box.Text = "2-а) " + Math.Round((womanWeightedExtOrpo95.Sum() / dbWoman) + (womanWeightedIntOrpo95.Sum() / dbWoman), 8);
 
                     //manExtIbpoBox.Text = "" + manWeightedExtOrpo.Count;
                     //manIntIbpoBox.Text = "" + manWeightedIntOrpo.Count;
@@ -1390,7 +1407,7 @@ namespace TVELtest
                         excelCells.Value2 = manIntOrpo[i - 2];
                         excelCells.Borders.ColorIndex = 1;
                         excelCells = (Excel.Range)excelWorksheet.Cells[i, "D"];
-                        excelCells.Value2 = manExtOrpo[i - 2] + manIntOrpo[i - 2];
+                        excelCells.Value2 = manSumOrpo[i - 2];//manExtOrpo[i - 2] + manIntOrpo[i - 2];
                         excelCells.Borders.ColorIndex = 1;
                         excelCells = (Excel.Range)excelWorksheet.Cells[i, "E"];
                         excelCells.Value2 = manExtOrpo95[i - 2];
@@ -1399,7 +1416,7 @@ namespace TVELtest
                         excelCells.Value2 = manIntOrpo95[i - 2];
                         excelCells.Borders.ColorIndex = 1;
                         excelCells = (Excel.Range)excelWorksheet.Cells[i, "G"];
-                        excelCells.Value2 = manExtOrpo95[i - 2] + manIntOrpo95[i - 2];
+                        excelCells.Value2 = manSumOrpo95[i - 2];//manExtOrpo95[i - 2] + manIntOrpo95[i - 2];
                         excelCells.Borders.ColorIndex = 1;
                     }
 
@@ -1519,7 +1536,7 @@ namespace TVELtest
                         excelCells.Borders.ColorIndex = 1;
 
                         excelCells = (Excel.Range)excelWorksheet.Cells[i, "D"];
-                        excelCells.Value2 = womanExtOrpo[i - 2] + womanIntOrpo[i - 2];
+                        excelCells.Value2 = womanSumOrpo[i - 2];//womanExtOrpo[i - 2] + womanIntOrpo[i - 2];
                         excelCells.Borders.ColorIndex = 1;
 
                         excelCells = (Excel.Range)excelWorksheet.Cells[i, "E"];
@@ -1531,7 +1548,7 @@ namespace TVELtest
                         excelCells.Borders.ColorIndex = 1;
 
                         excelCells = (Excel.Range)excelWorksheet.Cells[i, "G"];
-                        excelCells.Value2 = womanExtOrpo95[i - 2] + womanIntOrpo95[i - 2];
+                        excelCells.Value2 = womanSumOrpo95[i - 2];//womanExtOrpo95[i - 2] + womanIntOrpo95[i - 2];
                         excelCells.Borders.ColorIndex = 1;
                     }
 
@@ -1611,215 +1628,6 @@ namespace TVELtest
                             Type.Missing,                       //object TextVisualLayout
                             Type.Missing);                      //object Local
                     excelApp.Quit();
-
-
-
-
-
-                    //manExtOrpoBox.Text = "Количество в ManInt " + manWeightedIntOrpo.Count;
-                    //manIntOrpoBox.Text = "ManInt[" + manExtOrpoBox95.Text + "] = " + manIntLarArray[Convert.ToInt32(manExtOrpoBox.Text)][Convert.ToInt32(manExtOrpoBox95.Text)];//Math.Round(manWeightedIntOrpo.Sum() / dbMan, 7).ToString();
-                    //if (Convert.ToInt32(manExtOrpoBox95.Text) < womanIntLarArray[Convert.ToInt32(manExtOrpoBox.Text)].Count)
-                    //    womanExtOrpoBox.Text = "WomanInt[" + manExtOrpoBox95.Text + "] = " + womanIntLarArray[Convert.ToInt32(manExtOrpoBox.Text)][Convert.ToInt32(manExtOrpoBox95.Text)];
-                    //else
-                    //    womanExtOrpoBox.Text = "WomanInt[" + manExtOrpoBox95.Text + "] = " + womanIntLarArray[Convert.ToInt32(manExtOrpoBox.Text)][womanIntLarArray[Convert.ToInt32(manExtOrpoBox.Text)].Count - 1];
-
-                    //womanIntOrpoBox.Text = "ManInt95[" + manExtOrpoBox95.Text + "] = " + manWeightedIntOrpo_95[Convert.ToInt32(manExtOrpoBox.Text)];
-
-                    //manExtOrpoBox95.Text = "КолManInt = " + manWeightedIntOrpo.Count;
-                    //manIntOrpoBox95.Text = "КолManInt = " + manIntLarArray[Convert.ToInt32(manExtOrpoBox.Text)].Count;
-                    //womanExtOrpoBox95.Text = "КолWomanInt = " + womanIntLarArray[Convert.ToInt32(manExtOrpoBox.Text)].Count;
-                    //womanIntOrpoBox95.Text = "КолManInt95 = " + manWeightedIntOrpo_95.Count;
-
-                    ///*-----Вывод в Excel-файл-----*/
-                    ///*-----Инициализация Excel-файла-----*/
-                    //Excel.Application excelApp = new Excel.Application();
-                    ////excelApp.Visible = true;
-                    ////excelApp.DisplayAlerts = true;
-                    //excelApp.StandardFont = "Times-New-Roman";
-                    //excelApp.StandardFontSize = 12;
-
-                    ///*-----Создание рабочей книги с 4 страницами, в которые будет выводиться информация-----*/
-                    //excelApp.Workbooks.Add(Type.Missing);
-                    //Excel.Workbook excelWorkbook = excelApp.Workbooks[1];
-                    //excelApp.SheetsInNewWorkbook = 4;
-                    //Excel.Worksheet excelWorksheet = null;
-                    //Excel.Range excelCells = null;
-
-                    ///*-----Вывод в столбцы-----*/
-                    //excelWorksheet = (Excel.Worksheet)excelWorkbook.Worksheets.get_Item(1);
-                    //excelWorksheet.Name = "Мужчины, ОРПО внеш.";
-
-                    ///*-----Описываем ячейку А1 на странице-----*/
-                    //excelCells = excelWorksheet.get_Range("A1");
-                    //excelCells.VerticalAlignment = Excel.Constants.xlCenter;
-                    //excelCells.HorizontalAlignment = Excel.Constants.xlCenter;
-                    //excelCells.Borders.Weight = Excel.XlBorderWeight.xlThick;
-                    //excelCells.Value2 = "Возрастные группы";
-
-                    ///*-----Описываем ячейку B1 на странице-----*/
-                    //excelCells = excelWorksheet.get_Range("B1");
-                    //excelCells.VerticalAlignment = Excel.Constants.xlCenter;
-                    //excelCells.HorizontalAlignment = Excel.Constants.xlCenter;
-                    //excelCells.Borders.Weight = Excel.XlBorderWeight.xlThick;
-                    //excelCells.Value2 = "ОРПО";
-
-                    ///*-----Описываем ячейку C1 на странице-----*/
-                    //excelCells = excelWorksheet.get_Range("C1");
-                    //excelCells.VerticalAlignment = Excel.Constants.xlCenter;
-                    //excelCells.HorizontalAlignment = Excel.Constants.xlCenter;
-                    //excelCells.Borders.Weight = Excel.XlBorderWeight.xlThick;
-                    //excelCells.Value2 = "ОРПО_95";
-
-                    //for (int i = 2; i <= manExtOrpo.Length + 1; i++)
-                    //{
-                    //    excelCells = (Excel.Range)excelWorksheet.Cells[i, "A"];
-                    //    excelCells.Value2 = ageGroups[i - 2];
-                    //    excelCells.Borders.ColorIndex = 1;
-                    //    excelCells = (Excel.Range)excelWorksheet.Cells[i, "B"];
-                    //    excelCells.Value2 = manExtOrpo[i - 2];
-                    //    excelCells.Borders.ColorIndex = 1;
-                    //    excelCells = (Excel.Range)excelWorksheet.Cells[i, "C"];
-                    //    excelCells.Value2 = manExtOrpo_95[i - 2];
-                    //    excelCells.Borders.ColorIndex = 1;
-                    //}
-
-                    //excelWorksheet = (Excel.Worksheet)excelWorkbook.Worksheets.get_Item(2);
-                    //excelWorksheet.Name = "Мужчины, ОРПО внут.";
-
-                    ///*-----Описываем ячейку А1 на странице-----*/
-                    //excelCells = excelWorksheet.get_Range("A1");
-                    //excelCells.VerticalAlignment = Excel.Constants.xlCenter;
-                    //excelCells.HorizontalAlignment = Excel.Constants.xlCenter;
-                    //excelCells.Borders.Weight = Excel.XlBorderWeight.xlThick;
-                    //excelCells.Value2 = "Возрастные группы";
-
-                    ///*-----Описываем ячейку B1 на странице-----*/
-                    //excelCells = excelWorksheet.get_Range("B1");
-                    //excelCells.VerticalAlignment = Excel.Constants.xlCenter;
-                    //excelCells.HorizontalAlignment = Excel.Constants.xlCenter;
-                    //excelCells.Borders.Weight = Excel.XlBorderWeight.xlThick;
-                    //excelCells.Value2 = "ОРПО";
-
-                    ///*-----Описываем ячейку C1 на странице-----*/
-                    //excelCells = excelWorksheet.get_Range("C1");
-                    //excelCells.VerticalAlignment = Excel.Constants.xlCenter;
-                    //excelCells.HorizontalAlignment = Excel.Constants.xlCenter;
-                    //excelCells.Borders.Weight = Excel.XlBorderWeight.xlThick;
-                    //excelCells.Value2 = "ОРПО_95";
-
-                    //for (int i = 2; i <= manIntOrpo.Length + 1; i++)
-                    //{
-                    //    excelCells = (Excel.Range)excelWorksheet.Cells[i, "A"];
-                    //    excelCells.Value2 = ageGroups[i - 2];
-                    //    excelCells.Borders.ColorIndex = 1;
-                    //    excelCells = (Excel.Range)excelWorksheet.Cells[i, "B"];
-                    //    excelCells.Value2 = manIntOrpo[i - 2];
-                    //    excelCells.Borders.ColorIndex = 1;
-                    //    excelCells = (Excel.Range)excelWorksheet.Cells[i, "C"];
-                    //    excelCells.Value2 = manIntOrpo_95[i - 2];
-                    //    excelCells.Borders.ColorIndex = 1;
-
-                    //}
-
-                    //excelWorksheet = (Excel.Worksheet)excelWorkbook.Worksheets.get_Item(3);
-                    //excelWorksheet.Name = "Женщины, ОРПО внеш.";
-
-                    ///*-----Описываем ячейку А1 на странице-----*/
-                    //excelCells = excelWorksheet.get_Range("A1");
-                    //excelCells.VerticalAlignment = Excel.Constants.xlCenter;
-                    //excelCells.HorizontalAlignment = Excel.Constants.xlCenter;
-                    //excelCells.Borders.Weight = Excel.XlBorderWeight.xlThick;
-                    //excelCells.Value2 = "Возрастные группы";
-
-                    ///*-----Описываем ячейку B1 на странице-----*/
-                    //excelCells = excelWorksheet.get_Range("B1");
-                    //excelCells.VerticalAlignment = Excel.Constants.xlCenter;
-                    //excelCells.HorizontalAlignment = Excel.Constants.xlCenter;
-                    //excelCells.Borders.Weight = Excel.XlBorderWeight.xlThick;
-                    //excelCells.Value2 = "ОРПО";
-
-                    ///*-----Описываем ячейку C1 на странице-----*/
-                    //excelCells = excelWorksheet.get_Range("C1");
-                    //excelCells.VerticalAlignment = Excel.Constants.xlCenter;
-                    //excelCells.HorizontalAlignment = Excel.Constants.xlCenter;
-                    //excelCells.Borders.Weight = Excel.XlBorderWeight.xlThick;
-                    //excelCells.Value2 = "ОРПО_95";
-
-                    //for (int i = 2; i <= womanExtOrpo.Length + 1; i++)
-                    //{
-                    //    excelCells = (Excel.Range)excelWorksheet.Cells[i, "A"];
-                    //    excelCells.Value2 = ageGroups[i - 2];
-                    //    excelCells.Borders.ColorIndex = 1;
-                    //    excelCells = (Excel.Range)excelWorksheet.Cells[i, "B"];
-                    //    excelCells.Value2 = womanExtOrpo[i - 2];
-                    //    excelCells.Borders.ColorIndex = 1;
-                    //    excelCells = (Excel.Range)excelWorksheet.Cells[i, "C"];
-                    //    excelCells.Value2 = womanExtOrpo_95[i - 2];
-                    //    excelCells.Borders.ColorIndex = 1;
-                    //}
-
-                    //excelWorksheet = (Excel.Worksheet)excelWorkbook.Worksheets.get_Item(4);
-                    //excelWorksheet.Name = "Женщины, ОРПО внут.";
-
-                    ///*-----Описываем ячейку А1 на странице-----*/
-                    //excelCells = excelWorksheet.get_Range("A1");
-                    //excelCells.VerticalAlignment = Excel.Constants.xlCenter;
-                    //excelCells.HorizontalAlignment = Excel.Constants.xlCenter;
-                    //excelCells.Borders.Weight = Excel.XlBorderWeight.xlThick;
-                    //excelCells.Value2 = "Возрастные группы";
-
-                    ///*-----Описываем ячейку B1 на странице-----*/
-                    //excelCells = excelWorksheet.get_Range("B1");
-                    //excelCells.VerticalAlignment = Excel.Constants.xlCenter;
-                    //excelCells.HorizontalAlignment = Excel.Constants.xlCenter;
-                    //excelCells.Borders.Weight = Excel.XlBorderWeight.xlThick;
-                    //excelCells.Value2 = "ОРПО";
-
-                    ///*-----Описываем ячейку C1 на странице-----*/
-                    //excelCells = excelWorksheet.get_Range("C1");
-                    //excelCells.VerticalAlignment = Excel.Constants.xlCenter;
-                    //excelCells.HorizontalAlignment = Excel.Constants.xlCenter;
-                    //excelCells.Borders.Weight = Excel.XlBorderWeight.xlThick;
-                    //excelCells.Value2 = "ОРПО_95";
-
-                    //for (int i = 2; i <= womanIntOrpo.Length + 1; i++)
-                    //{
-                    //    excelCells = (Excel.Range)excelWorksheet.Cells[i, "A"];
-                    //    excelCells.Value2 = ageGroups[i - 2];
-                    //    excelCells.Borders.ColorIndex = 1;
-                    //    excelCells = (Excel.Range)excelWorksheet.Cells[i, "B"];
-                    //    excelCells.Value2 = womanIntOrpo[i - 2];
-                    //    excelCells.Borders.ColorIndex = 1;
-                    //    excelCells = (Excel.Range)excelWorksheet.Cells[i, "C"];
-                    //    excelCells.Value2 = womanIntOrpo_95[i - 2];
-                    //    excelCells.Borders.ColorIndex = 1;
-                    //}
-
-                    //char[] timeNameBuffer = DateTime.Now.ToString().ToCharArray();
-                    //for (int i = 0; i < timeNameBuffer.Length; i++)
-                    //{
-                    //    if (timeNameBuffer[i] == ':')
-                    //        timeNameBuffer[i] = '-';
-                    //}
-
-                    //if (larRB.Checked)
-                    //    saveAs = "ОПРО_LAR (Средний LAR(Det))";
-                    //if (detRB.Checked)
-                    //    saveAs = "ОПРО_Det (Средний LAR(Det))";
-
-                    //excelWorkbook.SaveAs(@Path.GetDirectoryName(Application.ExecutablePath) + "\\" + shopComboBox.SelectedItem + saveAs + "(" + new string(timeNameBuffer) + ").xlsx",  //object Filename
-                    //        Excel.XlFileFormat.xlOpenXMLWorkbook,                       //object FileFormat
-                    //        Type.Missing,                       //object Password 
-                    //        Type.Missing,                       //object WriteResPassword  
-                    //        Type.Missing,                       //object ReadOnlyRecommended
-                    //        Type.Missing,                       //object CreateBackup
-                    //        Excel.XlSaveAsAccessMode.xlNoChange,//XlSaveAsAccessMode AccessMode
-                    //        Type.Missing,                       //object ConflictResolution
-                    //        Type.Missing,                       //object AddToMru 
-                    //        Type.Missing,                       //object TextCodepage
-                    //        Type.Missing,                       //object TextVisualLayout
-                    //        Type.Missing);                      //object Local
-                    //excelApp.Quit();
                     connection.Close();
                 }
                 catch
@@ -1849,7 +1657,6 @@ namespace TVELtest
                 }
                 else
                 {
-
                     connection.Open();
                     try
                     {
@@ -2133,6 +1940,11 @@ namespace TVELtest
                             else
                                 manIntIbpoBox.Text = "Нет внутреннего облучения";
 
+                            if (manWeightedSumIbpo.Sum() / manRecordsList.Count < 100)
+                                manSumIbpoBox.Text = Math.Round(manWeightedSumIbpo.Sum() / manRecordsList.Count, 2).ToString();
+                            else
+                                manSumIbpoBox.Text = "Нет внутреннего облучения";
+
                             if (manWeightedExtIbpo95.Sum() / manRecordsList.Count < 100)
                                 manExtIbpoBox95.Text = Math.Round(manWeightedExtIbpo95.Sum() / manRecordsList.Count, 2).ToString();
                             else
@@ -2142,6 +1954,11 @@ namespace TVELtest
                                 manIntIbpoBox95.Text = Math.Round(manWeightedIntIbpo95.Sum() / manRecordsList.Count, 2).ToString();
                             else
                                 manIntIbpoBox95.Text = "Нет внутреннего облучения";
+
+                            if (manWeightedSumIbpo95.Sum() / manRecordsList.Count < 100)
+                                manSumIbpo95Box.Text = Math.Round(manWeightedSumIbpo95.Sum() / manRecordsList.Count, 2).ToString();
+                            else
+                                manSumIbpoBox.Text = "Нет внутреннего облучения";
 
                             if (womanWeightedExtIbpo.Sum() / womanRecordsList.Count < 100)
                                 womanExtIbpoBox.Text = Math.Round(womanWeightedExtIbpo.Sum() / womanRecordsList.Count, 2).ToString();
@@ -2153,6 +1970,11 @@ namespace TVELtest
                             else
                                 womanIntIbpoBox.Text = "Нет внутреннего облучения";
 
+                            if (womanWeightedSumIbpo.Sum() / womanRecordsList.Count < 100)
+                                womanSumIbpoBox.Text = Math.Round(womanWeightedSumIbpo.Sum() / womanRecordsList.Count, 2).ToString();
+                            else
+                                womanSumIbpoBox.Text = "Нет внутреннего облучения";
+
                             if (womanWeightedExtIbpo95.Sum() / womanRecordsList.Count < 100)
                                 womanExtIbpoBox95.Text = Math.Round(womanWeightedExtIbpo95.Sum() / womanRecordsList.Count, 2).ToString();
                             else
@@ -2162,6 +1984,11 @@ namespace TVELtest
                                 womanIntIbpoBox95.Text = Math.Round(womanWeightedIntIbpo95.Sum() / womanRecordsList.Count, 2).ToString();
                             else
                                 womanIntIbpoBox95.Text = "Нет внутреннего облучения";
+
+                            if (womanWeightedSumIbpo95.Sum() / womanRecordsList.Count < 100)
+                                womanSumIbpo95Box.Text = Math.Round(womanWeightedSumIbpo95.Sum() / womanRecordsList.Count, 2).ToString();
+                            else
+                                womanSumIbpo95Box.Text = "Нет внутреннего облучения";
 
                             /*-----Вывод в Excel-файл-----*/
                             /*-----Инициализация Excel-файла-----*/
