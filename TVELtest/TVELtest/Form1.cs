@@ -2065,27 +2065,45 @@ namespace TVELtest
                                 excelCells.Borders.ColorIndex = 1;
 
                                 excelCells = (Excel.Range)excelWorksheet.Cells[i, "B"];
-                                excelCells.Value2 = manExtIbpo[i - 2];
+                                if (manExtIbpo[i - 2] < 100)
+                                    excelCells.Value2 = manExtIbpo[i - 2];
+                                else
+                                    excelCells.Value2 = "Нет облучения";
                                 excelCells.Borders.ColorIndex = 1;
 
                                 excelCells = (Excel.Range)excelWorksheet.Cells[i, "C"];
-                                excelCells.Value2 = manIntIbpo[i - 2];
+                                if (manIntIbpo[i - 2] < 100)
+                                    excelCells.Value2 = manIntIbpo[i - 2];
+                                else
+                                    excelCells.Value2 = "Нет облучения";
                                 excelCells.Borders.ColorIndex = 1;
 
                                 excelCells = (Excel.Range)excelWorksheet.Cells[i, "D"];
-                                excelCells.Value2 = manSumIbpo[i - 2];
+                                if (manSumIbpo[i - 2] < 100)
+                                    excelCells.Value2 = manSumIbpo[i - 2];
+                                else
+                                    excelCells.Value2 = "Нет облучения";
                                 excelCells.Borders.ColorIndex = 1;
 
                                 excelCells = (Excel.Range)excelWorksheet.Cells[i, "E"];
-                                excelCells.Value2 = manExtIbpo95[i - 2];
+                                if (manExtIbpo95[i - 2] < 100)
+                                    excelCells.Value2 = manExtIbpo95[i - 2];
+                                else
+                                    excelCells.Value2 = "Нет облучения";
                                 excelCells.Borders.ColorIndex = 1;
 
                                 excelCells = (Excel.Range)excelWorksheet.Cells[i, "F"];
-                                excelCells.Value2 = manIntIbpo95[i - 2];
+                                if (manIntIbpo95[i - 2] < 100)
+                                    excelCells.Value2 = manIntIbpo95[i - 2];
+                                else
+                                    excelCells.Value2 = "Нет облучения";
                                 excelCells.Borders.ColorIndex = 1;
 
                                 excelCells = (Excel.Range)excelWorksheet.Cells[i, "G"];
-                                excelCells.Value2 = manSumIbpo95[i - 2];
+                                if (manSumIbpo95[i - 2] < 100)
+                                    excelCells.Value2 = manSumIbpo95[i - 2];
+                                else
+                                    excelCells.Value2 = "Нет облучения";
                                 excelCells.Borders.ColorIndex = 1;
                             }
 
@@ -2101,42 +2119,60 @@ namespace TVELtest
                             excelCells.VerticalAlignment = Excel.Constants.xlCenter;
                             excelCells.HorizontalAlignment = Excel.Constants.xlCenter;
                             excelCells.Borders.Weight = Excel.XlBorderWeight.xlMedium;
-                            excelCells.Value2 = Math.Round(manWeightedExtIbpo.Sum() / manRecordsList.Count, 8);
+                            if (manWeightedExtIbpo.Sum() / manRecordsList.Count < 100)
+                                excelCells.Value2 = Math.Round(manWeightedExtIbpo.Sum() / manRecordsList.Count, 8);
+                            else
+                                excelCells.Value2 = "Нет облучения";
 
                             /*-----Описываем ячейку А1 на странице-----*/
                             excelCells = excelWorksheet.get_Range("C" + 13);
                             excelCells.VerticalAlignment = Excel.Constants.xlCenter;
                             excelCells.HorizontalAlignment = Excel.Constants.xlCenter;
                             excelCells.Borders.Weight = Excel.XlBorderWeight.xlMedium;
-                            excelCells.Value2 = Math.Round(manWeightedIntIbpo.Sum() / manRecordsList.Count, 8);
+                            if (manWeightedIntIbpo.Sum() / manRecordsList.Count < 100)
+                                excelCells.Value2 = Math.Round(manWeightedIntIbpo.Sum() / manRecordsList.Count, 8);
+                            else
+                                excelCells.Value2 = "Нет облучения";
 
                             /*-----Описываем ячейку А1 на странице-----*/
                             excelCells = excelWorksheet.get_Range("D" + 13);
                             excelCells.VerticalAlignment = Excel.Constants.xlCenter;
                             excelCells.HorizontalAlignment = Excel.Constants.xlCenter;
                             excelCells.Borders.Weight = Excel.XlBorderWeight.xlMedium;
-                            excelCells.Value2 = Math.Round(manWeightedSumIbpo.Sum() / manRecordsList.Count, 8);
+                            if (manWeightedSumIbpo.Sum() / manRecordsList.Count < 100)
+                                excelCells.Value2 = Math.Round(manWeightedSumIbpo.Sum() / manRecordsList.Count, 8);
+                            else
+                                excelCells.Value2 = "Нет облучения";
 
                             /*-----Описываем ячейку А1 на странице-----*/
                             excelCells = excelWorksheet.get_Range("E" + 13);
                             excelCells.VerticalAlignment = Excel.Constants.xlCenter;
                             excelCells.HorizontalAlignment = Excel.Constants.xlCenter;
                             excelCells.Borders.Weight = Excel.XlBorderWeight.xlMedium;
-                            excelCells.Value2 = Math.Round(manWeightedExtIbpo95.Sum() / manRecordsList.Count, 8);
+                            if (manWeightedExtIbpo95.Sum() / manRecordsList.Count < 100)
+                                excelCells.Value2 = Math.Round(manWeightedExtIbpo95.Sum() / manRecordsList.Count, 8);
+                            else
+                                excelCells.Value2 = "Нет облучения";
 
                             /*-----Описываем ячейку А1 на странице-----*/
                             excelCells = excelWorksheet.get_Range("F" + 13);
                             excelCells.VerticalAlignment = Excel.Constants.xlCenter;
                             excelCells.HorizontalAlignment = Excel.Constants.xlCenter;
                             excelCells.Borders.Weight = Excel.XlBorderWeight.xlMedium;
-                            excelCells.Value2 = Math.Round(manWeightedIntIbpo95.Sum() / manRecordsList.Count, 8);
+                            if (manWeightedIntIbpo95.Sum() / manRecordsList.Count < 100)
+                                excelCells.Value2 = Math.Round(manWeightedIntIbpo95.Sum() / manRecordsList.Count, 8);
+                            else
+                                excelCells.Value2 = "Нет облучения";
 
                             /*-----Описываем ячейку А1 на странице-----*/
                             excelCells = excelWorksheet.get_Range("G" + 13);
                             excelCells.VerticalAlignment = Excel.Constants.xlCenter;
                             excelCells.HorizontalAlignment = Excel.Constants.xlCenter;
                             excelCells.Borders.Weight = Excel.XlBorderWeight.xlMedium;
-                            excelCells.Value2 = Math.Round(manWeightedSumIbpo95.Sum() / manRecordsList.Count, 8);
+                            if (manWeightedSumIbpo95.Sum() / manRecordsList.Count < 100)
+                                excelCells.Value2 = Math.Round(manWeightedSumIbpo95.Sum() / manRecordsList.Count, 8);
+                            else
+                                excelCells.Value2 = "Нет облучения";
 
                             excelWorksheet = (Excel.Worksheet)excelWorkbook.Worksheets.get_Item(2);
                             excelWorksheet.Name = "Женщины";
@@ -2197,27 +2233,45 @@ namespace TVELtest
                                 excelCells.Borders.ColorIndex = 1;
 
                                 excelCells = (Excel.Range)excelWorksheet.Cells[i, "B"];
-                                excelCells.Value2 = womanExtIbpo[i - 2];
+                                if (womanExtIbpo[i - 2] < 100)
+                                    excelCells.Value2 = womanExtIbpo[i - 2];
+                                else
+                                    excelCells.Value2 = "Нет облучения";
                                 excelCells.Borders.ColorIndex = 1;
 
                                 excelCells = (Excel.Range)excelWorksheet.Cells[i, "C"];
-                                excelCells.Value2 = womanIntIbpo[i - 2];
+                                if (womanIntIbpo[i - 2] < 100)
+                                    excelCells.Value2 = womanIntIbpo[i - 2];
+                                else
+                                    excelCells.Value2 = "Нет облучения";
                                 excelCells.Borders.ColorIndex = 1;
 
-                                excelCells = (Excel.Range)excelWorksheet.Cells[i, "C"];
-                                excelCells.Value2 = womanSumIbpo[i - 2];
+                                excelCells = (Excel.Range)excelWorksheet.Cells[i, "D"];
+                                if (womanSumIbpo[i - 2] < 100)
+                                    excelCells.Value2 = womanSumIbpo[i - 2];
+                                else
+                                    excelCells.Value2 = "Нет облучения";
                                 excelCells.Borders.ColorIndex = 1;
 
                                 excelCells = (Excel.Range)excelWorksheet.Cells[i, "E"];
-                                excelCells.Value2 = womanExtIbpo95[i - 2];
+                                if (womanExtIbpo95[i - 2] < 100)
+                                    excelCells.Value2 = womanExtIbpo95[i - 2];
+                                else
+                                    excelCells.Value2 = "Нет облучения";
                                 excelCells.Borders.ColorIndex = 1;
 
                                 excelCells = (Excel.Range)excelWorksheet.Cells[i, "F"];
-                                excelCells.Value2 = womanIntIbpo95[i - 2];
+                                if (womanIntIbpo95[i - 2] < 100)
+                                    excelCells.Value2 = womanIntIbpo95[i - 2];
+                                else
+                                    excelCells.Value2 = "Нет облучения";
                                 excelCells.Borders.ColorIndex = 1;
 
                                 excelCells = (Excel.Range)excelWorksheet.Cells[i, "G"];
-                                excelCells.Value2 = womanSumIbpo95[i - 2];
+                                if (womanSumIbpo95[i - 2] < 100) 
+                                    excelCells.Value2 = womanSumIbpo95[i - 2];
+                                else
+                                    excelCells.Value2 = "Нет облучения";
                                 excelCells.Borders.ColorIndex = 1;
                             }
 
@@ -2233,42 +2287,60 @@ namespace TVELtest
                             excelCells.VerticalAlignment = Excel.Constants.xlCenter;
                             excelCells.HorizontalAlignment = Excel.Constants.xlCenter;
                             excelCells.Borders.Weight = Excel.XlBorderWeight.xlMedium;
-                            excelCells.Value2 = Math.Round(womanWeightedExtIbpo.Sum() / womanRecordsList.Count, 8);
+                            if (womanWeightedExtIbpo.Sum() / womanRecordsList.Count < 100)
+                                excelCells.Value2 = Math.Round(womanWeightedExtIbpo.Sum() / womanRecordsList.Count, 8);
+                            else
+                                excelCells.Value2 = "Нет облучения";
 
                             /*-----Описываем ячейку А1 на странице-----*/
                             excelCells = excelWorksheet.get_Range("C" + 13);
                             excelCells.VerticalAlignment = Excel.Constants.xlCenter;
                             excelCells.HorizontalAlignment = Excel.Constants.xlCenter;
                             excelCells.Borders.Weight = Excel.XlBorderWeight.xlMedium;
-                            excelCells.Value2 = Math.Round(womanWeightedIntIbpo.Sum() / womanRecordsList.Count, 8);
+                            if (womanWeightedIntIbpo.Sum() / womanRecordsList.Count < 100)
+                                excelCells.Value2 = Math.Round(womanWeightedIntIbpo.Sum() / womanRecordsList.Count, 8);
+                            else
+                                excelCells.Value2 = "Нет облучения";
 
                             /*-----Описываем ячейку А1 на странице-----*/
                             excelCells = excelWorksheet.get_Range("D" + 13);
                             excelCells.VerticalAlignment = Excel.Constants.xlCenter;
                             excelCells.HorizontalAlignment = Excel.Constants.xlCenter;
                             excelCells.Borders.Weight = Excel.XlBorderWeight.xlMedium;
-                            excelCells.Value2 = Math.Round(womanWeightedSumIbpo.Sum() / womanRecordsList.Count, 8);
+                            if (womanWeightedSumIbpo.Sum() / womanRecordsList.Count < 100)
+                                excelCells.Value2 = Math.Round(womanWeightedSumIbpo.Sum() / womanRecordsList.Count, 8);
+                            else
+                                excelCells.Value2 = "Нет облучения";
 
                             /*-----Описываем ячейку А1 на странице-----*/
                             excelCells = excelWorksheet.get_Range("E" + 13);
                             excelCells.VerticalAlignment = Excel.Constants.xlCenter;
                             excelCells.HorizontalAlignment = Excel.Constants.xlCenter;
                             excelCells.Borders.Weight = Excel.XlBorderWeight.xlMedium;
-                            excelCells.Value2 = Math.Round(womanWeightedExtIbpo95.Sum() / womanRecordsList.Count, 8);
+                            if (womanWeightedExtIbpo95.Sum() / womanRecordsList.Count < 100)
+                                excelCells.Value2 = Math.Round(womanWeightedExtIbpo95.Sum() / womanRecordsList.Count, 8);
+                            else
+                                excelCells.Value2 = "Нет облучения";
 
                             /*-----Описываем ячейку А1 на странице-----*/
                             excelCells = excelWorksheet.get_Range("F" + 13);
                             excelCells.VerticalAlignment = Excel.Constants.xlCenter;
                             excelCells.HorizontalAlignment = Excel.Constants.xlCenter;
                             excelCells.Borders.Weight = Excel.XlBorderWeight.xlMedium;
-                            excelCells.Value2 = Math.Round(womanWeightedIntIbpo95.Sum() / womanRecordsList.Count, 8);
+                            if (womanWeightedIntIbpo95.Sum() / womanRecordsList.Count < 100)
+                                excelCells.Value2 = Math.Round(womanWeightedIntIbpo95.Sum() / womanRecordsList.Count, 8);
+                            else
+                                excelCells.Value2 = "Нет облучения";
 
                             /*-----Описываем ячейку А1 на странице-----*/
                             excelCells = excelWorksheet.get_Range("G" + 13);
                             excelCells.VerticalAlignment = Excel.Constants.xlCenter;
                             excelCells.HorizontalAlignment = Excel.Constants.xlCenter;
                             excelCells.Borders.Weight = Excel.XlBorderWeight.xlMedium;
-                            excelCells.Value2 = Math.Round(womanWeightedSumIbpo95.Sum() / womanRecordsList.Count, 8);
+                            if (womanWeightedSumIbpo95.Sum() / womanRecordsList.Count < 100)
+                                excelCells.Value2 = Math.Round(womanWeightedSumIbpo95.Sum() / womanRecordsList.Count, 8);
+                            else
+                                excelCells.Value2 = "Нет облучения";
 
                             char[] timeNameBuffer = DateTime.Now.ToString().ToCharArray();
                             for (int i = 0; i < timeNameBuffer.Length; i++)
