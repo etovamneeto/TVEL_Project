@@ -1,0 +1,7 @@
+c:\users\sergey\documents\visual studio 2010\Projects\DesignApplication\DesignApplication\bin\Debug\DesignApplication.exe
+c:\users\sergey\documents\visual studio 2010\Projects\DesignApplication\DesignApplication\bin\Debug\DesignApplication.pdb
+c:\users\sergey\documents\visual studio 2010\Projects\DesignApplication\DesignApplication\obj\x86\Debug\DesignApplication.Properties.Resources.resources
+c:\users\sergey\documents\visual studio 2010\Projects\DesignApplication\DesignApplication\obj\x86\Debug\DesignApplication.csproj.GenerateResource.Cache
+c:\users\sergey\documents\visual studio 2010\Projects\DesignApplication\DesignApplication\obj\x86\Debug\DesignApplication.exe
+c:\users\sergey\documents\visual studio 2010\Projects\DesignApplication\DesignApplication\obj\x86\Debug\DesignApplication.pdb
+c:\users\sergey\documents\visual studio 2010\Projects\DesignApplication\DesignApplication\obj\x86\Debug\DesignApplication.Form1.resources
