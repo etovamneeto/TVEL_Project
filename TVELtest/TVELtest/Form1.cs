@@ -51,6 +51,7 @@ namespace TVELtest
         byte sexFemale = 0;
         /*-----Определение пути до базы данных-----*/
         String dbPath = "";
+        String request = "";
 
         /*-----Массивы, хранящие ОРПО для половозрастных групп-----*/
         double[] manExtOrpo = null;
@@ -319,7 +320,6 @@ namespace TVELtest
             {
                 orpoButtonAverAge = true;
                 orpoButtonAverLar = false;
-
                 shopTrigger = true;
 
                 if (shopComboBox.SelectedItem == "СХК")
@@ -335,12 +335,17 @@ namespace TVELtest
                 else if (shopComboBox.SelectedItem == "ЧМЗ")
                     shopName = "r6";
 
+                request = "SELECT [ID], [Dose], [Year], [DoseInt], [Gender], [AgeAtExp] FROM [Final] WHERE [Shop]='" + shopName + "'";
+
+                if (shopComboBox.SelectedItem == "ВСЕ ПРЕДПРИЯТИЯ")
+                    request = "SELECT [ID], [Dose], [Year], [DoseInt], [Gender], [AgeAtExp] FROM [Final]";
+
                 connection.Open();
 
                 try
                 {
-                    OleDbDataAdapter adapter = new OleDbDataAdapter("SELECT [ID], [Dose], [Year], [DoseInt], [Gender], [AgeAtExp] FROM [Final] WHERE [Shop]='" + shopName + "'", connectionString);//Выбор нужных столбцов из нужной таблицы
-                    //OleDbDataAdapter adapter = new OleDbDataAdapter("SELECT [ID], [Dose], [Year], [DoseInt], [Gender], [AgeAtExp] FROM [Final] WHERE [Shop]='r2'", connectionString);//Выбор нужных столбцов из нужной таблицы
+                    OleDbDataAdapter adapter = new OleDbDataAdapter(request, connectionString);//Выбор нужных столбцов из нужной таблицы
+                    //OleDbDataAdapter adapter = new OleDbDataAdapter("SELECT [ID], [Dose], [Year], [DoseInt], [Gender], [AgeAtExp] FROM [Final]", connectionString);//Выбор нужных столбцов из нужной таблицы
                     DataSet dataSet = new DataSet();
                     adapter.Fill(dataSet, "Final");
 
@@ -928,18 +933,19 @@ namespace TVELtest
 
                     bufferPath = outPath + "\\ОРПО (Средний возраст)";
                     Directory.CreateDirectory(bufferPath);
-                    excelWorkbook.SaveAs(@bufferPath + "\\" + shopComboBox.SelectedItem + " " + saveAs + "(" + new string(timeNameBuffer) + ").xlsx",  //object Filename
-                            Excel.XlFileFormat.xlOpenXMLWorkbook,                       //object FileFormat
-                            Type.Missing,                       //object Password 
-                            Type.Missing,                       //object WriteResPassword  
-                            Type.Missing,                       //object ReadOnlyRecommended
-                            Type.Missing,                       //object CreateBackup
-                            Excel.XlSaveAsAccessMode.xlNoChange,//XlSaveAsAccessMode AccessMode
-                            Type.Missing,                       //object ConflictResolution
-                            Type.Missing,                       //object AddToMru 
-                            Type.Missing,                       //object TextCodepage
-                            Type.Missing,                       //object TextVisualLayout
-                            Type.Missing);                      //object Local
+                    excelWorkbook.SaveAs(
+                            @bufferPath + "\\" + shopComboBox.SelectedItem + " " + saveAs + "(" + new string(timeNameBuffer) + ").xlsx",  //object Filename
+                            Excel.XlFileFormat.xlOpenXMLWorkbook,   //object FileFormat
+                            Type.Missing,                           //object Password 
+                            Type.Missing,                           //object WriteResPassword  
+                            Type.Missing,                           //object ReadOnlyRecommended
+                            Type.Missing,                           //object CreateBackup
+                            Excel.XlSaveAsAccessMode.xlNoChange,    //XlSaveAsAccessMode AccessMode
+                            Type.Missing,                           //object ConflictResolution
+                            Type.Missing,                           //object AddToMru 
+                            Type.Missing,                           //object TextCodepage
+                            Type.Missing,                           //object TextVisualLayout
+                            Type.Missing);                          //object Local
                     excelApp.Quit();
                     connection.Close();
                 }
@@ -981,11 +987,16 @@ namespace TVELtest
                 else if (shopComboBox.SelectedItem == "ЧМЗ")
                     shopName = "r6";
 
+                request = "SELECT [ID], [Dose], [Year], [DoseInt], [Gender], [AgeAtExp] FROM [Final] WHERE [Shop]='" + shopName + "'";
+
+                if (shopComboBox.SelectedItem == "ВСЕ ПРЕДПРИЯТИЯ")
+                    request = "SELECT [ID], [Dose], [Year], [DoseInt], [Gender], [AgeAtExp] FROM [Final]";
+
                 connection.Open();
 
                 try
                 {
-                    OleDbDataAdapter adapter = new OleDbDataAdapter("SELECT [ID], [Dose], [Year], [DoseInt], [Gender], [AgeAtExp] FROM [Final] WHERE [Shop]='" + shopName + "'", connectionString);//Выбор нужных столбцов из нужной таблицы
+                    OleDbDataAdapter adapter = new OleDbDataAdapter(request, connectionString);//Выбор нужных столбцов из нужной таблицы
                     //OleDbDataAdapter adapter = new OleDbDataAdapter("SELECT [ID], [Dose], [Year], [DoseInt], [Gender], [AgeAtExp] FROM [Final] WHERE [Shop]='r3'", connectionString);//Выбор нужных столбцов из нужной таблицы
                     DataSet dataSet = new DataSet();
                     adapter.Fill(dataSet, "Final");
@@ -1615,18 +1626,19 @@ namespace TVELtest
 
                     bufferPath = outPath + "\\ОРПО (Средний LAR(Det))";
                     Directory.CreateDirectory(bufferPath);
-                    excelWorkbook.SaveAs(@bufferPath + "\\ " + shopComboBox.SelectedItem + " " + saveAs + "(" + new string(timeNameBuffer) + ").xlsx",  //object Filename
-                            Excel.XlFileFormat.xlOpenXMLWorkbook,                       //object FileFormat
-                            Type.Missing,                       //object Password 
-                            Type.Missing,                       //object WriteResPassword  
-                            Type.Missing,                       //object ReadOnlyRecommended
-                            Type.Missing,                       //object CreateBackup
-                            Excel.XlSaveAsAccessMode.xlNoChange,//XlSaveAsAccessMode AccessMode
-                            Type.Missing,                       //object ConflictResolution
-                            Type.Missing,                       //object AddToMru 
-                            Type.Missing,                       //object TextCodepage
-                            Type.Missing,                       //object TextVisualLayout
-                            Type.Missing);                      //object Local
+                    excelWorkbook.SaveAs(
+                            @bufferPath + "\\ " + shopComboBox.SelectedItem + " " + saveAs + "(" + new string(timeNameBuffer) + ").xlsx",  //object Filename
+                            Excel.XlFileFormat.xlOpenXMLWorkbook,   //object FileFormat
+                            Type.Missing,                           //object Password 
+                            Type.Missing,                           //object WriteResPassword  
+                            Type.Missing,                           //object ReadOnlyRecommended
+                            Type.Missing,                           //object CreateBackup
+                            Excel.XlSaveAsAccessMode.xlNoChange,    //XlSaveAsAccessMode AccessMode
+                            Type.Missing,                           //object ConflictResolution
+                            Type.Missing,                           //object AddToMru 
+                            Type.Missing,                           //object TextCodepage
+                            Type.Missing,                           //object TextVisualLayout
+                            Type.Missing);                          //object Local
                     excelApp.Quit();
                     connection.Close();
                 }

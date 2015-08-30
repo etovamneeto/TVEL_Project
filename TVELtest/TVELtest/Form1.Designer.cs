@@ -32,6 +32,14 @@
             this.getOrpoAverAgeButton = new System.Windows.Forms.Button();
             this.getIbpoButton = new System.Windows.Forms.Button();
             this.orpoGroupBox = new System.Windows.Forms.GroupBox();
+            this.womanSumOrpo95Label = new System.Windows.Forms.Label();
+            this.womanSumOrpoLabel = new System.Windows.Forms.Label();
+            this.manSumOrpo95Label = new System.Windows.Forms.Label();
+            this.manSumOrpoLabel = new System.Windows.Forms.Label();
+            this.womanSumOrpo95Box = new System.Windows.Forms.TextBox();
+            this.womanSumOrpoBox = new System.Windows.Forms.TextBox();
+            this.manSumOrpo95Box = new System.Windows.Forms.TextBox();
+            this.manSumOrpoBox = new System.Windows.Forms.TextBox();
             this.womanIntOrpoBox95 = new System.Windows.Forms.TextBox();
             this.womanExtOrpoBox95 = new System.Windows.Forms.TextBox();
             this.orpoBoxWomanIntLabel95 = new System.Windows.Forms.Label();
@@ -49,6 +57,14 @@
             this.orpoBoxManIntLabel = new System.Windows.Forms.Label();
             this.orpoBoxManExtLabel = new System.Windows.Forms.Label();
             this.ibpoGroupBox = new System.Windows.Forms.GroupBox();
+            this.womanSumIbpo95Label = new System.Windows.Forms.Label();
+            this.womanSumIbpoLabel = new System.Windows.Forms.Label();
+            this.manSumIbpo95Label = new System.Windows.Forms.Label();
+            this.manSumIbpoLabel = new System.Windows.Forms.Label();
+            this.womanSumIbpo95Box = new System.Windows.Forms.TextBox();
+            this.womanSumIbpoBox = new System.Windows.Forms.TextBox();
+            this.manSumIbpo95Box = new System.Windows.Forms.TextBox();
+            this.manSumIbpoBox = new System.Windows.Forms.TextBox();
             this.womanIntIbpoBox95 = new System.Windows.Forms.TextBox();
             this.womanExtIbpoBox95 = new System.Windows.Forms.TextBox();
             this.ibpoBoxWomanIntLabel95 = new System.Windows.Forms.Label();
@@ -70,22 +86,6 @@
             this.detRB = new System.Windows.Forms.RadioButton();
             this.shopComboBox = new System.Windows.Forms.ComboBox();
             this.shopNameLabel = new System.Windows.Forms.Label();
-            this.manSumOrpoBox = new System.Windows.Forms.TextBox();
-            this.manSumOrpo95Box = new System.Windows.Forms.TextBox();
-            this.womanSumOrpoBox = new System.Windows.Forms.TextBox();
-            this.womanSumOrpo95Box = new System.Windows.Forms.TextBox();
-            this.manSumOrpoLabel = new System.Windows.Forms.Label();
-            this.manSumOrpo95Label = new System.Windows.Forms.Label();
-            this.womanSumOrpoLabel = new System.Windows.Forms.Label();
-            this.womanSumOrpo95Label = new System.Windows.Forms.Label();
-            this.womanSumIbpo95Label = new System.Windows.Forms.Label();
-            this.womanSumIbpoLabel = new System.Windows.Forms.Label();
-            this.manSumIbpo95Label = new System.Windows.Forms.Label();
-            this.manSumIbpoLabel = new System.Windows.Forms.Label();
-            this.womanSumIbpo95Box = new System.Windows.Forms.TextBox();
-            this.womanSumIbpoBox = new System.Windows.Forms.TextBox();
-            this.manSumIbpo95Box = new System.Windows.Forms.TextBox();
-            this.manSumIbpoBox = new System.Windows.Forms.TextBox();
             this.orpoGroupBox.SuspendLayout();
             this.ibpoGroupBox.SuspendLayout();
             this.SuspendLayout();
@@ -152,6 +152,70 @@
             this.orpoGroupBox.TabIndex = 13;
             this.orpoGroupBox.TabStop = false;
             this.orpoGroupBox.Text = "Среднее ОРПО";
+            // 
+            // womanSumOrpo95Label
+            // 
+            this.womanSumOrpo95Label.AutoSize = true;
+            this.womanSumOrpo95Label.Location = new System.Drawing.Point(482, 111);
+            this.womanSumOrpo95Label.Name = "womanSumOrpo95Label";
+            this.womanSumOrpo95Label.Size = new System.Drawing.Size(124, 13);
+            this.womanSumOrpo95Label.TabIndex = 23;
+            this.womanSumOrpo95Label.Text = "Женщины, сумм. (95%)";
+            // 
+            // womanSumOrpoLabel
+            // 
+            this.womanSumOrpoLabel.AutoSize = true;
+            this.womanSumOrpoLabel.Location = new System.Drawing.Point(482, 85);
+            this.womanSumOrpoLabel.Name = "womanSumOrpoLabel";
+            this.womanSumOrpoLabel.Size = new System.Drawing.Size(95, 13);
+            this.womanSumOrpoLabel.TabIndex = 22;
+            this.womanSumOrpoLabel.Text = "Женщины, сумм.";
+            // 
+            // manSumOrpo95Label
+            // 
+            this.manSumOrpo95Label.AutoSize = true;
+            this.manSumOrpo95Label.Location = new System.Drawing.Point(482, 59);
+            this.manSumOrpo95Label.Name = "manSumOrpo95Label";
+            this.manSumOrpo95Label.Size = new System.Drawing.Size(119, 13);
+            this.manSumOrpo95Label.TabIndex = 21;
+            this.manSumOrpo95Label.Text = "Мужчины, сумм. (95%)";
+            // 
+            // manSumOrpoLabel
+            // 
+            this.manSumOrpoLabel.AutoSize = true;
+            this.manSumOrpoLabel.Location = new System.Drawing.Point(482, 33);
+            this.manSumOrpoLabel.Name = "manSumOrpoLabel";
+            this.manSumOrpoLabel.Size = new System.Drawing.Size(90, 13);
+            this.manSumOrpoLabel.TabIndex = 20;
+            this.manSumOrpoLabel.Text = "Мужчины, сумм.";
+            // 
+            // womanSumOrpo95Box
+            // 
+            this.womanSumOrpo95Box.Location = new System.Drawing.Point(612, 108);
+            this.womanSumOrpo95Box.Name = "womanSumOrpo95Box";
+            this.womanSumOrpo95Box.Size = new System.Drawing.Size(100, 20);
+            this.womanSumOrpo95Box.TabIndex = 19;
+            // 
+            // womanSumOrpoBox
+            // 
+            this.womanSumOrpoBox.Location = new System.Drawing.Point(612, 82);
+            this.womanSumOrpoBox.Name = "womanSumOrpoBox";
+            this.womanSumOrpoBox.Size = new System.Drawing.Size(100, 20);
+            this.womanSumOrpoBox.TabIndex = 18;
+            // 
+            // manSumOrpo95Box
+            // 
+            this.manSumOrpo95Box.Location = new System.Drawing.Point(612, 56);
+            this.manSumOrpo95Box.Name = "manSumOrpo95Box";
+            this.manSumOrpo95Box.Size = new System.Drawing.Size(100, 20);
+            this.manSumOrpo95Box.TabIndex = 17;
+            // 
+            // manSumOrpoBox
+            // 
+            this.manSumOrpoBox.Location = new System.Drawing.Point(612, 30);
+            this.manSumOrpoBox.Name = "manSumOrpoBox";
+            this.manSumOrpoBox.Size = new System.Drawing.Size(100, 20);
+            this.manSumOrpoBox.TabIndex = 16;
             // 
             // womanIntOrpoBox95
             // 
@@ -313,6 +377,70 @@
             this.ibpoGroupBox.TabIndex = 14;
             this.ibpoGroupBox.TabStop = false;
             this.ibpoGroupBox.Text = "Среднее ИБПО";
+            // 
+            // womanSumIbpo95Label
+            // 
+            this.womanSumIbpo95Label.AutoSize = true;
+            this.womanSumIbpo95Label.Location = new System.Drawing.Point(482, 111);
+            this.womanSumIbpo95Label.Name = "womanSumIbpo95Label";
+            this.womanSumIbpo95Label.Size = new System.Drawing.Size(124, 13);
+            this.womanSumIbpo95Label.TabIndex = 31;
+            this.womanSumIbpo95Label.Text = "Женщины, сумм. (95%)";
+            // 
+            // womanSumIbpoLabel
+            // 
+            this.womanSumIbpoLabel.AutoSize = true;
+            this.womanSumIbpoLabel.Location = new System.Drawing.Point(482, 85);
+            this.womanSumIbpoLabel.Name = "womanSumIbpoLabel";
+            this.womanSumIbpoLabel.Size = new System.Drawing.Size(95, 13);
+            this.womanSumIbpoLabel.TabIndex = 30;
+            this.womanSumIbpoLabel.Text = "Женщины, сумм.";
+            // 
+            // manSumIbpo95Label
+            // 
+            this.manSumIbpo95Label.AutoSize = true;
+            this.manSumIbpo95Label.Location = new System.Drawing.Point(482, 59);
+            this.manSumIbpo95Label.Name = "manSumIbpo95Label";
+            this.manSumIbpo95Label.Size = new System.Drawing.Size(119, 13);
+            this.manSumIbpo95Label.TabIndex = 29;
+            this.manSumIbpo95Label.Text = "Мужчины, сумм. (95%)";
+            // 
+            // manSumIbpoLabel
+            // 
+            this.manSumIbpoLabel.AutoSize = true;
+            this.manSumIbpoLabel.Location = new System.Drawing.Point(482, 33);
+            this.manSumIbpoLabel.Name = "manSumIbpoLabel";
+            this.manSumIbpoLabel.Size = new System.Drawing.Size(90, 13);
+            this.manSumIbpoLabel.TabIndex = 28;
+            this.manSumIbpoLabel.Text = "Мужчины, сумм.";
+            // 
+            // womanSumIbpo95Box
+            // 
+            this.womanSumIbpo95Box.Location = new System.Drawing.Point(612, 108);
+            this.womanSumIbpo95Box.Name = "womanSumIbpo95Box";
+            this.womanSumIbpo95Box.Size = new System.Drawing.Size(100, 20);
+            this.womanSumIbpo95Box.TabIndex = 27;
+            // 
+            // womanSumIbpoBox
+            // 
+            this.womanSumIbpoBox.Location = new System.Drawing.Point(612, 82);
+            this.womanSumIbpoBox.Name = "womanSumIbpoBox";
+            this.womanSumIbpoBox.Size = new System.Drawing.Size(100, 20);
+            this.womanSumIbpoBox.TabIndex = 26;
+            // 
+            // manSumIbpo95Box
+            // 
+            this.manSumIbpo95Box.Location = new System.Drawing.Point(612, 56);
+            this.manSumIbpo95Box.Name = "manSumIbpo95Box";
+            this.manSumIbpo95Box.Size = new System.Drawing.Size(100, 20);
+            this.manSumIbpo95Box.TabIndex = 25;
+            // 
+            // manSumIbpoBox
+            // 
+            this.manSumIbpoBox.Location = new System.Drawing.Point(612, 30);
+            this.manSumIbpoBox.Name = "manSumIbpoBox";
+            this.manSumIbpoBox.Size = new System.Drawing.Size(100, 20);
+            this.manSumIbpoBox.TabIndex = 24;
             // 
             // womanIntIbpoBox95
             // 
@@ -483,7 +611,8 @@
             "МСЗ",
             "УЭХК",
             "ПО ЭХЗ",
-            "ЧМЗ"});
+            "ЧМЗ",
+            "ВСЕ ПРЕДПРИЯТИЯ"});
             this.shopComboBox.Location = new System.Drawing.Point(491, 82);
             this.shopComboBox.Name = "shopComboBox";
             this.shopComboBox.Size = new System.Drawing.Size(175, 21);
@@ -497,134 +626,6 @@
             this.shopNameLabel.Size = new System.Drawing.Size(128, 13);
             this.shopNameLabel.TabIndex = 19;
             this.shopNameLabel.Text = "Выберите предприятие:";
-            // 
-            // manSumOrpoBox
-            // 
-            this.manSumOrpoBox.Location = new System.Drawing.Point(612, 30);
-            this.manSumOrpoBox.Name = "manSumOrpoBox";
-            this.manSumOrpoBox.Size = new System.Drawing.Size(100, 20);
-            this.manSumOrpoBox.TabIndex = 16;
-            // 
-            // manSumOrpo95Box
-            // 
-            this.manSumOrpo95Box.Location = new System.Drawing.Point(612, 56);
-            this.manSumOrpo95Box.Name = "manSumOrpo95Box";
-            this.manSumOrpo95Box.Size = new System.Drawing.Size(100, 20);
-            this.manSumOrpo95Box.TabIndex = 17;
-            // 
-            // womanSumOrpoBox
-            // 
-            this.womanSumOrpoBox.Location = new System.Drawing.Point(612, 82);
-            this.womanSumOrpoBox.Name = "womanSumOrpoBox";
-            this.womanSumOrpoBox.Size = new System.Drawing.Size(100, 20);
-            this.womanSumOrpoBox.TabIndex = 18;
-            // 
-            // womanSumOrpo95Box
-            // 
-            this.womanSumOrpo95Box.Location = new System.Drawing.Point(612, 108);
-            this.womanSumOrpo95Box.Name = "womanSumOrpo95Box";
-            this.womanSumOrpo95Box.Size = new System.Drawing.Size(100, 20);
-            this.womanSumOrpo95Box.TabIndex = 19;
-            // 
-            // manSumOrpoLabel
-            // 
-            this.manSumOrpoLabel.AutoSize = true;
-            this.manSumOrpoLabel.Location = new System.Drawing.Point(482, 33);
-            this.manSumOrpoLabel.Name = "manSumOrpoLabel";
-            this.manSumOrpoLabel.Size = new System.Drawing.Size(90, 13);
-            this.manSumOrpoLabel.TabIndex = 20;
-            this.manSumOrpoLabel.Text = "Мужчины, сумм.";
-            // 
-            // manSumOrpo95Label
-            // 
-            this.manSumOrpo95Label.AutoSize = true;
-            this.manSumOrpo95Label.Location = new System.Drawing.Point(482, 59);
-            this.manSumOrpo95Label.Name = "manSumOrpo95Label";
-            this.manSumOrpo95Label.Size = new System.Drawing.Size(119, 13);
-            this.manSumOrpo95Label.TabIndex = 21;
-            this.manSumOrpo95Label.Text = "Мужчины, сумм. (95%)";
-            // 
-            // womanSumOrpoLabel
-            // 
-            this.womanSumOrpoLabel.AutoSize = true;
-            this.womanSumOrpoLabel.Location = new System.Drawing.Point(482, 85);
-            this.womanSumOrpoLabel.Name = "womanSumOrpoLabel";
-            this.womanSumOrpoLabel.Size = new System.Drawing.Size(95, 13);
-            this.womanSumOrpoLabel.TabIndex = 22;
-            this.womanSumOrpoLabel.Text = "Женщины, сумм.";
-            // 
-            // womanSumOrpo95Label
-            // 
-            this.womanSumOrpo95Label.AutoSize = true;
-            this.womanSumOrpo95Label.Location = new System.Drawing.Point(482, 111);
-            this.womanSumOrpo95Label.Name = "womanSumOrpo95Label";
-            this.womanSumOrpo95Label.Size = new System.Drawing.Size(124, 13);
-            this.womanSumOrpo95Label.TabIndex = 23;
-            this.womanSumOrpo95Label.Text = "Женщины, сумм. (95%)";
-            // 
-            // womanSumIbpo95Label
-            // 
-            this.womanSumIbpo95Label.AutoSize = true;
-            this.womanSumIbpo95Label.Location = new System.Drawing.Point(482, 111);
-            this.womanSumIbpo95Label.Name = "womanSumIbpo95Label";
-            this.womanSumIbpo95Label.Size = new System.Drawing.Size(124, 13);
-            this.womanSumIbpo95Label.TabIndex = 31;
-            this.womanSumIbpo95Label.Text = "Женщины, сумм. (95%)";
-            // 
-            // womanSumIbpoLabel
-            // 
-            this.womanSumIbpoLabel.AutoSize = true;
-            this.womanSumIbpoLabel.Location = new System.Drawing.Point(482, 85);
-            this.womanSumIbpoLabel.Name = "womanSumIbpoLabel";
-            this.womanSumIbpoLabel.Size = new System.Drawing.Size(95, 13);
-            this.womanSumIbpoLabel.TabIndex = 30;
-            this.womanSumIbpoLabel.Text = "Женщины, сумм.";
-            // 
-            // manSumIbpo95Label
-            // 
-            this.manSumIbpo95Label.AutoSize = true;
-            this.manSumIbpo95Label.Location = new System.Drawing.Point(482, 59);
-            this.manSumIbpo95Label.Name = "manSumIbpo95Label";
-            this.manSumIbpo95Label.Size = new System.Drawing.Size(119, 13);
-            this.manSumIbpo95Label.TabIndex = 29;
-            this.manSumIbpo95Label.Text = "Мужчины, сумм. (95%)";
-            // 
-            // manSumIbpoLabel
-            // 
-            this.manSumIbpoLabel.AutoSize = true;
-            this.manSumIbpoLabel.Location = new System.Drawing.Point(482, 33);
-            this.manSumIbpoLabel.Name = "manSumIbpoLabel";
-            this.manSumIbpoLabel.Size = new System.Drawing.Size(90, 13);
-            this.manSumIbpoLabel.TabIndex = 28;
-            this.manSumIbpoLabel.Text = "Мужчины, сумм.";
-            // 
-            // womanSumIbpo95Box
-            // 
-            this.womanSumIbpo95Box.Location = new System.Drawing.Point(612, 108);
-            this.womanSumIbpo95Box.Name = "womanSumIbpo95Box";
-            this.womanSumIbpo95Box.Size = new System.Drawing.Size(100, 20);
-            this.womanSumIbpo95Box.TabIndex = 27;
-            // 
-            // womanSumIbpoBox
-            // 
-            this.womanSumIbpoBox.Location = new System.Drawing.Point(612, 82);
-            this.womanSumIbpoBox.Name = "womanSumIbpoBox";
-            this.womanSumIbpoBox.Size = new System.Drawing.Size(100, 20);
-            this.womanSumIbpoBox.TabIndex = 26;
-            // 
-            // manSumIbpo95Box
-            // 
-            this.manSumIbpo95Box.Location = new System.Drawing.Point(612, 56);
-            this.manSumIbpo95Box.Name = "manSumIbpo95Box";
-            this.manSumIbpo95Box.Size = new System.Drawing.Size(100, 20);
-            this.manSumIbpo95Box.TabIndex = 25;
-            // 
-            // manSumIbpoBox
-            // 
-            this.manSumIbpoBox.Location = new System.Drawing.Point(612, 30);
-            this.manSumIbpoBox.Name = "manSumIbpoBox";
-            this.manSumIbpoBox.Size = new System.Drawing.Size(100, 20);
-            this.manSumIbpoBox.TabIndex = 24;
             // 
             // Form1
             // 
