@@ -1326,7 +1326,7 @@ namespace TVELtest
                     else
                         womanIntOrpoBox95.Text = "Внутреннего облучения нет!";
 
-                    womanSumOrpo95Box.Text = "2-а) " + Math.Round((womanWeightedExtOrpo95.Sum() / dbWoman) + (womanWeightedIntOrpo95.Sum() / dbWoman), 8);
+                    womanSumOrpo95Box.Text = "2-б) " + Math.Round((womanWeightedExtOrpo95.Sum() / dbWoman) + (womanWeightedIntOrpo95.Sum() / dbWoman), 8);
 
                     //manExtIbpoBox.Text = "" + manWeightedExtOrpo.Count;
                     //manIntIbpoBox.Text = "" + manWeightedIntOrpo.Count;
