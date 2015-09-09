@@ -249,8 +249,12 @@ namespace TVELtest
         {           
             this.FormBorderStyle = FormBorderStyle.FixedDialog;
             this.MaximizeBox = false;
+
             larRB.Checked = true;
             detRB.Checked = false;
+
+            aMethodRB.Checked = true;
+            bMethodRB.Checked = false;
 
             exePath = Path.GetDirectoryName(Application.ExecutablePath);
             libPath = exePath + "\\DataRus2012";
@@ -597,53 +601,53 @@ namespace TVELtest
                     //womanIntOrpoBox.Text = "Count = " + manSadExtArray.Length;
                     //manExtOrpoBox.Text = "CountКонкр = " + manSadExtArray[Convert.ToInt32(womanExtOrpoBox.Text)].Count;
 
-                    if (manWeightedExtOrpo.Sum() > 0)
-                        manExtOrpoBox.Text = "2-а) " + Math.Round(manWeightedExtOrpo.Sum() / dbMan, 8);
-                    else
-                        manIntOrpoBox.Text = "Внешнего облучения нет!";
+                    //if (manWeightedExtOrpo.Sum() > 0)
+                    //    manExtOrpoBox.Text = "2-а) " + Math.Round(manWeightedExtOrpo.Sum() / dbMan, 8);
+                    //else
+                    //    manIntOrpoBox.Text = "Внешнего облучения нет!";
 
-                    if (manWeightedIntOrpo.Sum() > 0)
-                        manIntOrpoBox.Text = "2-а) " + Math.Round(manWeightedIntOrpo.Sum() / dbMan, 8);
-                    else
-                        manIntOrpoBox.Text = "Внутреннего облучения нет!";
+                    //if (manWeightedIntOrpo.Sum() > 0)
+                    //    manIntOrpoBox.Text = "2-а) " + Math.Round(manWeightedIntOrpo.Sum() / dbMan, 8);
+                    //else
+                    //    manIntOrpoBox.Text = "Внутреннего облучения нет!";
 
-                    manSumOrpoBox.Text = "2-а) " + Math.Round((manWeightedExtOrpo.Sum() / dbMan) + (manWeightedIntOrpo.Sum() / dbMan), 8);
+                    //manSumOrpoBox.Text = "2-а) " + Math.Round((manWeightedExtOrpo.Sum() / dbMan) + (manWeightedIntOrpo.Sum() / dbMan), 8);
 
-                    if (womanWeightedExtOrpo.Sum() > 0)
-                        womanExtOrpoBox.Text = "2-а) " + Math.Round(womanWeightedExtOrpo.Sum() / dbWoman, 8);
-                    else
-                        womanExtOrpoBox.Text = "Внешнего облучения нет!";
+                    //if (womanWeightedExtOrpo.Sum() > 0)
+                    //    womanExtOrpoBox.Text = "2-а) " + Math.Round(womanWeightedExtOrpo.Sum() / dbWoman, 8);
+                    //else
+                    //    womanExtOrpoBox.Text = "Внешнего облучения нет!";
 
-                    if (womanWeightedIntOrpo.Sum() > 0)
-                        womanIntOrpoBox.Text = "2-а) " + Math.Round(womanWeightedIntOrpo.Sum() / dbWoman, 8);
-                    else
-                        womanIntOrpoBox.Text = "Внутреннего облучения нет!";
+                    //if (womanWeightedIntOrpo.Sum() > 0)
+                    //    womanIntOrpoBox.Text = "2-а) " + Math.Round(womanWeightedIntOrpo.Sum() / dbWoman, 8);
+                    //else
+                    //    womanIntOrpoBox.Text = "Внутреннего облучения нет!";
 
-                    womanSumOrpoBox.Text = "2-а) " + Math.Round((womanWeightedExtOrpo.Sum() / dbWoman) + (womanWeightedIntOrpo.Sum() / dbWoman), 8);
+                    //womanSumOrpoBox.Text = "2-а) " + Math.Round((womanWeightedExtOrpo.Sum() / dbWoman) + (womanWeightedIntOrpo.Sum() / dbWoman), 8);
 
-                    if (manWeightedExtOrpo95.Sum() > 0)
-                        manExtOrpoBox95.Text = "2-а) " + Math.Round(manWeightedExtOrpo95.Sum() / dbMan, 8);
-                    else
-                        manIntOrpoBox95.Text = "Внешнего облучения нет!";
+                    //if (manWeightedExtOrpo95.Sum() > 0)
+                    //    manExtOrpoBox95.Text = "2-а) " + Math.Round(manWeightedExtOrpo95.Sum() / dbMan, 8);
+                    //else
+                    //    manIntOrpoBox95.Text = "Внешнего облучения нет!";
 
-                    if (manWeightedIntOrpo95.Sum() > 0)
-                        manIntOrpoBox95.Text = "2-а) " + Math.Round(manWeightedIntOrpo95.Sum() / dbMan, 8);
-                    else
-                        manIntOrpoBox95.Text = "Внутреннего облучения нет!";
+                    //if (manWeightedIntOrpo95.Sum() > 0)
+                    //    manIntOrpoBox95.Text = "2-а) " + Math.Round(manWeightedIntOrpo95.Sum() / dbMan, 8);
+                    //else
+                    //    manIntOrpoBox95.Text = "Внутреннего облучения нет!";
 
-                    manSumOrpo95Box.Text = "2-а) " + Math.Round((manWeightedExtOrpo95.Sum() / dbMan) + (manWeightedIntOrpo95.Sum() / dbMan), 8);
+                    //manSumOrpo95Box.Text = "2-а) " + Math.Round((manWeightedExtOrpo95.Sum() / dbMan) + (manWeightedIntOrpo95.Sum() / dbMan), 8);
 
-                    if (womanWeightedExtOrpo95.Sum() > 0)
-                        womanExtOrpoBox95.Text = "2-а) " + Math.Round(womanWeightedExtOrpo95.Sum() / dbWoman, 8);
-                    else
-                        womanExtOrpoBox95.Text = "Внешнего облучения нет!";
+                    //if (womanWeightedExtOrpo95.Sum() > 0)
+                    //    womanExtOrpoBox95.Text = "2-а) " + Math.Round(womanWeightedExtOrpo95.Sum() / dbWoman, 8);
+                    //else
+                    //    womanExtOrpoBox95.Text = "Внешнего облучения нет!";
 
-                    if (womanWeightedIntOrpo95.Sum() > 0)
-                        womanIntOrpoBox95.Text = "2-а) " + Math.Round(womanWeightedIntOrpo95.Sum() / dbWoman, 8);
-                    else
-                        womanIntOrpoBox95.Text = "Внутреннего облучения нет!";
+                    //if (womanWeightedIntOrpo95.Sum() > 0)
+                    //    womanIntOrpoBox95.Text = "2-а) " + Math.Round(womanWeightedIntOrpo95.Sum() / dbWoman, 8);
+                    //else
+                    //    womanIntOrpoBox95.Text = "Внутреннего облучения нет!";
 
-                    womanSumOrpo95Box.Text = "2-а) " + Math.Round((womanWeightedExtOrpo95.Sum() / dbWoman) + (womanWeightedIntOrpo95.Sum() / dbWoman), 8);
+                    //womanSumOrpo95Box.Text = "2-а) " + Math.Round((womanWeightedExtOrpo95.Sum() / dbWoman) + (womanWeightedIntOrpo95.Sum() / dbWoman), 8);
 
                     /*-----Вывод в Excel-файл-----*/
                     /*-----Инициализация Excel-файла-----*/
@@ -1280,53 +1284,53 @@ namespace TVELtest
                     //womanExtOrpoBox95.Text = "2-б) " + Math.Round(womanWeightedExtOrpo95.Sum() / dbWoman, 7).ToString();
                     //womanIntOrpoBox95.Text = "2-б) " + /*womanWeightedIntOrpo_95.Sum() / dbWoman;//*/Math.Round(womanWeightedIntOrpo95.Sum() / dbWoman, 7).ToString();
 
-                    if (manWeightedExtOrpo.Sum() > 0)
-                        manExtOrpoBox.Text = "2-б) " + Math.Round(manWeightedExtOrpo.Sum() / dbMan, 8);
-                    else
-                        manIntOrpoBox.Text = "Внешнего облучения нет!";
+                    //if (manWeightedExtOrpo.Sum() > 0)
+                    //    manExtOrpoBox.Text = "2-б) " + Math.Round(manWeightedExtOrpo.Sum() / dbMan, 8);
+                    //else
+                    //    manIntOrpoBox.Text = "Внешнего облучения нет!";
 
-                    if (manWeightedIntOrpo.Sum() > 0)
-                        manIntOrpoBox.Text = "2-б) " + Math.Round(manWeightedIntOrpo.Sum() / dbMan, 8);
-                    else
-                        manIntOrpoBox.Text = "Внутреннего облучения нет!";
+                    //if (manWeightedIntOrpo.Sum() > 0)
+                    //    manIntOrpoBox.Text = "2-б) " + Math.Round(manWeightedIntOrpo.Sum() / dbMan, 8);
+                    //else
+                    //    manIntOrpoBox.Text = "Внутреннего облучения нет!";
 
-                    manSumOrpoBox.Text = "2-б) " + Math.Round((manWeightedExtOrpo.Sum() / dbMan) + (manWeightedIntOrpo.Sum() / dbMan), 8);
+                    //manSumOrpoBox.Text = "2-б) " + Math.Round((manWeightedExtOrpo.Sum() / dbMan) + (manWeightedIntOrpo.Sum() / dbMan), 8);
 
-                    if (womanWeightedExtOrpo.Sum() > 0)
-                        womanExtOrpoBox.Text = "2-б) " + Math.Round(womanWeightedExtOrpo.Sum() / dbWoman, 8);
-                    else
-                        womanExtOrpoBox.Text = "Внешнего облучения нет!";
+                    //if (womanWeightedExtOrpo.Sum() > 0)
+                    //    womanExtOrpoBox.Text = "2-б) " + Math.Round(womanWeightedExtOrpo.Sum() / dbWoman, 8);
+                    //else
+                    //    womanExtOrpoBox.Text = "Внешнего облучения нет!";
 
-                    if (womanWeightedIntOrpo.Sum() > 0)
-                        womanIntOrpoBox.Text = "2-б) " + Math.Round(womanWeightedIntOrpo.Sum() / dbWoman, 8);
-                    else
-                        womanIntOrpoBox.Text = "Внутреннего облучения нет!";
+                    //if (womanWeightedIntOrpo.Sum() > 0)
+                    //    womanIntOrpoBox.Text = "2-б) " + Math.Round(womanWeightedIntOrpo.Sum() / dbWoman, 8);
+                    //else
+                    //    womanIntOrpoBox.Text = "Внутреннего облучения нет!";
 
-                    womanSumOrpoBox.Text = "2-б) " + Math.Round((womanWeightedExtOrpo.Sum() / dbWoman) + (womanWeightedIntOrpo.Sum() / dbWoman), 8);
+                    //womanSumOrpoBox.Text = "2-б) " + Math.Round((womanWeightedExtOrpo.Sum() / dbWoman) + (womanWeightedIntOrpo.Sum() / dbWoman), 8);
 
-                    if (manWeightedExtOrpo95.Sum() > 0)
-                        manExtOrpoBox95.Text = "2-б) " + Math.Round(manWeightedExtOrpo95.Sum() / dbMan, 8);
-                    else
-                        manIntOrpoBox95.Text = "Внешнего облучения нет!";
+                    //if (manWeightedExtOrpo95.Sum() > 0)
+                    //    manExtOrpoBox95.Text = "2-б) " + Math.Round(manWeightedExtOrpo95.Sum() / dbMan, 8);
+                    //else
+                    //    manIntOrpoBox95.Text = "Внешнего облучения нет!";
 
-                    if (manWeightedIntOrpo95.Sum() > 0)
-                        manIntOrpoBox95.Text = "2-б) " + Math.Round(manWeightedIntOrpo95.Sum() / dbMan, 8);
-                    else
-                        manIntOrpoBox95.Text = "Внутреннего облучения нет!";
+                    //if (manWeightedIntOrpo95.Sum() > 0)
+                    //    manIntOrpoBox95.Text = "2-б) " + Math.Round(manWeightedIntOrpo95.Sum() / dbMan, 8);
+                    //else
+                    //    manIntOrpoBox95.Text = "Внутреннего облучения нет!";
 
-                    manSumOrpo95Box.Text = "2-а) " + Math.Round((manWeightedExtOrpo95.Sum() / dbMan) + (manWeightedIntOrpo95.Sum() / dbMan), 8);
+                    //manSumOrpo95Box.Text = "2-а) " + Math.Round((manWeightedExtOrpo95.Sum() / dbMan) + (manWeightedIntOrpo95.Sum() / dbMan), 8);
 
-                    if (womanWeightedExtOrpo95.Sum() > 0)
-                        womanExtOrpoBox95.Text = "2-б) " + Math.Round(womanWeightedExtOrpo95.Sum() / dbWoman, 8);
-                    else
-                        womanExtOrpoBox95.Text = "Внешнего облучения нет!";
+                    //if (womanWeightedExtOrpo95.Sum() > 0)
+                    //    womanExtOrpoBox95.Text = "2-б) " + Math.Round(womanWeightedExtOrpo95.Sum() / dbWoman, 8);
+                    //else
+                    //    womanExtOrpoBox95.Text = "Внешнего облучения нет!";
 
-                    if (womanWeightedIntOrpo95.Sum() > 0)
-                        womanIntOrpoBox95.Text = "2-б) " + Math.Round(womanWeightedIntOrpo95.Sum() / dbWoman, 8);
-                    else
-                        womanIntOrpoBox95.Text = "Внутреннего облучения нет!";
+                    //if (womanWeightedIntOrpo95.Sum() > 0)
+                    //    womanIntOrpoBox95.Text = "2-б) " + Math.Round(womanWeightedIntOrpo95.Sum() / dbWoman, 8);
+                    //else
+                    //    womanIntOrpoBox95.Text = "Внутреннего облучения нет!";
 
-                    womanSumOrpo95Box.Text = "2-б) " + Math.Round((womanWeightedExtOrpo95.Sum() / dbWoman) + (womanWeightedIntOrpo95.Sum() / dbWoman), 8);
+                    //womanSumOrpo95Box.Text = "2-б) " + Math.Round((womanWeightedExtOrpo95.Sum() / dbWoman) + (womanWeightedIntOrpo95.Sum() / dbWoman), 8);
 
                     //manExtIbpoBox.Text = "" + manWeightedExtOrpo.Count;
                     //manIntIbpoBox.Text = "" + manWeightedIntOrpo.Count;
@@ -1697,14 +1701,14 @@ namespace TVELtest
 
                         if (manRecordsList.Count == 0 || womanRecordsList.Count == 0)
                         {
-                            manExtIbpoBox.Text = "Нет данных за 2012 год!";
-                            manIntIbpoBox.Text = "Нет данных за 2012 год!";
-                            manExtIbpoBox95.Text = "Нет данных за 2012 год!";
-                            manIntIbpoBox95.Text = "Нет данных за 2012 год!";
-                            womanExtIbpoBox.Text = "Нет данных за 2012 год!";
-                            womanIntIbpoBox.Text = "Нет данных за 2012 год!";
-                            womanExtIbpoBox95.Text = "Нет данных за 2012 год!";
-                            womanIntIbpoBox95.Text = "Нет данных за 2012 год!";
+                            //manExtIbpoBox.Text = "Нет данных за 2012 год!";
+                            //manIntIbpoBox.Text = "Нет данных за 2012 год!";
+                            //manExtIbpoBox95.Text = "Нет данных за 2012 год!";
+                            //manIntIbpoBox95.Text = "Нет данных за 2012 год!";
+                            //womanExtIbpoBox.Text = "Нет данных за 2012 год!";
+                            //womanIntIbpoBox.Text = "Нет данных за 2012 год!";
+                            //womanExtIbpoBox95.Text = "Нет данных за 2012 год!";
+                            //womanIntIbpoBox95.Text = "Нет данных за 2012 год!";
                         }
 
                         else
@@ -1942,65 +1946,65 @@ namespace TVELtest
                                 womanWeightedSumIbpo95.Add(womanSumIbpo95[i] * womanSumLarArray[i].Count);
                             }
 
-                            if (manWeightedExtIbpo.Sum() / manRecordsList.Count < 100)
-                                manExtIbpoBox.Text = Math.Round(manWeightedExtIbpo.Sum() / manRecordsList.Count, 2).ToString();
-                            else
-                                manExtIbpoBox.Text = "Нет внешнего облучения";
+                            //if (manWeightedExtIbpo.Sum() / manRecordsList.Count < 100)
+                            //    manExtIbpoBox.Text = Math.Round(manWeightedExtIbpo.Sum() / manRecordsList.Count, 2).ToString();
+                            //else
+                            //    manExtIbpoBox.Text = "Нет внешнего облучения";
 
-                            if (manWeightedIntIbpo.Sum() / manRecordsList.Count < 100)
-                                manIntIbpoBox.Text = Math.Round(manWeightedIntIbpo.Sum() / manRecordsList.Count, 2).ToString();
-                            else
-                                manIntIbpoBox.Text = "Нет внутреннего облучения";
+                            //if (manWeightedIntIbpo.Sum() / manRecordsList.Count < 100)
+                            //    manIntIbpoBox.Text = Math.Round(manWeightedIntIbpo.Sum() / manRecordsList.Count, 2).ToString();
+                            //else
+                            //    manIntIbpoBox.Text = "Нет внутреннего облучения";
 
-                            if (manWeightedSumIbpo.Sum() / manRecordsList.Count < 100)
-                                manSumIbpoBox.Text = Math.Round(manWeightedSumIbpo.Sum() / manRecordsList.Count, 2).ToString();
-                            else
-                                manSumIbpoBox.Text = "Нет внутреннего облучения";
+                            //if (manWeightedSumIbpo.Sum() / manRecordsList.Count < 100)
+                            //    manSumIbpoBox.Text = Math.Round(manWeightedSumIbpo.Sum() / manRecordsList.Count, 2).ToString();
+                            //else
+                            //    manSumIbpoBox.Text = "Нет внутреннего облучения";
 
-                            if (manWeightedExtIbpo95.Sum() / manRecordsList.Count < 100)
-                                manExtIbpoBox95.Text = Math.Round(manWeightedExtIbpo95.Sum() / manRecordsList.Count, 2).ToString();
-                            else
-                                manExtIbpoBox95.Text = "Нет внешнего облучения";
+                            //if (manWeightedExtIbpo95.Sum() / manRecordsList.Count < 100)
+                            //    manExtIbpoBox95.Text = Math.Round(manWeightedExtIbpo95.Sum() / manRecordsList.Count, 2).ToString();
+                            //else
+                            //    manExtIbpoBox95.Text = "Нет внешнего облучения";
 
-                            if (manWeightedIntIbpo95.Sum() / manRecordsList.Count < 100)
-                                manIntIbpoBox95.Text = Math.Round(manWeightedIntIbpo95.Sum() / manRecordsList.Count, 2).ToString();
-                            else
-                                manIntIbpoBox95.Text = "Нет внутреннего облучения";
+                            //if (manWeightedIntIbpo95.Sum() / manRecordsList.Count < 100)
+                            //    manIntIbpoBox95.Text = Math.Round(manWeightedIntIbpo95.Sum() / manRecordsList.Count, 2).ToString();
+                            //else
+                            //    manIntIbpoBox95.Text = "Нет внутреннего облучения";
 
-                            if (manWeightedSumIbpo95.Sum() / manRecordsList.Count < 100)
-                                manSumIbpo95Box.Text = Math.Round(manWeightedSumIbpo95.Sum() / manRecordsList.Count, 2).ToString();
-                            else
-                                manSumIbpoBox.Text = "Нет внутреннего облучения";
+                            //if (manWeightedSumIbpo95.Sum() / manRecordsList.Count < 100)
+                            //    manSumIbpo95Box.Text = Math.Round(manWeightedSumIbpo95.Sum() / manRecordsList.Count, 2).ToString();
+                            //else
+                            //    manSumIbpoBox.Text = "Нет внутреннего облучения";
 
-                            if (womanWeightedExtIbpo.Sum() / womanRecordsList.Count < 100)
-                                womanExtIbpoBox.Text = Math.Round(womanWeightedExtIbpo.Sum() / womanRecordsList.Count, 2).ToString();
-                            else
-                                womanExtIbpoBox.Text = "Нет внешнего облучения";
+                            //if (womanWeightedExtIbpo.Sum() / womanRecordsList.Count < 100)
+                            //    womanExtIbpoBox.Text = Math.Round(womanWeightedExtIbpo.Sum() / womanRecordsList.Count, 2).ToString();
+                            //else
+                            //    womanExtIbpoBox.Text = "Нет внешнего облучения";
 
-                            if (womanWeightedIntIbpo.Sum() / womanRecordsList.Count < 100)
-                                womanIntIbpoBox.Text = Math.Round(womanWeightedIntIbpo.Sum() / womanRecordsList.Count, 2).ToString();
-                            else
-                                womanIntIbpoBox.Text = "Нет внутреннего облучения";
+                            //if (womanWeightedIntIbpo.Sum() / womanRecordsList.Count < 100)
+                            //    womanIntIbpoBox.Text = Math.Round(womanWeightedIntIbpo.Sum() / womanRecordsList.Count, 2).ToString();
+                            //else
+                            //    womanIntIbpoBox.Text = "Нет внутреннего облучения";
 
-                            if (womanWeightedSumIbpo.Sum() / womanRecordsList.Count < 100)
-                                womanSumIbpoBox.Text = Math.Round(womanWeightedSumIbpo.Sum() / womanRecordsList.Count, 2).ToString();
-                            else
-                                womanSumIbpoBox.Text = "Нет внутреннего облучения";
+                            //if (womanWeightedSumIbpo.Sum() / womanRecordsList.Count < 100)
+                            //    womanSumIbpoBox.Text = Math.Round(womanWeightedSumIbpo.Sum() / womanRecordsList.Count, 2).ToString();
+                            //else
+                            //    womanSumIbpoBox.Text = "Нет внутреннего облучения";
 
-                            if (womanWeightedExtIbpo95.Sum() / womanRecordsList.Count < 100)
-                                womanExtIbpoBox95.Text = Math.Round(womanWeightedExtIbpo95.Sum() / womanRecordsList.Count, 2).ToString();
-                            else
-                                womanExtIbpoBox95.Text = "Нет внешнего облучения";
+                            //if (womanWeightedExtIbpo95.Sum() / womanRecordsList.Count < 100)
+                            //    womanExtIbpoBox95.Text = Math.Round(womanWeightedExtIbpo95.Sum() / womanRecordsList.Count, 2).ToString();
+                            //else
+                            //    womanExtIbpoBox95.Text = "Нет внешнего облучения";
 
-                            if (womanWeightedIntIbpo95.Sum() / womanRecordsList.Count < 100)
-                                womanIntIbpoBox95.Text = Math.Round(womanWeightedIntIbpo95.Sum() / womanRecordsList.Count, 2).ToString();
-                            else
-                                womanIntIbpoBox95.Text = "Нет внутреннего облучения";
+                            //if (womanWeightedIntIbpo95.Sum() / womanRecordsList.Count < 100)
+                            //    womanIntIbpoBox95.Text = Math.Round(womanWeightedIntIbpo95.Sum() / womanRecordsList.Count, 2).ToString();
+                            //else
+                            //    womanIntIbpoBox95.Text = "Нет внутреннего облучения";
 
-                            if (womanWeightedSumIbpo95.Sum() / womanRecordsList.Count < 100)
-                                womanSumIbpo95Box.Text = Math.Round(womanWeightedSumIbpo95.Sum() / womanRecordsList.Count, 2).ToString();
-                            else
-                                womanSumIbpo95Box.Text = "Нет внутреннего облучения";
+                            //if (womanWeightedSumIbpo95.Sum() / womanRecordsList.Count < 100)
+                            //    womanSumIbpo95Box.Text = Math.Round(womanWeightedSumIbpo95.Sum() / womanRecordsList.Count, 2).ToString();
+                            //else
+                            //    womanSumIbpo95Box.Text = "Нет внутреннего облучения";
 
                             /*-----Вывод в Excel-файл-----*/
                             /*-----Инициализация Excel-файла-----*/
@@ -2425,6 +2429,45 @@ namespace TVELtest
                 MessageBox.Show("Нет связи с базой данных! Подключите базу!", "Внимание", MessageBoxButtons.OK, MessageBoxIcon.Exclamation, MessageBoxDefaultButton.Button1);
                 Application.DoEvents();
             }
+        }
+
+        private void button1_Click(object sender, EventArgs e)
+        {
+            DataTable dt = new DataTable();
+            dt.Columns.Add("Column1");
+            dt.Columns.Add("Column2");
+            dt.Columns.Add("Column3");
+            int[] m1 = new int[20];
+            double[] m2 = new double[20];
+            string[] m3 = new string[20];
+
+            for (int i = 0; i < 20; i++)
+            {
+                m1[i] = i;
+                m2[i] = i * 1.25;
+                m3[i] = "A " + i;
+                DataRow r = dt.NewRow();
+                r["Column1"] = m1[i];
+                r["Column2"] = m2[i];
+                r["Column3"] = m3[i];
+                dt.Rows.Add(r);
+            }
+
+            manOrpoGridView.DataSource = dt;
+            manOrpoGridView.AutoSizeColumnsMode = DataGridViewAutoSizeColumnsMode.Fill;
+            manOrpoGridView.AllowUserToAddRows = false;
+
+            womanOrpoGridView.DataSource = dt;
+            womanOrpoGridView.AutoSizeColumnsMode = DataGridViewAutoSizeColumnsMode.Fill;
+            womanOrpoGridView.AllowUserToAddRows = false;
+
+            manIbpoGridView.DataSource = dt;
+            manIbpoGridView.AutoSizeColumnsMode = DataGridViewAutoSizeColumnsMode.Fill;
+            manIbpoGridView.AllowUserToAddRows = false;
+
+            womanIbpoGridView.DataSource = dt;
+            womanIbpoGridView.AutoSizeColumnsMode = DataGridViewAutoSizeColumnsMode.Fill;
+            womanIbpoGridView.AllowUserToAddRows = false;
         }
     }
 }

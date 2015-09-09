@@ -5,3 +5,5 @@ c:\users\sergey\documents\visual studio 2010\Projects\DesignApplication\DesignAp
 c:\users\sergey\documents\visual studio 2010\Projects\DesignApplication\DesignApplication\obj\x86\Debug\DesignApplication.exe
 c:\users\sergey\documents\visual studio 2010\Projects\DesignApplication\DesignApplication\obj\x86\Debug\DesignApplication.pdb
 c:\users\sergey\documents\visual studio 2010\Projects\DesignApplication\DesignApplication\obj\x86\Debug\DesignApplication.Form1.resources
+C:\Users\Sergey\Desktop\TVEL_Project\DesignApplication\DesignApplication\obj\x86\Debug\DesignApplication.exe
+C:\Users\Sergey\Desktop\TVEL_Project\DesignApplication\DesignApplication\obj\x86\Debug\DesignApplication.pdb
