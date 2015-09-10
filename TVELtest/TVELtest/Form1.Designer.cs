@@ -29,7 +29,7 @@
         private void InitializeComponent()
         {
             this.openFileButton = new System.Windows.Forms.Button();
-            this.getOrpoAverAgeButton = new System.Windows.Forms.Button();
+            this.getOrpoButton = new System.Windows.Forms.Button();
             this.getIbpoButton = new System.Windows.Forms.Button();
             this.larRB = new System.Windows.Forms.RadioButton();
             this.detRB = new System.Windows.Forms.RadioButton();
@@ -48,7 +48,6 @@
             this.bMethodRB = new System.Windows.Forms.RadioButton();
             this.methodGroup = new System.Windows.Forms.GroupBox();
             this.larOrDetGroup = new System.Windows.Forms.GroupBox();
-            this.textBox1 = new System.Windows.Forms.TextBox();
             this.tabControl.SuspendLayout();
             this.manOrpoPage.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.manOrpoGridView)).BeginInit();
@@ -68,19 +67,19 @@
             this.openFileButton.Name = "openFileButton";
             this.openFileButton.Size = new System.Drawing.Size(468, 43);
             this.openFileButton.TabIndex = 12;
-            this.openFileButton.Text = "Шаг 1: Выберите базу данных";
+            this.openFileButton.Text = "Выберите базу данных";
             this.openFileButton.UseVisualStyleBackColor = true;
             this.openFileButton.Click += new System.EventHandler(this.openFileButton_Click);
             // 
-            // getOrpoAverAgeButton
+            // getOrpoButton
             // 
-            this.getOrpoAverAgeButton.Location = new System.Drawing.Point(12, 61);
-            this.getOrpoAverAgeButton.Name = "getOrpoAverAgeButton";
-            this.getOrpoAverAgeButton.Size = new System.Drawing.Size(468, 43);
-            this.getOrpoAverAgeButton.TabIndex = 0;
-            this.getOrpoAverAgeButton.Text = "Шаг 2: Рассчитать ОРПО";
-            this.getOrpoAverAgeButton.UseVisualStyleBackColor = true;
-            this.getOrpoAverAgeButton.Click += new System.EventHandler(this.getOrpoAverAgeButton_Click);
+            this.getOrpoButton.Location = new System.Drawing.Point(12, 61);
+            this.getOrpoButton.Name = "getOrpoButton";
+            this.getOrpoButton.Size = new System.Drawing.Size(468, 43);
+            this.getOrpoButton.TabIndex = 0;
+            this.getOrpoButton.Text = "Рассчитать ОРПО";
+            this.getOrpoButton.UseVisualStyleBackColor = true;
+            this.getOrpoButton.Click += new System.EventHandler(this.getOrpoButton_Click);
             // 
             // getIbpoButton
             // 
@@ -88,7 +87,7 @@
             this.getIbpoButton.Name = "getIbpoButton";
             this.getIbpoButton.Size = new System.Drawing.Size(468, 43);
             this.getIbpoButton.TabIndex = 6;
-            this.getIbpoButton.Text = "Шаг 3: Рассчитать ИБПО";
+            this.getIbpoButton.Text = "Рассчитать ИБПО";
             this.getIbpoButton.UseVisualStyleBackColor = true;
             this.getIbpoButton.Click += new System.EventHandler(this.getIbpoButton_Click);
             // 
@@ -129,6 +128,7 @@
             this.shopComboBox.Name = "shopComboBox";
             this.shopComboBox.Size = new System.Drawing.Size(175, 21);
             this.shopComboBox.TabIndex = 18;
+            this.shopComboBox.SelectedIndexChanged += new System.EventHandler(this.shopComboBox_SelectedIndexChanged);
             // 
             // shopNameLabel
             // 
@@ -237,6 +237,7 @@
             this.aMethodRB.TabStop = true;
             this.aMethodRB.Text = "Метод А";
             this.aMethodRB.UseVisualStyleBackColor = true;
+            this.aMethodRB.CheckedChanged += new System.EventHandler(this.aMethodRB_CheckedChanged);
             // 
             // bMethodRB
             // 
@@ -248,6 +249,7 @@
             this.bMethodRB.TabStop = true;
             this.bMethodRB.Text = "Метод Б";
             this.bMethodRB.UseVisualStyleBackColor = true;
+            this.bMethodRB.CheckedChanged += new System.EventHandler(this.bMethodRB_CheckedChanged);
             // 
             // methodGroup
             // 
@@ -271,27 +273,18 @@
             this.larOrDetGroup.TabStop = false;
             this.larOrDetGroup.Text = "LAR (Det)";
             // 
-            // textBox1
-            // 
-            this.textBox1.Location = new System.Drawing.Point(630, 8);
-            this.textBox1.Name = "textBox1";
-            this.textBox1.Size = new System.Drawing.Size(100, 20);
-            this.textBox1.TabIndex = 1;
-            this.textBox1.TextChanged += new System.EventHandler(this.textBox1_TextChanged);
-            // 
             // Form1
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(742, 473);
-            this.Controls.Add(this.textBox1);
             this.Controls.Add(this.larOrDetGroup);
             this.Controls.Add(this.methodGroup);
             this.Controls.Add(this.shopNameLabel);
             this.Controls.Add(this.shopComboBox);
             this.Controls.Add(this.openFileButton);
             this.Controls.Add(this.getIbpoButton);
-            this.Controls.Add(this.getOrpoAverAgeButton);
+            this.Controls.Add(this.getOrpoButton);
             this.Controls.Add(this.tabControl);
             this.Name = "Form1";
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
@@ -318,7 +311,7 @@
         #endregion
 
         private System.Windows.Forms.Button openFileButton;
-        private System.Windows.Forms.Button getOrpoAverAgeButton;
+        private System.Windows.Forms.Button getOrpoButton;
         private System.Windows.Forms.Button getIbpoButton;
         private System.Windows.Forms.RadioButton larRB;
         private System.Windows.Forms.RadioButton detRB;
@@ -337,7 +330,6 @@
         private System.Windows.Forms.DataGridView womanIbpoGridView;
         private System.Windows.Forms.GroupBox methodGroup;
         private System.Windows.Forms.GroupBox larOrDetGroup;
-        private System.Windows.Forms.TextBox textBox1;
 
 
     }

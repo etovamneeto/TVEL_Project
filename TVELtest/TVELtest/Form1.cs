@@ -12,8 +12,6 @@ using RiskCalculatorLib;
 using System.Diagnostics;
 using System.Threading;
 using Excel = Microsoft.Office.Interop.Excel;
-//Хреновины имеют значение, когда сравниваешь строки и строки, т.е. когда тебе надо ввести в текстовую ячейку текстовый параметр; В другие, где инты или флоаты, туда не нужны они
-//"UPDATE [names] SET [userName]='" + nameBox.Text + "', [age]=" + Convert.ToInt32(ageBox.Text), но + " WHERE [id]=" + Convert.ToInt32(table.Rows[0]["id"]), connection);
 
 namespace TVELtest
 {
@@ -69,7 +67,7 @@ namespace TVELtest
         List<int>[] manIntYearsArray = null;
         List<int>[] manYearsArray = null;
         List<int>[] womanExtYearsArray = null;
-        List<int>[] womanIntYearsArray = null;    
+        List<int>[] womanIntYearsArray = null;
         List<int>[] womanYearsArray = null;
 
         /*-----Создание массивов, храящих LAR п/в групп-----*/
@@ -106,11 +104,9 @@ namespace TVELtest
         List<double> womanWeightedExtOrpo95 = null;
         List<double> womanWeightedIntOrpo95 = null;
 
-        bool orpoButtonAverAge = false;
-        bool orpoButtonAverLar = false;
-        bool shopTrigger = false;
-
-
+        bool openFileCheck = false;
+        bool orpoButtonCheck = false;
+        bool ibpoButtonCheck = false;
 
         /*-----Описание класса Объект, представляющий собой строку таблицы с параметрами: id, пол, доза суммарная, доза внутренняя, возраст при облучении-----*/
         public class dbObject
@@ -162,7 +158,7 @@ namespace TVELtest
         {
             double lar = 0;
             double secondPowerElement = 4 * Math.Pow(10, -6) * Math.Pow(meanAge, 2);
-            double firstPowerElement = -11 * Math.Pow(10, -4)  * meanAge;
+            double firstPowerElement = -11 * Math.Pow(10, -4) * meanAge;
             double constant = 6.63 * Math.Pow(10, -2);
             return lar = secondPowerElement + firstPowerElement + constant;
         }
@@ -221,7 +217,7 @@ namespace TVELtest
             double constant = -1.53 * Math.Pow(10, -2);
             return det = secondPowerElement + firstPowerElement + constant;
         }
-       
+
         public double getWomanIntDet(double meanAge)
         {
             double det = 0;
@@ -284,22 +280,27 @@ namespace TVELtest
         }
 
         private void Form1_Load(object sender, EventArgs e)
-        {           
+        {
             this.FormBorderStyle = FormBorderStyle.FixedDialog;
             this.MaximizeBox = false;
-
             larRB.Checked = true;
             detRB.Checked = false;
-
-            aMethodRB.Checked = true;
-            bMethodRB.Checked = false;
+            //aMethodRB.Checked = true;
+            //bMethodRB.Checked = false;
 
             exePath = Path.GetDirectoryName(Application.ExecutablePath);
             libPath = exePath + "\\DataRus2012";
             outPath = exePath + "\\Табличные выводы";
             Directory.CreateDirectory(outPath);
-
             RiskCalculatorLib.RiskCalculator.FillData(ref libPath);
+
+            getOrpoButton.Enabled = false;
+            getIbpoButton.Enabled = false;
+            aMethodRB.Enabled = false;
+            bMethodRB.Enabled = false;
+            larRB.Enabled = false;
+            detRB.Enabled = false;
+            shopComboBox.Enabled = false;
         }
 
         private void openFileButton_Click(object sender, EventArgs e)
@@ -352,18 +353,17 @@ namespace TVELtest
             ageUpperBound.Add(64);
             ageUpperBound.Add(69);
             ageUpperBound.Add(100);
+
+            shopComboBox.Enabled = true;
+            openFileButton.Enabled = false;
         }
 
-        private void getOrpoAverAgeButton_Click(object sender, EventArgs e)
+        private void getOrpoButton_Click(object sender, EventArgs e)
         {
             /*-----Инициализация всяких входных параметров, подключения к БД, парсинга в таблицу нужных столбцов-----*/
             OleDbConnection connection = new OleDbConnection(connectionString);
             try
             {
-                orpoButtonAverAge = true;
-                orpoButtonAverLar = false;
-                shopTrigger = true;
-
                 if (shopComboBox.SelectedItem == "СХК")
                     shopName = "r1";
                 else if (shopComboBox.SelectedItem == "АЭХК")
@@ -396,9 +396,9 @@ namespace TVELtest
                     dbFinalRecords = new List<dbObject>();
                     for (int i = 0; i < table.Rows.Count; i++)
                     {
-                        if(aMethodRB.Checked)
+                        if (aMethodRB.Checked)
                             dbFinalRecords.Add(new dbObject(Convert.ToInt32(table.Rows[i]["id"]), Convert.ToByte(table.Rows[i]["gender"]), Convert.ToInt32(table.Rows[i]["year"]), Convert.ToInt16(table.Rows[i]["ageatexp"]), Convert.ToDouble(table.Rows[i]["dose"]) / 1000, Convert.ToDouble(table.Rows[i]["doseint"]) / 1000));
-                        if(bMethodRB.Checked)
+                        if (bMethodRB.Checked)
                             dbFinalRecords.Add(new dbObject(Convert.ToInt32(table.Rows[i]["id"]), Convert.ToByte(table.Rows[i]["gender"]), Convert.ToInt32(table.Rows[i]["year"]), Convert.ToInt16(table.Rows[i]["ageatexp"]), Convert.ToDouble(table.Rows[i]["dose"]), Convert.ToDouble(table.Rows[i]["doseint"])));
                     }
 
@@ -493,7 +493,6 @@ namespace TVELtest
                             }
                     }
 
-
                     if (bMethodRB.Checked)
                     {
                         /*-----Заполнение массива списков доз-----*/
@@ -584,6 +583,7 @@ namespace TVELtest
                                         manIntLarArray[i].Add(calculator.getDetriment().Value.Lung);
                                 }
                             }
+
                         for (int i = 0; i < ageGroups.Count; i++)
                             for (int k = 0; k < womanSadExtArray[i].Count; k++)
                             {
@@ -611,7 +611,6 @@ namespace TVELtest
                             }
                     }
 
-///*---------------------------------------------------------------------------------------------------------------------------------------*/
                     /*-----Инициализация массивов, хранящих ОРПО для половозрастных групп-----*/
                     manExtOrpo = new double[ageGroups.Count];
                     manIntOrpo = new double[ageGroups.Count];
@@ -812,19 +811,6 @@ namespace TVELtest
 
                         if (womanSadIntArray[i].Count > 0)
                             womanWeightedIntOrpo95.Add(womanIntOrpo95[i] * womanSadIntArray[i].Count);
-
-                        //if (bMethodRB.Checked)
-                        //{
-                        //    manWeightedExtOrpo.Add(manExtOrpo[i] * manSadExtArray[i].Count);
-                        //    manWeightedIntOrpo.Add(manIntOrpo[i] * manSadIntArray[i].Count);
-                        //    womanWeightedExtOrpo.Add(womanExtOrpo[i] * womanSadExtArray[i].Count);
-                        //    womanWeightedIntOrpo.Add(womanIntOrpo[i] * womanSadIntArray[i].Count);
-
-                        //    manWeightedExtOrpo95.Add(manExtOrpo95[i] * manSadExtArray[i].Count);
-                        //    manWeightedIntOrpo95.Add(manIntOrpo95[i] * manSadIntArray[i].Count);
-                        //    womanWeightedExtOrpo95.Add(womanExtOrpo95[i] * womanSadExtArray[i].Count);
-                        //    womanWeightedIntOrpo95.Add(womanIntOrpo95[i] * womanSadIntArray[i].Count);
-                        //}
                     }
 
                     manOrpoTable = new DataTable();
@@ -931,11 +917,321 @@ namespace TVELtest
                     womanOrpoGridView.DataSource = womanOrpoTable;
                     womanOrpoGridView.AutoSizeColumnsMode = DataGridViewAutoSizeColumnsMode.Fill;
                     womanOrpoGridView.AllowUserToAddRows = false;
-/*------------------------------------------------Вывод в эксель-файл-----------------------------------------------------------------------------*/
-                    //if (aMethodRB.Checked)
-                    //    textBox1.Text = "ок А";
-                    //if (bMethodRB.Checked)
-                    //    textBox1.Text = "ок Б";
+
+                    /*-----Вывод в Excel-файл-----*/
+                    /*-----Инициализация Excel-файла-----*/
+                    Excel.Application excelApp = new Excel.Application();
+                    excelApp.StandardFont = "Times-New-Roman";
+                    excelApp.StandardFontSize = 12;
+
+                    /*-----Создание рабочей книг, в которые будет выводиться информация-----*/
+                    excelApp.SheetsInNewWorkbook = 2;
+                    excelApp.Workbooks.Add(Type.Missing);
+                    Excel.Workbook excelWorkbook = excelApp.Workbooks[1];
+                    Excel.Worksheet excelWorksheet = null;
+                    Excel.Range excelCells = null;
+
+                    /*-----Вывод в столбцы-----*/
+                    excelWorksheet = (Excel.Worksheet)excelWorkbook.Worksheets.get_Item(1);
+                    excelWorksheet.Name = "Мужчины";
+
+                    /*-----Описываем ячейку А1 на странице-----*/
+                    excelCells = excelWorksheet.get_Range("A1");
+                    excelCells.VerticalAlignment = Excel.Constants.xlCenter;
+                    excelCells.HorizontalAlignment = Excel.Constants.xlCenter;
+                    excelCells.Borders.Weight = Excel.XlBorderWeight.xlThick;
+                    excelCells.Value2 = "Возрастные группы";
+
+                    /*-----Описываем ячейку B1 на странице-----*/
+                    excelCells = excelWorksheet.get_Range("B1");
+                    excelCells.VerticalAlignment = Excel.Constants.xlCenter;
+                    excelCells.HorizontalAlignment = Excel.Constants.xlCenter;
+                    excelCells.Borders.Weight = Excel.XlBorderWeight.xlThick;
+                    excelCells.Value2 = "Внешнее облучение";
+
+                    /*-----Описываем ячейку C1 на странице-----*/
+                    excelCells = excelWorksheet.get_Range("C1");
+                    excelCells.VerticalAlignment = Excel.Constants.xlCenter;
+                    excelCells.HorizontalAlignment = Excel.Constants.xlCenter;
+                    excelCells.Borders.Weight = Excel.XlBorderWeight.xlThick;
+                    excelCells.Value2 = "Внутреннее облучение";
+
+                    /*-----Описываем ячейку D1 на странице-----*/
+                    excelCells = excelWorksheet.get_Range("D1");
+                    excelCells.VerticalAlignment = Excel.Constants.xlCenter;
+                    excelCells.HorizontalAlignment = Excel.Constants.xlCenter;
+                    excelCells.Borders.Weight = Excel.XlBorderWeight.xlThick;
+                    excelCells.Value2 = "Сумма";
+
+                    /*-----Описываем ячейку E1 на странице-----*/
+                    excelCells = excelWorksheet.get_Range("E1");
+                    excelCells.VerticalAlignment = Excel.Constants.xlCenter;
+                    excelCells.HorizontalAlignment = Excel.Constants.xlCenter;
+                    excelCells.Borders.Weight = Excel.XlBorderWeight.xlThick;
+                    excelCells.Value2 = "Внешнее облучение (95%)";
+
+                    /*-----Описываем ячейку F1 на странице-----*/
+                    excelCells = excelWorksheet.get_Range("F1");
+                    excelCells.VerticalAlignment = Excel.Constants.xlCenter;
+                    excelCells.HorizontalAlignment = Excel.Constants.xlCenter;
+                    excelCells.Borders.Weight = Excel.XlBorderWeight.xlThick;
+                    excelCells.Value2 = "Внутреннее облучение (95%)";
+
+                    /*-----Описываем ячейку G1 на странице-----*/
+                    excelCells = excelWorksheet.get_Range("G1");
+                    excelCells.VerticalAlignment = Excel.Constants.xlCenter;
+                    excelCells.HorizontalAlignment = Excel.Constants.xlCenter;
+                    excelCells.Borders.Weight = Excel.XlBorderWeight.xlThick;
+                    excelCells.Value2 = "Сумма (95%)";
+
+                    for (int i = 2; i <= manExtOrpo.Length + 1; i++)
+                    {
+                        excelCells = (Excel.Range)excelWorksheet.Cells[i, "A"];
+                        excelCells.Value2 = ageGroups[i - 2];
+                        excelCells.Borders.ColorIndex = 1;
+                        excelCells = (Excel.Range)excelWorksheet.Cells[i, "B"];
+                        excelCells.Value2 = manExtOrpo[i - 2];
+                        excelCells.Borders.ColorIndex = 1;
+                        excelCells = (Excel.Range)excelWorksheet.Cells[i, "C"];
+                        excelCells.Value2 = manIntOrpo[i - 2];
+                        excelCells.Borders.ColorIndex = 1;
+                        excelCells = (Excel.Range)excelWorksheet.Cells[i, "D"];
+                        excelCells.Value2 = manSumOrpo[i - 2];
+                        excelCells.Borders.ColorIndex = 1;
+                        excelCells = (Excel.Range)excelWorksheet.Cells[i, "E"];
+                        excelCells.Value2 = manExtOrpo95[i - 2];
+                        excelCells.Borders.ColorIndex = 1;
+                        excelCells = (Excel.Range)excelWorksheet.Cells[i, "F"];
+                        excelCells.Value2 = manIntOrpo95[i - 2];
+                        excelCells.Borders.ColorIndex = 1;
+                        excelCells = (Excel.Range)excelWorksheet.Cells[i, "G"];
+                        excelCells.Value2 = manSumOrpo95[i - 2];
+                        excelCells.Borders.ColorIndex = 1;
+                    }
+
+                    /*-----Описываем ячейку А13 на странице-----*/
+                    excelCells = excelWorksheet.get_Range("A" + 13);
+                    excelCells.VerticalAlignment = Excel.Constants.xlCenter;
+                    excelCells.HorizontalAlignment = Excel.Constants.xlCenter;
+                    excelCells.Borders.Weight = Excel.XlBorderWeight.xlMedium;
+                    excelCells.Value2 = "Взвешенные величины";
+
+                    /*-----Описываем ячейку B13 на странице-----*/
+                    excelCells = excelWorksheet.get_Range("B" + 13);
+                    excelCells.VerticalAlignment = Excel.Constants.xlCenter;
+                    excelCells.HorizontalAlignment = Excel.Constants.xlCenter;
+                    excelCells.Borders.Weight = Excel.XlBorderWeight.xlMedium;
+                    excelCells.Value2 = Math.Round(manWeightedExtOrpo.Sum() / dbMan, 8);
+
+                    /*-----Описываем ячейку C13 на странице-----*/
+                    excelCells = excelWorksheet.get_Range("C" + 13);
+                    excelCells.VerticalAlignment = Excel.Constants.xlCenter;
+                    excelCells.HorizontalAlignment = Excel.Constants.xlCenter;
+                    excelCells.Borders.Weight = Excel.XlBorderWeight.xlMedium;
+                    excelCells.Value2 = Math.Round(manWeightedIntOrpo.Sum() / dbMan, 8);
+
+                    /*-----Описываем ячейку D13 на странице-----*/
+                    excelCells = excelWorksheet.get_Range("D" + 13);
+                    excelCells.VerticalAlignment = Excel.Constants.xlCenter;
+                    excelCells.HorizontalAlignment = Excel.Constants.xlCenter;
+                    excelCells.Borders.Weight = Excel.XlBorderWeight.xlMedium;
+                    excelCells.Value2 = Math.Round((manWeightedExtOrpo.Sum() / dbMan) + (manWeightedIntOrpo.Sum() / dbMan), 8);
+
+                    /*-----Описываем ячейку E13 на странице-----*/
+                    excelCells = excelWorksheet.get_Range("E" + 13);
+                    excelCells.VerticalAlignment = Excel.Constants.xlCenter;
+                    excelCells.HorizontalAlignment = Excel.Constants.xlCenter;
+                    excelCells.Borders.Weight = Excel.XlBorderWeight.xlMedium;
+                    excelCells.Value2 = Math.Round(manWeightedExtOrpo95.Sum() / dbMan, 8);
+
+                    /*-----Описываем ячейку F13 на странице-----*/
+                    excelCells = excelWorksheet.get_Range("F" + 13);
+                    excelCells.VerticalAlignment = Excel.Constants.xlCenter;
+                    excelCells.HorizontalAlignment = Excel.Constants.xlCenter;
+                    excelCells.Borders.Weight = Excel.XlBorderWeight.xlMedium;
+                    excelCells.Value2 = Math.Round(manWeightedIntOrpo95.Sum() / dbMan, 8);
+
+                    /*-----Описываем ячейку G13 на странице-----*/
+                    excelCells = excelWorksheet.get_Range("G" + 13);
+                    excelCells.VerticalAlignment = Excel.Constants.xlCenter;
+                    excelCells.HorizontalAlignment = Excel.Constants.xlCenter;
+                    excelCells.Borders.Weight = Excel.XlBorderWeight.xlMedium;
+                    excelCells.Value2 = Math.Round((manWeightedExtOrpo95.Sum() / dbMan) + (manWeightedIntOrpo95.Sum() / dbMan), 8);
+
+                    excelWorksheet = (Excel.Worksheet)excelWorkbook.Worksheets.get_Item(2);
+                    excelWorksheet.Name = "Женщины";
+
+                    /*-----Описываем ячейку А1 на странице-----*/
+                    excelCells = excelWorksheet.get_Range("A1");
+                    excelCells.VerticalAlignment = Excel.Constants.xlCenter;
+                    excelCells.HorizontalAlignment = Excel.Constants.xlCenter;
+                    excelCells.Borders.Weight = Excel.XlBorderWeight.xlThick;
+                    excelCells.Value2 = "Возрастные группы";
+
+                    /*-----Описываем ячейку B1 на странице-----*/
+                    excelCells = excelWorksheet.get_Range("B1");
+                    excelCells.VerticalAlignment = Excel.Constants.xlCenter;
+                    excelCells.HorizontalAlignment = Excel.Constants.xlCenter;
+                    excelCells.Borders.Weight = Excel.XlBorderWeight.xlThick;
+                    excelCells.Value2 = "Внешнее облучение";
+
+                    /*-----Описываем ячейку C1 на странице-----*/
+                    excelCells = excelWorksheet.get_Range("C1");
+                    excelCells.VerticalAlignment = Excel.Constants.xlCenter;
+                    excelCells.HorizontalAlignment = Excel.Constants.xlCenter;
+                    excelCells.Borders.Weight = Excel.XlBorderWeight.xlThick;
+                    excelCells.Value2 = "Внутреннее облучение";
+
+                    /*-----Описываем ячейку B1 на странице-----*/
+                    excelCells = excelWorksheet.get_Range("D1");
+                    excelCells.VerticalAlignment = Excel.Constants.xlCenter;
+                    excelCells.HorizontalAlignment = Excel.Constants.xlCenter;
+                    excelCells.Borders.Weight = Excel.XlBorderWeight.xlThick;
+                    excelCells.Value2 = "Сумма";
+
+                    /*-----Описываем ячейку C1 на странице-----*/
+                    excelCells = excelWorksheet.get_Range("E1");
+                    excelCells.VerticalAlignment = Excel.Constants.xlCenter;
+                    excelCells.HorizontalAlignment = Excel.Constants.xlCenter;
+                    excelCells.Borders.Weight = Excel.XlBorderWeight.xlThick;
+                    excelCells.Value2 = "Внешнее облучение (95%)";
+
+                    /*-----Описываем ячейку C1 на странице-----*/
+                    excelCells = excelWorksheet.get_Range("F1");
+                    excelCells.VerticalAlignment = Excel.Constants.xlCenter;
+                    excelCells.HorizontalAlignment = Excel.Constants.xlCenter;
+                    excelCells.Borders.Weight = Excel.XlBorderWeight.xlThick;
+                    excelCells.Value2 = "Внутреннее облучение (95%)";
+
+                    /*-----Описываем ячейку C1 на странице-----*/
+                    excelCells = excelWorksheet.get_Range("G1");
+                    excelCells.VerticalAlignment = Excel.Constants.xlCenter;
+                    excelCells.HorizontalAlignment = Excel.Constants.xlCenter;
+                    excelCells.Borders.Weight = Excel.XlBorderWeight.xlThick;
+                    excelCells.Value2 = "Сумма (95%)";
+
+                    for (int i = 2; i <= womanExtOrpo.Length + 1; i++)
+                    {
+                        excelCells = (Excel.Range)excelWorksheet.Cells[i, "A"];
+                        excelCells.Value2 = ageGroups[i - 2];
+                        excelCells.Borders.ColorIndex = 1;
+
+                        excelCells = (Excel.Range)excelWorksheet.Cells[i, "B"];
+                        excelCells.Value2 = womanExtOrpo[i - 2];
+                        excelCells.Borders.ColorIndex = 1;
+
+                        excelCells = (Excel.Range)excelWorksheet.Cells[i, "C"];
+                        excelCells.Value2 = womanIntOrpo[i - 2];
+                        excelCells.Borders.ColorIndex = 1;
+
+                        excelCells = (Excel.Range)excelWorksheet.Cells[i, "D"];
+                        excelCells.Value2 = womanSumOrpo[i - 2];
+                        excelCells.Borders.ColorIndex = 1;
+
+                        excelCells = (Excel.Range)excelWorksheet.Cells[i, "E"];
+                        excelCells.Value2 = womanExtOrpo95[i - 2];
+                        excelCells.Borders.ColorIndex = 1;
+
+                        excelCells = (Excel.Range)excelWorksheet.Cells[i, "F"];
+                        excelCells.Value2 = womanIntOrpo95[i - 2];
+                        excelCells.Borders.ColorIndex = 1;
+
+                        excelCells = (Excel.Range)excelWorksheet.Cells[i, "G"];
+                        excelCells.Value2 = womanSumOrpo95[i - 2];
+                        excelCells.Borders.ColorIndex = 1;
+                    }
+
+                    /*-----Описываем ячейку А1 на странице-----*/
+                    excelCells = excelWorksheet.get_Range("A" + 13);
+                    excelCells.VerticalAlignment = Excel.Constants.xlCenter;
+                    excelCells.HorizontalAlignment = Excel.Constants.xlCenter;
+                    excelCells.Borders.Weight = Excel.XlBorderWeight.xlMedium;
+                    excelCells.Value2 = "Взвешенные величины";
+
+                    /*-----Описываем ячейку А1 на странице-----*/
+                    excelCells = excelWorksheet.get_Range("B" + 13);
+                    excelCells.VerticalAlignment = Excel.Constants.xlCenter;
+                    excelCells.HorizontalAlignment = Excel.Constants.xlCenter;
+                    excelCells.Borders.Weight = Excel.XlBorderWeight.xlMedium;
+                    excelCells.Value2 = Math.Round(womanWeightedExtOrpo.Sum() / dbWoman, 8);
+
+                    /*-----Описываем ячейку А1 на странице-----*/
+                    excelCells = excelWorksheet.get_Range("C" + 13);
+                    excelCells.VerticalAlignment = Excel.Constants.xlCenter;
+                    excelCells.HorizontalAlignment = Excel.Constants.xlCenter;
+                    excelCells.Borders.Weight = Excel.XlBorderWeight.xlMedium;
+                    excelCells.Value2 = Math.Round(womanWeightedIntOrpo.Sum() / dbWoman, 8);
+
+                    /*-----Описываем ячейку А1 на странице-----*/
+                    excelCells = excelWorksheet.get_Range("D" + 13);
+                    excelCells.VerticalAlignment = Excel.Constants.xlCenter;
+                    excelCells.HorizontalAlignment = Excel.Constants.xlCenter;
+                    excelCells.Borders.Weight = Excel.XlBorderWeight.xlMedium;
+                    excelCells.Value2 = Math.Round((womanWeightedExtOrpo.Sum() / dbWoman) + (womanWeightedIntOrpo.Sum() / dbWoman), 8);
+
+                    /*-----Описываем ячейку А1 на странице-----*/
+                    excelCells = excelWorksheet.get_Range("E" + 13);
+                    excelCells.VerticalAlignment = Excel.Constants.xlCenter;
+                    excelCells.HorizontalAlignment = Excel.Constants.xlCenter;
+                    excelCells.Borders.Weight = Excel.XlBorderWeight.xlMedium;
+                    excelCells.Value2 = Math.Round(womanWeightedExtOrpo95.Sum() / dbWoman, 8);
+
+                    /*-----Описываем ячейку А1 на странице-----*/
+                    excelCells = excelWorksheet.get_Range("F" + 13);
+                    excelCells.VerticalAlignment = Excel.Constants.xlCenter;
+                    excelCells.HorizontalAlignment = Excel.Constants.xlCenter;
+                    excelCells.Borders.Weight = Excel.XlBorderWeight.xlMedium;
+                    excelCells.Value2 = Math.Round(womanWeightedIntOrpo95.Sum() / dbWoman, 8);
+
+                    /*-----Описываем ячейку А1 на странице-----*/
+                    excelCells = excelWorksheet.get_Range("G" + 13);
+                    excelCells.VerticalAlignment = Excel.Constants.xlCenter;
+                    excelCells.HorizontalAlignment = Excel.Constants.xlCenter;
+                    excelCells.Borders.Weight = Excel.XlBorderWeight.xlMedium;
+                    excelCells.Value2 = Math.Round((womanWeightedExtOrpo95.Sum() / dbWoman) + (womanWeightedIntOrpo95.Sum() / dbWoman), 8);
+
+                    char[] timeNameBuffer = DateTime.Now.ToString().ToCharArray();
+                    for (int i = 0; i < timeNameBuffer.Length; i++)
+                    {
+                        if (timeNameBuffer[i] == ':')
+                            timeNameBuffer[i] = '-';
+                    }
+
+                    if (aMethodRB.Checked)
+                    {
+                        if (larRB.Checked)
+                            saveAs = "ОРПО_LAR (Средний возраст)";
+                        if (detRB.Checked)
+                            saveAs = "ОРПО_Det (Средний возраст)";
+
+                        bufferPath = outPath + "\\ОРПО (Средний возраст)";
+                    }
+                    if (bMethodRB.Checked)
+                    {
+                        if (larRB.Checked)
+                            saveAs = "ОПРО_LAR (Средний LAR(Det))";
+                        if (detRB.Checked)
+                            saveAs = "ОПРО_Det (Средний LAR(Det))";
+
+                        bufferPath = outPath + "\\ОРПО (Средний LAR(Det))";
+                    }
+
+                    Directory.CreateDirectory(bufferPath);
+                    excelWorkbook.SaveAs(
+                            @bufferPath + "\\" + shopComboBox.SelectedItem + " " + saveAs + "(" + new string(timeNameBuffer) + ").xlsx",  //object Filename
+                            Excel.XlFileFormat.xlOpenXMLWorkbook,   //object FileFormat
+                            Type.Missing,                           //object Password 
+                            Type.Missing,                           //object WriteResPassword  
+                            Type.Missing,                           //object ReadOnlyRecommended
+                            Type.Missing,                           //object CreateBackup
+                            Excel.XlSaveAsAccessMode.xlNoChange,    //XlSaveAsAccessMode AccessMode
+                            Type.Missing,                           //object ConflictResolution
+                            Type.Missing,                           //object AddToMru 
+                            Type.Missing,                           //object TextCodepage
+                            Type.Missing,                           //object TextVisualLayout
+                            Type.Missing);                          //object Local
+                    excelApp.Quit();
+                    connection.Close();
                 }
                 catch
                 {
@@ -943,1164 +1239,810 @@ namespace TVELtest
                     Application.DoEvents();
                 }
             }
-
-            catch/*(OleDbException ex)*/
+            catch
             {
                 MessageBox.Show("Не выбрана база данных!", "Внимание", MessageBoxButtons.OK, MessageBoxIcon.Exclamation, MessageBoxDefaultButton.Button1);
                 Application.DoEvents();
             }
-        }
-
-        private void getOrpoAverLarButton_Click(object sender, EventArgs e)
-        {
-            /*-----Инициализация всяких входных параметров, подключения к БД, парсинга в таблицу нужных столбцов-----*/
-            OleDbConnection connection = new OleDbConnection(connectionString);
-            try
-            {
-                shopTrigger = true;
-                orpoButtonAverAge = false;
-                orpoButtonAverLar = true;
-
-                if (shopComboBox.SelectedItem == "СХК")
-                    shopName = "r1";
-                else if (shopComboBox.SelectedItem == "АЭХК")
-                    shopName = "r2";
-                else if (shopComboBox.SelectedItem == "МСЗ")
-                    shopName = "r3";
-                else if (shopComboBox.SelectedItem == "УЭХК")
-                    shopName = "r4";
-                else if (shopComboBox.SelectedItem == "ПО ЭХЗ")
-                    shopName = "r5";
-                else if (shopComboBox.SelectedItem == "ЧМЗ")
-                    shopName = "r6";
-
-                request = "SELECT [ID], [Dose], [Year], [DoseInt], [Gender], [AgeAtExp] FROM [Final] WHERE [Shop]='" + shopName + "'";
-
-                if (shopComboBox.SelectedItem == "ВСЕ ПРЕДПРИЯТИЯ")
-                    request = "SELECT [ID], [Dose], [Year], [DoseInt], [Gender], [AgeAtExp] FROM [Final]";
-
-                connection.Open();
-
-                try
-                {
-                    OleDbDataAdapter adapter = new OleDbDataAdapter(request, connectionString);//Выбор нужных столбцов из нужной таблицы
-                    //OleDbDataAdapter adapter = new OleDbDataAdapter("SELECT [ID], [Dose], [Year], [DoseInt], [Gender], [AgeAtExp] FROM [Final] WHERE [Shop]='r3'", connectionString);//Выбор нужных столбцов из нужной таблицы
-                    DataSet dataSet = new DataSet();
-                    adapter.Fill(dataSet, "Final");
-                    DataTable table = dataSet.Tables[0];//Из Final в эту таблицу считываются поля, указанные в запросе; Выборка для МСК (shop = r3)
-
-                    /*-----Список объектов; достаем все необходимое для расчетов: id, dose, doseInt, ageAtExp, gender-----*/
-                    dbFinalRecords = new List<dbObject>();
-                    for (int i = 0; i < table.Rows.Count; i++)
-                    {
-                        dbFinalRecords.Add(new dbObject(Convert.ToInt32(table.Rows[i]["id"]), Convert.ToByte(table.Rows[i]["gender"]), Convert.ToInt32(table.Rows[i]["year"]), Convert.ToInt16(table.Rows[i]["ageatexp"]), Convert.ToDouble(table.Rows[i]["dose"]), Convert.ToDouble(table.Rows[i]["doseint"])));
-                    }
-
-                    /*-----Список, в котором хранится пол-----*/
-                    List<byte> dbSex = new List<byte>();
-                    for (int i = 0; i < dbFinalRecords.Count; i++)
-                        dbSex.Add(dbFinalRecords[i].getSex());
-
-                    /*-----Определение пола; Меньшая цифра пола - М, большая - Ж-----*/
-                    sexMale = dbSex.Min();
-                    sexFemale = dbSex.Max();
-
-                    /*-----Счетчики, определяющие количество мужских и женских записей-----*/
-                    double dbMan = 0;
-                    for (int i = 0; i < dbFinalRecords.Count; i++)
-                        if (dbFinalRecords[i].getSex() == sexMale)
-                            dbMan++;
-
-                    double dbWoman = 0;
-                    for (int i = 0; i < dbFinalRecords.Count; i++)
-                        if (dbFinalRecords[i].getSex() == sexFemale)
-                            dbWoman++;
-
-                    /*-----Массивы списков для мужчин и для женщин, в каждом из которых хранятся дозы (внешние и внутренние) для соответствующий половозрастной группы-----*/
-                    List<double>[] manSadExtArray = new List<double>[ageGroups.Count];//SAD - SexAgeDose
-                    List<double>[] manSadIntArray = new List<double>[ageGroups.Count];
-                    List<double>[] womanSadExtArray = new List<double>[ageGroups.Count];
-                    List<double>[] womanSadIntArray = new List<double>[ageGroups.Count];
-
-                    /*-----Массив списоков, через которые будут вычесляться средние возроста половозрастных групп-----*/
-                    List<int>[] manYearsArray = new List<int>[ageGroups.Count];
-                    List<int>[] womanYearsArray = new List<int>[ageGroups.Count];
-
-                    for (int i = 0; i < ageGroups.Count; i++)
-                    {
-                        manSadExtArray[i] = new List<double>();
-                        manSadIntArray[i] = new List<double>();
-                        womanSadExtArray[i] = new List<double>();
-                        womanSadIntArray[i] = new List<double>();
-
-                        manYearsArray[i] = new List<int>();
-                        womanYearsArray[i] = new List<int>();
-                    }
-
-                    /*-----Заполнение массива списков доз-----*/
-                    for (int i = 0; i < ageGroups.Count; i++)
-                        for (int k = 0; k < dbFinalRecords.Count; k++)
-                        {
-                            if (dbFinalRecords[k].getSex() == sexMale)
-                                if (dbFinalRecords[k].getAgeAtExp() >= ageLowerBound[i] && dbFinalRecords[k].getAgeAtExp() <= ageUpperBound[i])
-                                {
-                                    manSadExtArray[i].Add(dbFinalRecords[k].getDose() - dbFinalRecords[k].getDoseInt());
-                                    manSadIntArray[i].Add(dbFinalRecords[k].getDoseInt());
-                                    manYearsArray[i].Add(dbFinalRecords[k].getAgeAtExp());
-                                }
-                            if (dbFinalRecords[k].getSex() == sexFemale)
-                                if (dbFinalRecords[k].getAgeAtExp() >= ageLowerBound[i] && dbFinalRecords[k].getAgeAtExp() <= ageUpperBound[i])
-                                {
-                                    womanSadExtArray[i].Add(dbFinalRecords[k].getDose() - dbFinalRecords[k].getDoseInt());
-                                    womanSadIntArray[i].Add(dbFinalRecords[k].getDoseInt());
-                                    womanYearsArray[i].Add(dbFinalRecords[k].getAgeAtExp());
-                                }
-                        }
-
-                    //Задание весовых коэффициентов для тканей (в нашем случае учитывается только влияние на лёгкие)
-                    double wLung = 0.12;
-
-                    /*-----Создание дозовых историй-----*/
-                    List<RiskCalculator.DoseHistoryRecord[]>[] manDoseHistoryList = new List<RiskCalculator.DoseHistoryRecord[]>[ageGroups.Count];
-                    List<RiskCalculator.DoseHistoryRecord[]>[] womanDoseHistoryList = new List<RiskCalculator.DoseHistoryRecord[]>[ageGroups.Count];
-                    for (int i = 0; i < ageGroups.Count; i++)
-                    {
-                        manDoseHistoryList[i] = new List<RiskCalculator.DoseHistoryRecord[]>();
-                        womanDoseHistoryList[i] = new List<RiskCalculator.DoseHistoryRecord[]>();
-                    }
-                    for (int i = 0; i < ageGroups.Count; i++)
-                        for (int k = 0; k < manSadExtArray[i].Count; k++)
-                        {
-                            manDoseHistoryList[i].Add(new RiskCalculator.DoseHistoryRecord[1]);
-                        }
-                    for (int i = 0; i < ageGroups.Count; i++)
-                        for (int k = 0; k < manSadExtArray[i].Count; k++)
-                        {
-                            womanDoseHistoryList[i].Add(new RiskCalculator.DoseHistoryRecord[1]);
-                        }
-
-                    /*-----Создание массивов, храящих LAR п/в групп-----*/
-                    List<double>[] manExtLarArray = new List<double>[ageGroups.Count];
-                    List<double>[] manIntLarArray = new List<double>[ageGroups.Count];
-                    for (int i = 0; i < ageGroups.Count; i++)
-                    {
-                        manExtLarArray[i] = new List<double>();
-                        manIntLarArray[i] = new List<double>();
-                    }
-
-                    List<double>[] womanExtLarArray = new List<double>[ageGroups.Count];
-                    List<double>[] womanIntLarArray = new List<double>[ageGroups.Count];
-                    for (int i = 0; i < ageGroups.Count; i++)
-                    {
-                        womanExtLarArray[i] = new List<double>();
-                        womanIntLarArray[i] = new List<double>();
-                    }
-
-                    /*-----Заполнение ДИ-----*/
-                    RiskCalculator.DoseHistoryRecord[] record = null;
-                    RiskCalculatorLib.RiskCalculator calculator = null;
-                    bool isIncidence = false;
-                    for (int i = 0; i < ageGroups.Count; i++)
-                        for (int k = 0; k < manSadExtArray[i].Count; k++)
-                        {
-                            manDoseHistoryList[i][k][0] = new RiskCalculator.DoseHistoryRecord();
-                            manDoseHistoryList[i][k][0].AgeAtExposure = (short)manYearsArray[i][k];
-                            manDoseHistoryList[i][k][0].AllSolidDoseInmGy = manSadExtArray[i][k];
-                            manDoseHistoryList[i][k][0].LeukaemiaDoseInmGy = manSadExtArray[i][k];
-                            manDoseHistoryList[i][k][0].LungDoseInmGy = manSadIntArray[i][k] / wLung;
-
-                            record = manDoseHistoryList[i][k];
-                            calculator = new RiskCalculatorLib.RiskCalculator(RiskCalculator.SEX_MALE, manDoseHistoryList[i][k][0].AgeAtExposure, ref record, true);
-                            if (larRB.Checked)
-                            {
-                                manExtLarArray[i].Add(calculator.getLAR(false, isIncidence).AllCancers);
-                                if (manDoseHistoryList[i][k][0].LungDoseInmGy > 0)
-                                    manIntLarArray[i].Add(calculator.getLAR(false, isIncidence).Lung);
-                            }
-                            if (detRB.Checked)
-                            {
-                                calculator.createEARSamples(0, ref isIncidence);
-                                manExtLarArray[i].Add(calculator.getDetriment().Value.AllCancers);
-                                if (manDoseHistoryList[i][k][0].LungDoseInmGy > 0)
-                                    manIntLarArray[i].Add(calculator.getDetriment().Value.Lung);
-                            }
-                        }
-                    for (int i = 0; i < ageGroups.Count; i++)
-                        for (int k = 0; k < womanSadExtArray[i].Count; k++)
-                        {
-                            womanDoseHistoryList[i][k][0] = new RiskCalculator.DoseHistoryRecord();
-                            womanDoseHistoryList[i][k][0].AgeAtExposure = (short)womanYearsArray[i][k];
-                            womanDoseHistoryList[i][k][0].AllSolidDoseInmGy = womanSadExtArray[i][k];
-                            womanDoseHistoryList[i][k][0].LeukaemiaDoseInmGy = womanSadExtArray[i][k];
-                            womanDoseHistoryList[i][k][0].LungDoseInmGy = womanSadIntArray[i][k] / wLung;
-
-                            record = womanDoseHistoryList[i][k];
-                            calculator = new RiskCalculatorLib.RiskCalculator(RiskCalculator.SEX_FEMALE, womanDoseHistoryList[i][k][0].AgeAtExposure, ref record, true);
-                            if (larRB.Checked)
-                            {
-                                womanExtLarArray[i].Add(calculator.getLAR(false, isIncidence).AllCancers);
-                                if (womanDoseHistoryList[i][k][0].LungDoseInmGy != 0)
-                                    womanIntLarArray[i].Add(calculator.getLAR(false, isIncidence).Lung);
-                            }
-                            if (detRB.Checked)
-                            {
-                                calculator.createEARSamples(0, ref isIncidence);
-                                womanExtLarArray[i].Add(calculator.getDetriment().Value.AllCancers);
-                                if (womanDoseHistoryList[i][k][0].LungDoseInmGy != 0)
-                                    womanIntLarArray[i].Add(calculator.getDetriment().Value.Lung);
-                            }
-                        }
-
-                    /*-----Инициализация массивов, хранящих ОРПО для половозрастных групп-----*/
-                    manExtOrpo = new double[ageGroups.Count];
-                    manIntOrpo = new double[ageGroups.Count];
-                    manSumOrpo = new double[ageGroups.Count];
-
-                    womanExtOrpo = new double[ageGroups.Count];
-                    womanIntOrpo = new double[ageGroups.Count];
-                    womanSumOrpo = new double[ageGroups.Count];
-
-                    manExtOrpo95 = new double[ageGroups.Count];
-                    manIntOrpo95 = new double[ageGroups.Count];
-                    manSumOrpo95 = new double[ageGroups.Count];
-
-                    womanExtOrpo95 = new double[ageGroups.Count];
-                    womanIntOrpo95 = new double[ageGroups.Count];
-                    womanSumOrpo95 = new double[ageGroups.Count];
-
-                    for (int i = 0; i < ageGroups.Count; i++)
-                    {
-                        if (manExtLarArray[i].Count > 0)
-                        {
-
-                            //manExtOrpo[i] = getOrpo(getManExtLar(manYearsArray[i].Average()), manSadExtArray[i].Average());
-                            //manExtOrpo_95[i] = getOrpo_95(getManExtLar(manYearsArray[i].Average()), manSadExtArray[i].Average(), getDeviation(manSadExtArray[i]));
-                            manExtOrpo[i] = manExtLarArray[i].Average();//manSadExtArray[i].Average());
-                            manExtLarArray[i].Sort();
-                            if (manExtLarArray[i].Count == 1)
-                                manExtOrpo95[i] = manExtLarArray[i][0];
-                            if (manExtLarArray[i].Count > 1)
-                                manExtOrpo95[i] = manExtLarArray[i][manExtLarArray[i].Count * 95 / 100 - 1];
-                        }
-
-                        if (manIntLarArray[i].Count > 0)
-                        {
-                            //manIntOrpo[i] = getOrpo(getManIntLar(manYearsArray[i].Average()), manSadIntArray[i].Average());
-                            // manIntOrpo_95[i] = getOrpo_95(getManIntLar(manYearsArray[i].Average()), manSadIntArray[i].Average(), getDeviation(manSadIntArray[i]));
-                            manIntOrpo[i] = manIntLarArray[i].Average();//manSadIntArray[i].Average());
-                            manIntLarArray[i].Sort();
-                            if (manIntLarArray[i].Count == 1)
-                                manIntOrpo95[i] = manIntLarArray[i][0];
-                            if (manIntLarArray[i].Count > 1)
-                                manIntOrpo95[i] = manIntLarArray[i][manIntLarArray[i].Count * 95 / 100 - 1];
-                            //manSadIntArray[i].Sort();
-                            //manIntOrpo_95[i] = getOrpo_95(manIntLarArray[i].Average(), manSadIntArray[i][manSadIntArray[i].Count * 95 / 100 - 1]);
-                        }
-
-                        manSumOrpo[i] = manExtOrpo[i] + manIntOrpo[i];
-                        manSumOrpo95[i] = manExtOrpo95[i] + manIntOrpo95[i];
-
-                        if (womanExtLarArray[i].Count > 0)
-                        {
-                            //womanExtOrpo[i] = getOrpo(getWomanExtLar(womanYearsArray[i].Average()), womanSadExtArray[i].Average());
-                            //womanExtOrpo_95[i] = getOrpo_95(getWomanExtLar(womanYearsArray[i].Average()), womanSadExtArray[i].Average(), getDeviation(womanSadExtArray[i]));
-                            womanExtOrpo[i] = womanExtLarArray[i].Average();//womanSadExtArray[i].Average());
-                            womanExtLarArray[i].Sort();
-                            
-                            if (womanExtLarArray[i].Count == 1)
-                                womanExtOrpo95[i] = womanExtLarArray[i][0];
-                            if (womanExtLarArray[i].Count > 1)
-                                womanExtOrpo95[i] = womanExtLarArray[i][womanExtLarArray[i].Count * 95 / 100 - 1];
-                            //womanSadExtArray[i].Sort();
-                            //womanExtOrpo_95[i] = getOrpo_95(womanExtLarArray[i].Average(), womanSadExtArray[i][womanSadExtArray[i].Count * 95 / 100 - 1]);
-                        }
-
-                        if (womanIntLarArray[i].Count > 0)
-                        {
-                            //womanIntOrpo[i] = getOrpo(getWomanIntLar(womanYearsArray[i].Average()), womanSadIntArray[i].Average());
-                            //womanIntOrpo_95[i] = getOrpo_95(getWomanIntLar(womanYearsArray[i].Average()), womanSadIntArray[i].Average(), getDeviation(womanSadIntArray[i]));
-                            womanIntOrpo[i] = womanIntLarArray[i].Average();//womanSadIntArray[i].Average());
-                            womanIntLarArray[i].Sort();
-                            
-                            if (womanIntLarArray[i].Count == 1)
-                                womanIntOrpo95[i] = womanIntLarArray[i][0];
-                            if (womanIntLarArray[i].Count > 1)
-                                womanIntOrpo95[i] = womanIntLarArray[i][womanIntLarArray[i].Count * 95 / 100 - 1];
-                            //womanSadIntArray[i].Sort();
-                            //womanIntOrpo_95[i] = getOrpo_95(womanIntLarArray[i].Average(), womanSadIntArray[i][womanSadIntArray[i].Count * 95 / 100 - 1]);
-                        }
-
-                        womanSumOrpo[i] = womanExtOrpo[i] + womanIntOrpo[i];
-                        womanSumOrpo95[i] = womanExtOrpo95[i] + womanIntOrpo95[i];
-                    }
-
-                    List<double> manWeightedExtOrpo = new List<double>();
-                    List<double> manWeightedIntOrpo = new List<double>();
-                    List<double> womanWeightedExtOrpo = new List<double>();
-                    List<double> womanWeightedIntOrpo = new List<double>();
-
-                    List<double> manWeightedExtOrpo95 = new List<double>();
-                    List<double> manWeightedIntOrpo95 = new List<double>();
-                    List<double> womanWeightedExtOrpo95 = new List<double>();
-                    List<double> womanWeightedIntOrpo95 = new List<double>();
-
-                    for (int i = 0; i < ageGroups.Count; i++)
-                    {
-                        manWeightedExtOrpo.Add(manExtOrpo[i] * manSadExtArray[i].Count);
-                        manWeightedIntOrpo.Add(manIntOrpo[i] * manSadIntArray[i].Count);
-                        womanWeightedExtOrpo.Add(womanExtOrpo[i] * womanSadExtArray[i].Count);
-                        womanWeightedIntOrpo.Add(womanIntOrpo[i] * womanSadIntArray[i].Count);
-
-                        manWeightedExtOrpo95.Add(manExtOrpo95[i] * manSadExtArray[i].Count);
-                        manWeightedIntOrpo95.Add(manIntOrpo95[i] * manSadIntArray[i].Count);
-                        womanWeightedExtOrpo95.Add(womanExtOrpo95[i] * womanSadExtArray[i].Count);
-                        womanWeightedIntOrpo95.Add(womanIntOrpo95[i] * womanSadIntArray[i].Count);
-                    }
-
-                    //manExtOrpoBox.Text = "2-б) " + Math.Round(manWeightedExtOrpo.Sum() / dbMan, 7).ToString();
-                    //manIntOrpoBox.Text = "2-б) " + /*manWeightedIntOrpo.Sum() / dbMan;//*/Math.Round(manWeightedIntOrpo.Sum() / dbMan, 7).ToString();
-                    //womanExtOrpoBox.Text = "2-б) " + Math.Round(womanWeightedExtOrpo.Sum() / dbWoman, 7).ToString();
-                    //womanIntOrpoBox.Text = "2-б) " + /*womanWeightedIntOrpo.Sum() / dbWoman;//*/Math.Round(womanWeightedIntOrpo.Sum() / dbWoman, 7).ToString();
-
-                    //manExtOrpoBox95.Text = "2-б) " + Math.Round(manWeightedExtOrpo95.Sum() / dbMan, 7).ToString();
-                    //manIntOrpoBox95.Text = "2-б) " + /*manWeightedIntOrpo_95.Sum() / dbMan;//*/Math.Round(manWeightedIntOrpo95.Sum() / dbMan, 7).ToString();
-                    //womanExtOrpoBox95.Text = "2-б) " + Math.Round(womanWeightedExtOrpo95.Sum() / dbWoman, 7).ToString();
-                    //womanIntOrpoBox95.Text = "2-б) " + /*womanWeightedIntOrpo_95.Sum() / dbWoman;//*/Math.Round(womanWeightedIntOrpo95.Sum() / dbWoman, 7).ToString();
-
-                    //if (manWeightedExtOrpo.Sum() > 0)
-                    //    manExtOrpoBox.Text = "2-б) " + Math.Round(manWeightedExtOrpo.Sum() / dbMan, 8);
-                    //else
-                    //    manIntOrpoBox.Text = "Внешнего облучения нет!";
-
-                    //if (manWeightedIntOrpo.Sum() > 0)
-                    //    manIntOrpoBox.Text = "2-б) " + Math.Round(manWeightedIntOrpo.Sum() / dbMan, 8);
-                    //else
-                    //    manIntOrpoBox.Text = "Внутреннего облучения нет!";
-
-                    //manSumOrpoBox.Text = "2-б) " + Math.Round((manWeightedExtOrpo.Sum() / dbMan) + (manWeightedIntOrpo.Sum() / dbMan), 8);
-
-                    //if (womanWeightedExtOrpo.Sum() > 0)
-                    //    womanExtOrpoBox.Text = "2-б) " + Math.Round(womanWeightedExtOrpo.Sum() / dbWoman, 8);
-                    //else
-                    //    womanExtOrpoBox.Text = "Внешнего облучения нет!";
-
-                    //if (womanWeightedIntOrpo.Sum() > 0)
-                    //    womanIntOrpoBox.Text = "2-б) " + Math.Round(womanWeightedIntOrpo.Sum() / dbWoman, 8);
-                    //else
-                    //    womanIntOrpoBox.Text = "Внутреннего облучения нет!";
-
-                    //womanSumOrpoBox.Text = "2-б) " + Math.Round((womanWeightedExtOrpo.Sum() / dbWoman) + (womanWeightedIntOrpo.Sum() / dbWoman), 8);
-
-                    //if (manWeightedExtOrpo95.Sum() > 0)
-                    //    manExtOrpoBox95.Text = "2-б) " + Math.Round(manWeightedExtOrpo95.Sum() / dbMan, 8);
-                    //else
-                    //    manIntOrpoBox95.Text = "Внешнего облучения нет!";
-
-                    //if (manWeightedIntOrpo95.Sum() > 0)
-                    //    manIntOrpoBox95.Text = "2-б) " + Math.Round(manWeightedIntOrpo95.Sum() / dbMan, 8);
-                    //else
-                    //    manIntOrpoBox95.Text = "Внутреннего облучения нет!";
-
-                    //manSumOrpo95Box.Text = "2-а) " + Math.Round((manWeightedExtOrpo95.Sum() / dbMan) + (manWeightedIntOrpo95.Sum() / dbMan), 8);
-
-                    //if (womanWeightedExtOrpo95.Sum() > 0)
-                    //    womanExtOrpoBox95.Text = "2-б) " + Math.Round(womanWeightedExtOrpo95.Sum() / dbWoman, 8);
-                    //else
-                    //    womanExtOrpoBox95.Text = "Внешнего облучения нет!";
-
-                    //if (womanWeightedIntOrpo95.Sum() > 0)
-                    //    womanIntOrpoBox95.Text = "2-б) " + Math.Round(womanWeightedIntOrpo95.Sum() / dbWoman, 8);
-                    //else
-                    //    womanIntOrpoBox95.Text = "Внутреннего облучения нет!";
-
-                    //womanSumOrpo95Box.Text = "2-б) " + Math.Round((womanWeightedExtOrpo95.Sum() / dbWoman) + (womanWeightedIntOrpo95.Sum() / dbWoman), 8);
-
-                    //manExtIbpoBox.Text = "" + manWeightedExtOrpo.Count;
-                    //manIntIbpoBox.Text = "" + manWeightedIntOrpo.Count;
-                    //womanExtIbpoBox.Text = "" + womanWeightedExtOrpo.Count;
-                    //womanIntIbpoBox.Text = "" + womanWeightedIntOrpo.Count;
-
-                    //manExtIbpoBox95.Text = "" + manWeightedExtOrpo95.Count;
-                    //manIntIbpoBox95.Text = "" + manWeightedIntOrpo95.Count;
-                    //womanExtIbpoBox95.Text = "" + womanWeightedExtOrpo95.Count;
-                    //womanIntIbpoBox95.Text = "" + womanWeightedIntOrpo95.Count;
-                }
-                catch
-                {
-                    MessageBox.Show("Не выбрано предприятие!", "Внимание", MessageBoxButtons.OK, MessageBoxIcon.Exclamation, MessageBoxDefaultButton.Button1);
-                    Application.DoEvents();
-                }
-            }
-
-            catch/*(OleDbException ex)*/
-            {
-                MessageBox.Show("Не выбрана база данных!", "Внимание", MessageBoxButtons.OK, MessageBoxIcon.Exclamation, MessageBoxDefaultButton.Button1);
-                Application.DoEvents();
-            }
+            getIbpoButton.Enabled = true;
         }
 
         private void getIbpoButton_Click(object sender, EventArgs e)
         {
-            //stopWatch.Start();
+            aMethodRB.Enabled = true;
+            bMethodRB.Enabled = true;
             OleDbConnection connection = new OleDbConnection(connectionString);
             try
             {
-                if (!shopTrigger)
+                connection.Open();
+                try
                 {
-                    MessageBox.Show("Смените предприятие и пересчитайте ОРПО!", "Внимание", MessageBoxButtons.OK, MessageBoxIcon.Exclamation, MessageBoxDefaultButton.Button1);
-                    Application.DoEvents();
-                }
-                else
-                {
-                    connection.Open();
-                    try
+                    OleDbDataAdapter adapter = new OleDbDataAdapter("SELECT [ID], [Year], [Dose], [DoseInt] FROM [Dose]", connectionString);
+                    DataSet dataSet = new DataSet();
+                    adapter.Fill(dataSet, "Dose");
+                    DataTable table = dataSet.Tables[0];
+
+                    /*-----Список объектов, хранящих данные из таблицы Dose-----*/
+                    dbDoseRecords = new List<dbObject>();
+                    for (int i = 0; i < table.Rows.Count; i++)
                     {
-                        OleDbDataAdapter adapter = new OleDbDataAdapter("SELECT [ID], [Year], [Dose], [DoseInt] FROM [Dose]", connectionString);
-                        DataSet dataSet = new DataSet();
-                        adapter.Fill(dataSet, "Dose");
-                        DataTable table = dataSet.Tables[0];
-
-                        /*-----Список объектов, хранящих данные из таблицы Dose-----*/
-                        dbDoseRecords = new List<dbObject>();
-                        for (int i = 0; i < table.Rows.Count; i++)
-                        {
-                            dbDoseRecords.Add(new dbObject(Convert.ToInt32(table.Rows[i]["id"]), Convert.ToInt32(table.Rows[i]["year"]), Convert.ToDouble(table.Rows[i]["dose"]) / 1000, Convert.ToDouble(table.Rows[i]["doseint"]) / 1000));
-                        }
-
-                        /*-----Списки id, у которых есть записи в 2012 году-----*/
-                        List<dbObject> manRecordsList = new List<dbObject>();
-                        List<dbObject> womanRecordsList = new List<dbObject>();
-                        for (int i = 0; i < dbFinalRecords.Count; i++)
-                        {
-                            if (dbFinalRecords[i].getSex() == sexMale && dbFinalRecords[i].getYear() == 2012)
-                                manRecordsList.Add(dbFinalRecords[i]);
-                            if (dbFinalRecords[i].getSex() == sexFemale && dbFinalRecords[i].getYear() == 2012)
-                                womanRecordsList.Add(dbFinalRecords[i]);
-                        }
-
-                        if (manRecordsList.Count == 0 || womanRecordsList.Count == 0)
-                        {
-                            //manExtIbpoBox.Text = "Нет данных за 2012 год!";
-                            //manIntIbpoBox.Text = "Нет данных за 2012 год!";
-                            //manExtIbpoBox95.Text = "Нет данных за 2012 год!";
-                            //manIntIbpoBox95.Text = "Нет данных за 2012 год!";
-                            //womanExtIbpoBox.Text = "Нет данных за 2012 год!";
-                            //womanIntIbpoBox.Text = "Нет данных за 2012 год!";
-                            //womanExtIbpoBox95.Text = "Нет данных за 2012 год!";
-                            //womanIntIbpoBox95.Text = "Нет данных за 2012 год!";
-                        }
-
-                        else
-                        {
-                            /*-----Массивы списков для мужчин и женщин.
-                             * Каждый элемент массива - список, содержащий элементы,
-                             * у которых одинаковые id (это записи дозовой истории конкретного человека)-----*/
-                            List<dbObject>[] manGroupedRecordsArray = new List<dbObject>[manRecordsList.Count];
-                            for (int i = 0; i < manGroupedRecordsArray.Length; i++)
-                                manGroupedRecordsArray[i] = new List<dbObject>();
-                            List<dbObject>[] womanGroupedRecordsArray = new List<dbObject>[womanRecordsList.Count];
-                            for (int i = 0; i < womanGroupedRecordsArray.Length; i++)
-                                womanGroupedRecordsArray[i] = new List<dbObject>();
-
-                            /*-----Заполнение этих массивов-----*/
-                            List<dbObject> buffer = null;
-                            for (int i = 0; i < manGroupedRecordsArray.Length; i++)
-                            {
-                                buffer = new List<dbObject>();
-                                for (int k = 0; k < dbDoseRecords.Count; k++)
-                                {
-                                    if (manRecordsList[i].getId() == dbDoseRecords[k].getId())
-                                    {
-                                        dbDoseRecords[k].setSex(sexMale);
-                                        dbDoseRecords[k].setAgeAtExp(Convert.ToInt16(manRecordsList[i].getAgeAtExp() - (manRecordsList[i].getYear() - dbDoseRecords[k].getYear())));
-                                        buffer.Add(dbDoseRecords[k]);
-                                    }
-                                }
-                                manGroupedRecordsArray[i] = buffer;
-                            }
-                            for (int i = 0; i < womanGroupedRecordsArray.Length; i++)
-                            {
-                                buffer = new List<dbObject>();
-                                for (int k = 0; k < dbDoseRecords.Count; k++)
-                                {
-                                    if (womanRecordsList[i].getId() == dbDoseRecords[k].getId())
-                                    {
-                                        dbDoseRecords[k].setSex(sexFemale);
-                                        dbDoseRecords[k].setAgeAtExp(Convert.ToInt16(womanRecordsList[i].getAgeAtExp() - (womanRecordsList[i].getYear() - dbDoseRecords[k].getYear())));
-                                        buffer.Add(dbDoseRecords[k]);
-                                    }
-                                }
-                                womanGroupedRecordsArray[i] = buffer;
-                            }
-
-                            /*-----Задание весовых коэффициентов для тканей (в нашем случае учитывается только влияние на лёгкие)-----*/
-                            double wLung = 0.12;
-
-                            /*-----Создание пустого списка дозовых историй мужчин; для каждого уникального ID своя дозовая история (по сути, это ячейки, которые надо заполнить)-----*/
-                            List<RiskCalculator.DoseHistoryRecord[]> manDoseHistoryList = new List<RiskCalculator.DoseHistoryRecord[]>();
-                            for (int i = 0; i < manGroupedRecordsArray.Length; i++)
-                            {
-                                manDoseHistoryList.Add(new RiskCalculator.DoseHistoryRecord[manGroupedRecordsArray[i].Count]);
-                            }
-                            foreach (RiskCalculator.DoseHistoryRecord[] note in manDoseHistoryList)
-                            {
-                                for (int i = 0; i < note.Length; i++)
-                                    note[i] = new RiskCalculator.DoseHistoryRecord();
-                            }
-
-                            /*-----Создание аналогичного списка дозовых историй для женщин-----*/
-                            List<RiskCalculator.DoseHistoryRecord[]> womanDoseHistoryList = new List<RiskCalculator.DoseHistoryRecord[]>();
-                            for (int i = 0; i < womanGroupedRecordsArray.Length; i++)
-                            {
-                                womanDoseHistoryList.Add(new RiskCalculator.DoseHistoryRecord[womanGroupedRecordsArray[i].Count]);
-                            }
-                            foreach (RiskCalculator.DoseHistoryRecord[] note in womanDoseHistoryList)
-                            {
-                                for (int i = 0; i < note.Length; i++)
-                                    note[i] = new RiskCalculator.DoseHistoryRecord();
-                            }
-
-                            /*-----Заполнение дозовых историй мужчин-----*/
-                            for (int i = 0; i < manGroupedRecordsArray.Length; i++)
-                                for (int k = 0; k < manGroupedRecordsArray[i].Count; k++)
-                                {
-                                    manDoseHistoryList[i][k].AgeAtExposure = manGroupedRecordsArray[i][k].getAgeAtExp();
-                                    manDoseHistoryList[i][k].AllSolidDoseInmGy = manGroupedRecordsArray[i][k].getDose() - manGroupedRecordsArray[i][k].getDoseInt();
-                                    manDoseHistoryList[i][k].LeukaemiaDoseInmGy = manGroupedRecordsArray[i][k].getDose() - manGroupedRecordsArray[i][k].getDoseInt();
-                                    manDoseHistoryList[i][k].LungDoseInmGy = manGroupedRecordsArray[i][k].getDoseInt() / wLung;
-                                }
-                            /*-----Заполнение дозовых историй женщин-----*/
-                            for (int i = 0; i < womanGroupedRecordsArray.Length; i++)
-                                for (int k = 0; k < womanGroupedRecordsArray[i].Count; k++)
-                                {
-                                    womanDoseHistoryList[i][k].AgeAtExposure = womanGroupedRecordsArray[i][k].getAgeAtExp();
-                                    womanDoseHistoryList[i][k].AllSolidDoseInmGy = womanGroupedRecordsArray[i][k].getDose() - womanGroupedRecordsArray[i][k].getDoseInt();
-                                    womanDoseHistoryList[i][k].LeukaemiaDoseInmGy = womanGroupedRecordsArray[i][k].getDose() - womanGroupedRecordsArray[i][k].getDoseInt();
-                                    womanDoseHistoryList[i][k].LungDoseInmGy = womanGroupedRecordsArray[i][k].getDoseInt() / wLung;
-                                }
-
-                            /*-----Создание массива списков для п/в групп мужчин, хранящих LAR п/в группы;
-                             * каждый элемент массива - список LAR-ов п/в группы.
-                             * Это массивы LAR от внешнего облучения.
-                             * Для внутреннего отдельно надо-----*/
-                            List<double>[] manExtLarArray = new List<double>[ageGroups.Count];
-                            List<double>[] manIntLarArray = new List<double>[ageGroups.Count];
-                            List<double>[] manSumLarArray = new List<double>[ageGroups.Count];
-                            for (int i = 0; i < ageGroups.Count; i++)
-                            {
-                                manExtLarArray[i] = new List<double>();
-                                manIntLarArray[i] = new List<double>();
-                                manSumLarArray[i] = new List<double>();
-                            }
-
-                            /*-----Создание аналогичного массива для женщин-----*/
-                            List<double>[] womanExtLarArray = new List<double>[ageGroups.Count];
-                            List<double>[] womanIntLarArray = new List<double>[ageGroups.Count];
-                            List<double>[] womanSumLarArray = new List<double>[ageGroups.Count];
-                            for (int i = 0; i < ageGroups.Count; i++)
-                            {
-                                womanExtLarArray[i] = new List<double>();
-                                womanIntLarArray[i] = new List<double>();
-                                womanSumLarArray[i] = new List<double>();
-                            }
-
-                            /*-----Заполнение этих массивов-----*/
-                            RiskCalculator.DoseHistoryRecord[] record = null;
-                            RiskCalculatorLib.RiskCalculator calculator = null;
-                            for (int i = 0; i < ageGroups.Count; i++)
-                                for (int k = 0; k < manDoseHistoryList.Count; k++)
-                                {
-                                    if (manRecordsList[k].getAgeAtExp() == manDoseHistoryList[k][manDoseHistoryList[k].Length - 1].AgeAtExposure)
-                                        if (manRecordsList[k].getAgeAtExp() >= ageLowerBound[i] && manRecordsList[k].getAgeAtExp() <= ageUpperBound[i])
-                                        {
-                                            record = manDoseHistoryList[k];
-                                            calculator = new RiskCalculatorLib.RiskCalculator(RiskCalculator.SEX_MALE, manDoseHistoryList[k][0].AgeAtExposure, ref record, true);
-                                            manExtLarArray[i].Add(calculator.getLAR(false, true).AllCancers);//Кажется, здесь считается LAR...
-                                            manIntLarArray[i].Add(calculator.getLAR(false, true).Lung);
-                                            manSumLarArray[i].Add(calculator.getLAR(false, true).AllCancers + calculator.getLAR(false, true).Lung);
-                                        }
-                                }
-
-                            for (int i = 0; i < ageGroups.Count; i++)
-                                for (int k = 0; k < womanDoseHistoryList.Count; k++)
-                                {
-                                    if (womanRecordsList[k].getAgeAtExp() == womanDoseHistoryList[k][womanDoseHistoryList[k].Length - 1].AgeAtExposure)
-                                        if (womanRecordsList[k].getAgeAtExp() >= ageLowerBound[i] && womanRecordsList[k].getAgeAtExp() <= ageUpperBound[i])
-                                        {
-                                            record = womanDoseHistoryList[k];
-                                            calculator = new RiskCalculatorLib.RiskCalculator(RiskCalculator.SEX_FEMALE, womanDoseHistoryList[k][0].AgeAtExposure, ref record, true);
-                                            womanExtLarArray[i].Add(calculator.getLAR(false, true).AllCancers);//в этой строчке должен вычисляться LAR и записываться в этот список
-                                            womanIntLarArray[i].Add(calculator.getLAR(false, true).Lung);
-                                            womanSumLarArray[i].Add(calculator.getLAR(false, true).AllCancers + calculator.getLAR(false, true).Lung);
-                                        }
-                                }
-
-                            double[] manExtIbpo = new double[ageGroups.Count];
-                            double[] manExtIbpo95 = new double[ageGroups.Count];
-
-                            double[] manIntIbpo = new double[ageGroups.Count];
-                            double[] manIntIbpo95 = new double[ageGroups.Count];
-
-                            double[] manSumIbpo = new double[ageGroups.Count];
-                            double[] manSumIbpo95 = new double[ageGroups.Count];
-
-                            double[] womanExtIbpo = new double[ageGroups.Count];
-                            double[] womanExtIbpo95 = new double[ageGroups.Count];
-
-                            double[] womanIntIbpo = new double[ageGroups.Count];
-                            double[] womanIntIbpo95 = new double[ageGroups.Count];
-
-                            double[] womanSumIbpo = new double[ageGroups.Count];
-                            double[] womanSumIbpo95 = new double[ageGroups.Count];
-
-
-                            for (int i = 0; i < ageGroups.Count; i++)
-                            {
-                                if (manExtLarArray[i].Count > 0)
-                                {
-                                    manExtIbpo[i] = getIbpo(manExtLarArray[i], manExtOrpo[i]);
-                                    manExtIbpo95[i] = getIbpo(manExtLarArray[i], manExtOrpo95[i]);
-                                }
-
-                                if (manIntLarArray[i].Count > 0)
-                                {
-                                    manIntIbpo[i] = getIbpo(manIntLarArray[i], manIntOrpo[i]);
-                                    manIntIbpo95[i] = getIbpo(manIntLarArray[i], manIntOrpo95[i]);
-                                }
-
-                                if (manSumLarArray[i].Count > 0)
-                                {
-                                    manSumIbpo[i] = getIbpo(manSumLarArray[i], manSumOrpo[i]);
-                                    manSumIbpo95[i] = getIbpo(manSumLarArray[i], manSumOrpo95[i]);
-                                }
-
-                                if (womanExtLarArray[i].Count > 0)
-                                {
-                                    womanExtIbpo[i] = getIbpo(womanExtLarArray[i], womanExtOrpo[i]);
-                                    womanExtIbpo95[i] = getIbpo(womanExtLarArray[i], womanExtOrpo95[i]);
-                                }
-
-                                if (womanIntLarArray[i].Count > 0)
-                                {
-                                    womanIntIbpo[i] = getIbpo(womanIntLarArray[i], womanIntOrpo[i]);
-                                    womanIntIbpo95[i] = getIbpo(womanIntLarArray[i], womanIntOrpo95[i]);
-                                }
-
-                                if (womanSumLarArray[i].Count > 0)
-                                {
-                                    womanSumIbpo[i] = getIbpo(womanSumLarArray[i], womanSumOrpo[i]);
-                                    womanSumIbpo95[i] = getIbpo(womanSumLarArray[i], womanSumOrpo95[i]);
-                                }
-                            }
-
-                            /*-----Создание списков для подсчета взвешенных величин ИБПО-----*/
-                            List<double> manWeightedExtIbpo = new List<double>();
-                            List<double> manWeightedIntIbpo = new List<double>();
-                            List<double> manWeightedSumIbpo = new List<double>();
-                            List<double> womanWeightedExtIbpo = new List<double>();
-                            List<double> womanWeightedIntIbpo = new List<double>();
-                            List<double> womanWeightedSumIbpo = new List<double>();
-
-                            List<double> manWeightedExtIbpo95 = new List<double>();
-                            List<double> manWeightedIntIbpo95 = new List<double>();
-                            List<double> manWeightedSumIbpo95 = new List<double>();
-                            List<double> womanWeightedExtIbpo95 = new List<double>();
-                            List<double> womanWeightedIntIbpo95 = new List<double>();
-                            List<double> womanWeightedSumIbpo95 = new List<double>();
-
-                            for (int i = 0; i < ageGroups.Count; i++)
-                            {
-                                manWeightedExtIbpo.Add(manExtIbpo[i] * manExtLarArray[i].Count);
-                                manWeightedIntIbpo.Add(manIntIbpo[i] * manIntLarArray[i].Count);
-                                manWeightedSumIbpo.Add(manSumIbpo[i] * manSumLarArray[i].Count);
-                                womanWeightedExtIbpo.Add(womanExtIbpo[i] * womanExtLarArray[i].Count);
-                                womanWeightedIntIbpo.Add(womanIntIbpo[i] * womanIntLarArray[i].Count);
-                                womanWeightedSumIbpo.Add(womanSumIbpo[i] * womanSumLarArray[i].Count);
-
-                                manWeightedExtIbpo95.Add(manExtIbpo95[i] * manExtLarArray[i].Count);
-                                manWeightedIntIbpo95.Add(manIntIbpo95[i] * manIntLarArray[i].Count);
-                                manWeightedSumIbpo95.Add(manSumIbpo95[i] * manSumLarArray[i].Count);
-                                womanWeightedExtIbpo95.Add(womanExtIbpo95[i] * womanExtLarArray[i].Count);
-                                womanWeightedIntIbpo95.Add(womanIntIbpo95[i] * womanIntLarArray[i].Count);
-                                womanWeightedSumIbpo95.Add(womanSumIbpo95[i] * womanSumLarArray[i].Count);
-                            }
-
-                            //if (manWeightedExtIbpo.Sum() / manRecordsList.Count < 100)
-                            //    manExtIbpoBox.Text = Math.Round(manWeightedExtIbpo.Sum() / manRecordsList.Count, 2).ToString();
-                            //else
-                            //    manExtIbpoBox.Text = "Нет внешнего облучения";
-
-                            //if (manWeightedIntIbpo.Sum() / manRecordsList.Count < 100)
-                            //    manIntIbpoBox.Text = Math.Round(manWeightedIntIbpo.Sum() / manRecordsList.Count, 2).ToString();
-                            //else
-                            //    manIntIbpoBox.Text = "Нет внутреннего облучения";
-
-                            //if (manWeightedSumIbpo.Sum() / manRecordsList.Count < 100)
-                            //    manSumIbpoBox.Text = Math.Round(manWeightedSumIbpo.Sum() / manRecordsList.Count, 2).ToString();
-                            //else
-                            //    manSumIbpoBox.Text = "Нет внутреннего облучения";
-
-                            //if (manWeightedExtIbpo95.Sum() / manRecordsList.Count < 100)
-                            //    manExtIbpoBox95.Text = Math.Round(manWeightedExtIbpo95.Sum() / manRecordsList.Count, 2).ToString();
-                            //else
-                            //    manExtIbpoBox95.Text = "Нет внешнего облучения";
-
-                            //if (manWeightedIntIbpo95.Sum() / manRecordsList.Count < 100)
-                            //    manIntIbpoBox95.Text = Math.Round(manWeightedIntIbpo95.Sum() / manRecordsList.Count, 2).ToString();
-                            //else
-                            //    manIntIbpoBox95.Text = "Нет внутреннего облучения";
-
-                            //if (manWeightedSumIbpo95.Sum() / manRecordsList.Count < 100)
-                            //    manSumIbpo95Box.Text = Math.Round(manWeightedSumIbpo95.Sum() / manRecordsList.Count, 2).ToString();
-                            //else
-                            //    manSumIbpoBox.Text = "Нет внутреннего облучения";
-
-                            //if (womanWeightedExtIbpo.Sum() / womanRecordsList.Count < 100)
-                            //    womanExtIbpoBox.Text = Math.Round(womanWeightedExtIbpo.Sum() / womanRecordsList.Count, 2).ToString();
-                            //else
-                            //    womanExtIbpoBox.Text = "Нет внешнего облучения";
-
-                            //if (womanWeightedIntIbpo.Sum() / womanRecordsList.Count < 100)
-                            //    womanIntIbpoBox.Text = Math.Round(womanWeightedIntIbpo.Sum() / womanRecordsList.Count, 2).ToString();
-                            //else
-                            //    womanIntIbpoBox.Text = "Нет внутреннего облучения";
-
-                            //if (womanWeightedSumIbpo.Sum() / womanRecordsList.Count < 100)
-                            //    womanSumIbpoBox.Text = Math.Round(womanWeightedSumIbpo.Sum() / womanRecordsList.Count, 2).ToString();
-                            //else
-                            //    womanSumIbpoBox.Text = "Нет внутреннего облучения";
-
-                            //if (womanWeightedExtIbpo95.Sum() / womanRecordsList.Count < 100)
-                            //    womanExtIbpoBox95.Text = Math.Round(womanWeightedExtIbpo95.Sum() / womanRecordsList.Count, 2).ToString();
-                            //else
-                            //    womanExtIbpoBox95.Text = "Нет внешнего облучения";
-
-                            //if (womanWeightedIntIbpo95.Sum() / womanRecordsList.Count < 100)
-                            //    womanIntIbpoBox95.Text = Math.Round(womanWeightedIntIbpo95.Sum() / womanRecordsList.Count, 2).ToString();
-                            //else
-                            //    womanIntIbpoBox95.Text = "Нет внутреннего облучения";
-
-                            //if (womanWeightedSumIbpo95.Sum() / womanRecordsList.Count < 100)
-                            //    womanSumIbpo95Box.Text = Math.Round(womanWeightedSumIbpo95.Sum() / womanRecordsList.Count, 2).ToString();
-                            //else
-                            //    womanSumIbpo95Box.Text = "Нет внутреннего облучения";
-
-                            /*-----Вывод в Excel-файл-----*/
-                            /*-----Инициализация Excel-файла-----*/
-                            Excel.Application excelApp = new Excel.Application();
-                            //excelApp.Visible = true;
-                            //excelApp.DisplayAlerts = true;
-                            excelApp.StandardFont = "Times-New-Roman";
-                            excelApp.StandardFontSize = 12;
-
-                            /*-----Создание рабочей книги с 4 страницами, в которые будет выводиться информация-----*/
-                            excelApp.Workbooks.Add(Type.Missing);
-                            Excel.Workbook excelWorkbook = excelApp.Workbooks[1];
-                            excelApp.SheetsInNewWorkbook = 2;
-                            Excel.Worksheet excelWorksheet = null;
-                            Excel.Range excelCells = null;
-
-                            /*-----Вывод в столбцы-----*/
-                            excelWorksheet = (Excel.Worksheet)excelWorkbook.Worksheets.get_Item(1);
-                            excelWorksheet.Name = "Мужчины";
-
-                            /*-----Описываем ячейку А1 на странице-----*/
-                            excelCells = excelWorksheet.get_Range("A1");
-                            excelCells.VerticalAlignment = Excel.Constants.xlCenter;
-                            excelCells.HorizontalAlignment = Excel.Constants.xlCenter;
-                            excelCells.Borders.Weight = Excel.XlBorderWeight.xlThick;
-                            excelCells.Value2 = "Возрастные группы";
-
-                            /*-----Описываем ячейку B1 на странице-----*/
-                            excelCells = excelWorksheet.get_Range("B1");
-                            excelCells.VerticalAlignment = Excel.Constants.xlCenter;
-                            excelCells.HorizontalAlignment = Excel.Constants.xlCenter;
-                            excelCells.Borders.Weight = Excel.XlBorderWeight.xlThick;
-                            excelCells.Value2 = "Внешнее облучение";
-
-                            /*-----Описываем ячейку C1 на странице-----*/
-                            excelCells = excelWorksheet.get_Range("C1");
-                            excelCells.VerticalAlignment = Excel.Constants.xlCenter;
-                            excelCells.HorizontalAlignment = Excel.Constants.xlCenter;
-                            excelCells.Borders.Weight = Excel.XlBorderWeight.xlThick;
-                            excelCells.Value2 = "Внутреннее облучение";
-
-                            /*-----Описываем ячейку B1 на странице-----*/
-                            excelCells = excelWorksheet.get_Range("D1");
-                            excelCells.VerticalAlignment = Excel.Constants.xlCenter;
-                            excelCells.HorizontalAlignment = Excel.Constants.xlCenter;
-                            excelCells.Borders.Weight = Excel.XlBorderWeight.xlThick;
-                            excelCells.Value2 = "Сумма";
-
-                            /*-----Описываем ячейку C1 на странице-----*/
-                            excelCells = excelWorksheet.get_Range("E1");
-                            excelCells.VerticalAlignment = Excel.Constants.xlCenter;
-                            excelCells.HorizontalAlignment = Excel.Constants.xlCenter;
-                            excelCells.Borders.Weight = Excel.XlBorderWeight.xlThick;
-                            excelCells.Value2 = "Внешнее облучение (95%)";
-
-                            /*-----Описываем ячейку C1 на странице-----*/
-                            excelCells = excelWorksheet.get_Range("F1");
-                            excelCells.VerticalAlignment = Excel.Constants.xlCenter;
-                            excelCells.HorizontalAlignment = Excel.Constants.xlCenter;
-                            excelCells.Borders.Weight = Excel.XlBorderWeight.xlThick;
-                            excelCells.Value2 = "Внутреннее облучение (95%)";
-
-                            /*-----Описываем ячейку C1 на странице-----*/
-                            excelCells = excelWorksheet.get_Range("G1");
-                            excelCells.VerticalAlignment = Excel.Constants.xlCenter;
-                            excelCells.HorizontalAlignment = Excel.Constants.xlCenter;
-                            excelCells.Borders.Weight = Excel.XlBorderWeight.xlThick;
-                            excelCells.Value2 = "Сумма (95%)";
-
-                            for (int i = 2; i <= manExtIbpo.Length + 1; i++)
-                            {
-                                excelCells = (Excel.Range)excelWorksheet.Cells[i, "A"];
-                                excelCells.Value2 = ageGroups[i - 2];
-                                excelCells.Borders.ColorIndex = 1;
-
-                                excelCells = (Excel.Range)excelWorksheet.Cells[i, "B"];
-                                if (manExtIbpo[i - 2] < 100)
-                                    excelCells.Value2 = manExtIbpo[i - 2];
-                                else
-                                    excelCells.Value2 = "Нет облучения";
-                                excelCells.Borders.ColorIndex = 1;
-
-                                excelCells = (Excel.Range)excelWorksheet.Cells[i, "C"];
-                                if (manIntIbpo[i - 2] < 100)
-                                    excelCells.Value2 = manIntIbpo[i - 2];
-                                else
-                                    excelCells.Value2 = "Нет облучения";
-                                excelCells.Borders.ColorIndex = 1;
-
-                                excelCells = (Excel.Range)excelWorksheet.Cells[i, "D"];
-                                if (manSumIbpo[i - 2] < 100)
-                                    excelCells.Value2 = manSumIbpo[i - 2];
-                                else
-                                    excelCells.Value2 = "Нет облучения";
-                                excelCells.Borders.ColorIndex = 1;
-
-                                excelCells = (Excel.Range)excelWorksheet.Cells[i, "E"];
-                                if (manExtIbpo95[i - 2] < 100)
-                                    excelCells.Value2 = manExtIbpo95[i - 2];
-                                else
-                                    excelCells.Value2 = "Нет облучения";
-                                excelCells.Borders.ColorIndex = 1;
-
-                                excelCells = (Excel.Range)excelWorksheet.Cells[i, "F"];
-                                if (manIntIbpo95[i - 2] < 100)
-                                    excelCells.Value2 = manIntIbpo95[i - 2];
-                                else
-                                    excelCells.Value2 = "Нет облучения";
-                                excelCells.Borders.ColorIndex = 1;
-
-                                excelCells = (Excel.Range)excelWorksheet.Cells[i, "G"];
-                                if (manSumIbpo95[i - 2] < 100)
-                                    excelCells.Value2 = manSumIbpo95[i - 2];
-                                else
-                                    excelCells.Value2 = "Нет облучения";
-                                excelCells.Borders.ColorIndex = 1;
-                            }
-
-                            /*-----Описываем ячейку А1 на странице-----*/
-                            excelCells = excelWorksheet.get_Range("A" + 13);
-                            excelCells.VerticalAlignment = Excel.Constants.xlCenter;
-                            excelCells.HorizontalAlignment = Excel.Constants.xlCenter;
-                            excelCells.Borders.Weight = Excel.XlBorderWeight.xlMedium;
-                            excelCells.Value2 = "Взвешенные величины";
-
-                            /*-----Описываем ячейку А1 на странице-----*/
-                            excelCells = excelWorksheet.get_Range("B" + 13);
-                            excelCells.VerticalAlignment = Excel.Constants.xlCenter;
-                            excelCells.HorizontalAlignment = Excel.Constants.xlCenter;
-                            excelCells.Borders.Weight = Excel.XlBorderWeight.xlMedium;
-                            if (manWeightedExtIbpo.Sum() / manRecordsList.Count < 100)
-                                excelCells.Value2 = Math.Round(manWeightedExtIbpo.Sum() / manRecordsList.Count, 8);
-                            else
-                                excelCells.Value2 = "Нет облучения";
-
-                            /*-----Описываем ячейку А1 на странице-----*/
-                            excelCells = excelWorksheet.get_Range("C" + 13);
-                            excelCells.VerticalAlignment = Excel.Constants.xlCenter;
-                            excelCells.HorizontalAlignment = Excel.Constants.xlCenter;
-                            excelCells.Borders.Weight = Excel.XlBorderWeight.xlMedium;
-                            if (manWeightedIntIbpo.Sum() / manRecordsList.Count < 100)
-                                excelCells.Value2 = Math.Round(manWeightedIntIbpo.Sum() / manRecordsList.Count, 8);
-                            else
-                                excelCells.Value2 = "Нет облучения";
-
-                            /*-----Описываем ячейку А1 на странице-----*/
-                            excelCells = excelWorksheet.get_Range("D" + 13);
-                            excelCells.VerticalAlignment = Excel.Constants.xlCenter;
-                            excelCells.HorizontalAlignment = Excel.Constants.xlCenter;
-                            excelCells.Borders.Weight = Excel.XlBorderWeight.xlMedium;
-                            if (manWeightedSumIbpo.Sum() / manRecordsList.Count < 100)
-                                excelCells.Value2 = Math.Round(manWeightedSumIbpo.Sum() / manRecordsList.Count, 8);
-                            else
-                                excelCells.Value2 = "Нет облучения";
-
-                            /*-----Описываем ячейку А1 на странице-----*/
-                            excelCells = excelWorksheet.get_Range("E" + 13);
-                            excelCells.VerticalAlignment = Excel.Constants.xlCenter;
-                            excelCells.HorizontalAlignment = Excel.Constants.xlCenter;
-                            excelCells.Borders.Weight = Excel.XlBorderWeight.xlMedium;
-                            if (manWeightedExtIbpo95.Sum() / manRecordsList.Count < 100)
-                                excelCells.Value2 = Math.Round(manWeightedExtIbpo95.Sum() / manRecordsList.Count, 8);
-                            else
-                                excelCells.Value2 = "Нет облучения";
-
-                            /*-----Описываем ячейку А1 на странице-----*/
-                            excelCells = excelWorksheet.get_Range("F" + 13);
-                            excelCells.VerticalAlignment = Excel.Constants.xlCenter;
-                            excelCells.HorizontalAlignment = Excel.Constants.xlCenter;
-                            excelCells.Borders.Weight = Excel.XlBorderWeight.xlMedium;
-                            if (manWeightedIntIbpo95.Sum() / manRecordsList.Count < 100)
-                                excelCells.Value2 = Math.Round(manWeightedIntIbpo95.Sum() / manRecordsList.Count, 8);
-                            else
-                                excelCells.Value2 = "Нет облучения";
-
-                            /*-----Описываем ячейку А1 на странице-----*/
-                            excelCells = excelWorksheet.get_Range("G" + 13);
-                            excelCells.VerticalAlignment = Excel.Constants.xlCenter;
-                            excelCells.HorizontalAlignment = Excel.Constants.xlCenter;
-                            excelCells.Borders.Weight = Excel.XlBorderWeight.xlMedium;
-                            if (manWeightedSumIbpo95.Sum() / manRecordsList.Count < 100)
-                                excelCells.Value2 = Math.Round(manWeightedSumIbpo95.Sum() / manRecordsList.Count, 8);
-                            else
-                                excelCells.Value2 = "Нет облучения";
-
-                            excelWorksheet = (Excel.Worksheet)excelWorkbook.Worksheets.get_Item(2);
-                            excelWorksheet.Name = "Женщины";
-
-                            /*-----Описываем ячейку А1 на странице-----*/
-                            excelCells = excelWorksheet.get_Range("A1");
-                            excelCells.VerticalAlignment = Excel.Constants.xlCenter;
-                            excelCells.HorizontalAlignment = Excel.Constants.xlCenter;
-                            excelCells.Borders.Weight = Excel.XlBorderWeight.xlThick;
-                            excelCells.Value2 = "Возрастные группы";
-
-                            /*-----Описываем ячейку B1 на странице-----*/
-                            excelCells = excelWorksheet.get_Range("B1");
-                            excelCells.VerticalAlignment = Excel.Constants.xlCenter;
-                            excelCells.HorizontalAlignment = Excel.Constants.xlCenter;
-                            excelCells.Borders.Weight = Excel.XlBorderWeight.xlThick;
-                            excelCells.Value2 = "Внешнее облучение";
-
-                            /*-----Описываем ячейку C1 на странице-----*/
-                            excelCells = excelWorksheet.get_Range("C1");
-                            excelCells.VerticalAlignment = Excel.Constants.xlCenter;
-                            excelCells.HorizontalAlignment = Excel.Constants.xlCenter;
-                            excelCells.Borders.Weight = Excel.XlBorderWeight.xlThick;
-                            excelCells.Value2 = "Внутреннее облучение";
-
-                            /*-----Описываем ячейку B1 на странице-----*/
-                            excelCells = excelWorksheet.get_Range("D1");
-                            excelCells.VerticalAlignment = Excel.Constants.xlCenter;
-                            excelCells.HorizontalAlignment = Excel.Constants.xlCenter;
-                            excelCells.Borders.Weight = Excel.XlBorderWeight.xlThick;
-                            excelCells.Value2 = "Сумма";
-
-                            /*-----Описываем ячейку C1 на странице-----*/
-                            excelCells = excelWorksheet.get_Range("E1");
-                            excelCells.VerticalAlignment = Excel.Constants.xlCenter;
-                            excelCells.HorizontalAlignment = Excel.Constants.xlCenter;
-                            excelCells.Borders.Weight = Excel.XlBorderWeight.xlThick;
-                            excelCells.Value2 = "Внешнее облучение (95%)";
-
-                            /*-----Описываем ячейку C1 на странице-----*/
-                            excelCells = excelWorksheet.get_Range("F1");
-                            excelCells.VerticalAlignment = Excel.Constants.xlCenter;
-                            excelCells.HorizontalAlignment = Excel.Constants.xlCenter;
-                            excelCells.Borders.Weight = Excel.XlBorderWeight.xlThick;
-                            excelCells.Value2 = "Внутреннее облучение (95%)";
-
-                            /*-----Описываем ячейку C1 на странице-----*/
-                            excelCells = excelWorksheet.get_Range("G1");
-                            excelCells.VerticalAlignment = Excel.Constants.xlCenter;
-                            excelCells.HorizontalAlignment = Excel.Constants.xlCenter;
-                            excelCells.Borders.Weight = Excel.XlBorderWeight.xlThick;
-                            excelCells.Value2 = "Сумма (95%)";
-
-                            for (int i = 2; i <= womanExtIbpo.Length + 1; i++)
-                            {
-                                excelCells = (Excel.Range)excelWorksheet.Cells[i, "A"];
-                                excelCells.Value2 = ageGroups[i - 2];
-                                excelCells.Borders.ColorIndex = 1;
-
-                                excelCells = (Excel.Range)excelWorksheet.Cells[i, "B"];
-                                if (womanExtIbpo[i - 2] < 100)
-                                    excelCells.Value2 = womanExtIbpo[i - 2];
-                                else
-                                    excelCells.Value2 = "Нет облучения";
-                                excelCells.Borders.ColorIndex = 1;
-
-                                excelCells = (Excel.Range)excelWorksheet.Cells[i, "C"];
-                                if (womanIntIbpo[i - 2] < 100)
-                                    excelCells.Value2 = womanIntIbpo[i - 2];
-                                else
-                                    excelCells.Value2 = "Нет облучения";
-                                excelCells.Borders.ColorIndex = 1;
-
-                                excelCells = (Excel.Range)excelWorksheet.Cells[i, "D"];
-                                if (womanSumIbpo[i - 2] < 100)
-                                    excelCells.Value2 = womanSumIbpo[i - 2];
-                                else
-                                    excelCells.Value2 = "Нет облучения";
-                                excelCells.Borders.ColorIndex = 1;
-
-                                excelCells = (Excel.Range)excelWorksheet.Cells[i, "E"];
-                                if (womanExtIbpo95[i - 2] < 100)
-                                    excelCells.Value2 = womanExtIbpo95[i - 2];
-                                else
-                                    excelCells.Value2 = "Нет облучения";
-                                excelCells.Borders.ColorIndex = 1;
-
-                                excelCells = (Excel.Range)excelWorksheet.Cells[i, "F"];
-                                if (womanIntIbpo95[i - 2] < 100)
-                                    excelCells.Value2 = womanIntIbpo95[i - 2];
-                                else
-                                    excelCells.Value2 = "Нет облучения";
-                                excelCells.Borders.ColorIndex = 1;
-
-                                excelCells = (Excel.Range)excelWorksheet.Cells[i, "G"];
-                                if (womanSumIbpo95[i - 2] < 100) 
-                                    excelCells.Value2 = womanSumIbpo95[i - 2];
-                                else
-                                    excelCells.Value2 = "Нет облучения";
-                                excelCells.Borders.ColorIndex = 1;
-                            }
-
-                            /*-----Описываем ячейку А1 на странице-----*/
-                            excelCells = excelWorksheet.get_Range("A" + 13);
-                            excelCells.VerticalAlignment = Excel.Constants.xlCenter;
-                            excelCells.HorizontalAlignment = Excel.Constants.xlCenter;
-                            excelCells.Borders.Weight = Excel.XlBorderWeight.xlMedium;
-                            excelCells.Value2 = "Взвешенные величины";
-
-                            /*-----Описываем ячейку А1 на странице-----*/
-                            excelCells = excelWorksheet.get_Range("B" + 13);
-                            excelCells.VerticalAlignment = Excel.Constants.xlCenter;
-                            excelCells.HorizontalAlignment = Excel.Constants.xlCenter;
-                            excelCells.Borders.Weight = Excel.XlBorderWeight.xlMedium;
-                            if (womanWeightedExtIbpo.Sum() / womanRecordsList.Count < 100)
-                                excelCells.Value2 = Math.Round(womanWeightedExtIbpo.Sum() / womanRecordsList.Count, 8);
-                            else
-                                excelCells.Value2 = "Нет облучения";
-
-                            /*-----Описываем ячейку А1 на странице-----*/
-                            excelCells = excelWorksheet.get_Range("C" + 13);
-                            excelCells.VerticalAlignment = Excel.Constants.xlCenter;
-                            excelCells.HorizontalAlignment = Excel.Constants.xlCenter;
-                            excelCells.Borders.Weight = Excel.XlBorderWeight.xlMedium;
-                            if (womanWeightedIntIbpo.Sum() / womanRecordsList.Count < 100)
-                                excelCells.Value2 = Math.Round(womanWeightedIntIbpo.Sum() / womanRecordsList.Count, 8);
-                            else
-                                excelCells.Value2 = "Нет облучения";
-
-                            /*-----Описываем ячейку А1 на странице-----*/
-                            excelCells = excelWorksheet.get_Range("D" + 13);
-                            excelCells.VerticalAlignment = Excel.Constants.xlCenter;
-                            excelCells.HorizontalAlignment = Excel.Constants.xlCenter;
-                            excelCells.Borders.Weight = Excel.XlBorderWeight.xlMedium;
-                            if (womanWeightedSumIbpo.Sum() / womanRecordsList.Count < 100)
-                                excelCells.Value2 = Math.Round(womanWeightedSumIbpo.Sum() / womanRecordsList.Count, 8);
-                            else
-                                excelCells.Value2 = "Нет облучения";
-
-                            /*-----Описываем ячейку А1 на странице-----*/
-                            excelCells = excelWorksheet.get_Range("E" + 13);
-                            excelCells.VerticalAlignment = Excel.Constants.xlCenter;
-                            excelCells.HorizontalAlignment = Excel.Constants.xlCenter;
-                            excelCells.Borders.Weight = Excel.XlBorderWeight.xlMedium;
-                            if (womanWeightedExtIbpo95.Sum() / womanRecordsList.Count < 100)
-                                excelCells.Value2 = Math.Round(womanWeightedExtIbpo95.Sum() / womanRecordsList.Count, 8);
-                            else
-                                excelCells.Value2 = "Нет облучения";
-
-                            /*-----Описываем ячейку А1 на странице-----*/
-                            excelCells = excelWorksheet.get_Range("F" + 13);
-                            excelCells.VerticalAlignment = Excel.Constants.xlCenter;
-                            excelCells.HorizontalAlignment = Excel.Constants.xlCenter;
-                            excelCells.Borders.Weight = Excel.XlBorderWeight.xlMedium;
-                            if (womanWeightedIntIbpo95.Sum() / womanRecordsList.Count < 100)
-                                excelCells.Value2 = Math.Round(womanWeightedIntIbpo95.Sum() / womanRecordsList.Count, 8);
-                            else
-                                excelCells.Value2 = "Нет облучения";
-
-                            /*-----Описываем ячейку А1 на странице-----*/
-                            excelCells = excelWorksheet.get_Range("G" + 13);
-                            excelCells.VerticalAlignment = Excel.Constants.xlCenter;
-                            excelCells.HorizontalAlignment = Excel.Constants.xlCenter;
-                            excelCells.Borders.Weight = Excel.XlBorderWeight.xlMedium;
-                            if (womanWeightedSumIbpo95.Sum() / womanRecordsList.Count < 100)
-                                excelCells.Value2 = Math.Round(womanWeightedSumIbpo95.Sum() / womanRecordsList.Count, 8);
-                            else
-                                excelCells.Value2 = "Нет облучения";
-
-                            char[] timeNameBuffer = DateTime.Now.ToString().ToCharArray();
-                            for (int i = 0; i < timeNameBuffer.Length; i++)
-                            {
-                                if (timeNameBuffer[i] == ':')
-                                    timeNameBuffer[i] = '-';
-                            }
-
-                            if (larRB.Checked)
-                                saveAs = " ИБПО_LAR";
-                            if (detRB.Checked)
-                                saveAs = " ИБПО_Det";
-
-                            if (orpoButtonAverAge)
-                            {
-                                bufferPath = outPath + "\\ИБПО (Средний возраст)";
-                                Directory.CreateDirectory(bufferPath);
-                                excelWorkbook.SaveAs(@bufferPath + "\\" + shopComboBox.SelectedItem + saveAs + " (Средний возраст)" + "(" + new string(timeNameBuffer) + ").xlsx",  //object Filename
-                                        Excel.XlFileFormat.xlOpenXMLWorkbook,                       //object FileFormat
-                                        Type.Missing,                       //object Password 
-                                        Type.Missing,                       //object WriteResPassword  
-                                        Type.Missing,                       //object ReadOnlyRecommended
-                                        Type.Missing,                       //object CreateBackup
-                                        Excel.XlSaveAsAccessMode.xlNoChange,//XlSaveAsAccessMode AccessMode
-                                        Type.Missing,                       //object ConflictResolution
-                                        Type.Missing,                       //object AddToMru 
-                                        Type.Missing,                       //object TextCodepage
-                                        Type.Missing,                       //object TextVisualLayout
-                                        Type.Missing);                      //object Local
-                            }
-                            if (orpoButtonAverLar)
-                            {
-                                bufferPath = outPath + "\\ИБПО (Средний LAR(Det))";
-                                Directory.CreateDirectory(bufferPath);
-                                excelWorkbook.SaveAs(@bufferPath + "\\" + shopComboBox.SelectedItem + saveAs + " (Средний LAR(Det))" + "(" + new string(timeNameBuffer) + ").xlsx",  //object Filename
-                                        Excel.XlFileFormat.xlOpenXMLWorkbook,                       //object FileFormat
-                                        Type.Missing,                       //object Password 
-                                        Type.Missing,                       //object WriteResPassword  
-                                        Type.Missing,                       //object ReadOnlyRecommended
-                                        Type.Missing,                       //object CreateBackup
-                                        Excel.XlSaveAsAccessMode.xlNoChange,//XlSaveAsAccessMode AccessMode
-                                        Type.Missing,                       //object ConflictResolution
-                                        Type.Missing,                       //object AddToMru 
-                                        Type.Missing,                       //object TextCodepage
-                                        Type.Missing,                       //object TextVisualLayout
-                                        Type.Missing);                      //object Local
-                            }
-                            excelApp.Quit();
-                        }
-
-                        connection.Close();
-                        shopTrigger = false;
-                        ///*-----Замер времени работы кнопки-----*/
-                        //stopWatch.Stop();
-                        //TimeSpan ts = stopWatch.Elapsed;
-                        //string elapsedTime = String.Format("{0:00}:{1:00}:{2:00}.{3:00}",
-                        //ts.Hours, ts.Minutes, ts.Seconds,
-                        //ts.Milliseconds / 10);
-                        //womanExtIbpoBox95.Text = "Время " + elapsedTime;
+                        dbDoseRecords.Add(new dbObject(Convert.ToInt32(table.Rows[i]["id"]), Convert.ToInt32(table.Rows[i]["year"]), Convert.ToDouble(table.Rows[i]["dose"]) / 1000, Convert.ToDouble(table.Rows[i]["doseint"]) / 1000));
                     }
-                    catch
+
+                    /*-----Списки id, у которых есть записи в 2012 году-----*/
+                    List<dbObject> manRecordsList = new List<dbObject>();
+                    List<dbObject> womanRecordsList = new List<dbObject>();
+                    for (int i = 0; i < dbFinalRecords.Count; i++)
                     {
-                        MessageBox.Show("ОРПО не посчитано!", "Внимание", MessageBoxButtons.OK, MessageBoxIcon.Exclamation, MessageBoxDefaultButton.Button1);
+                        if (dbFinalRecords[i].getSex() == sexMale && dbFinalRecords[i].getYear() == 2012)
+                            manRecordsList.Add(dbFinalRecords[i]);
+                        if (dbFinalRecords[i].getSex() == sexFemale && dbFinalRecords[i].getYear() == 2012)
+                            womanRecordsList.Add(dbFinalRecords[i]);
+                    }
+
+                    if (manRecordsList.Count == 0 || womanRecordsList.Count == 0)
+                    {
+                        MessageBox.Show("Нет данных за 2012 год. ИБПО рассчитан не будет!", "Внимание", MessageBoxButtons.OK, MessageBoxIcon.Exclamation, MessageBoxDefaultButton.Button1);
                         Application.DoEvents();
                     }
+
+                    else
+                    {
+                        /*-----Массивы списков для мужчин и женщин.
+                         * Каждый элемент массива - список, содержащий элементы,
+                         * у которых одинаковые id (это записи дозовой истории конкретного человека)-----*/
+                        List<dbObject>[] manGroupedRecordsArray = new List<dbObject>[manRecordsList.Count];
+                        for (int i = 0; i < manGroupedRecordsArray.Length; i++)
+                            manGroupedRecordsArray[i] = new List<dbObject>();
+                        List<dbObject>[] womanGroupedRecordsArray = new List<dbObject>[womanRecordsList.Count];
+                        for (int i = 0; i < womanGroupedRecordsArray.Length; i++)
+                            womanGroupedRecordsArray[i] = new List<dbObject>();
+
+                        /*-----Заполнение этих массивов-----*/
+                        List<dbObject> buffer = null;
+                        for (int i = 0; i < manGroupedRecordsArray.Length; i++)
+                        {
+                            buffer = new List<dbObject>();
+                            for (int k = 0; k < dbDoseRecords.Count; k++)
+                            {
+                                if (manRecordsList[i].getId() == dbDoseRecords[k].getId())
+                                {
+                                    dbDoseRecords[k].setSex(sexMale);
+                                    dbDoseRecords[k].setAgeAtExp(Convert.ToInt16(manRecordsList[i].getAgeAtExp() - (manRecordsList[i].getYear() - dbDoseRecords[k].getYear())));
+                                    buffer.Add(dbDoseRecords[k]);
+                                }
+                            }
+                            manGroupedRecordsArray[i] = buffer;
+                        }
+                        for (int i = 0; i < womanGroupedRecordsArray.Length; i++)
+                        {
+                            buffer = new List<dbObject>();
+                            for (int k = 0; k < dbDoseRecords.Count; k++)
+                            {
+                                if (womanRecordsList[i].getId() == dbDoseRecords[k].getId())
+                                {
+                                    dbDoseRecords[k].setSex(sexFemale);
+                                    dbDoseRecords[k].setAgeAtExp(Convert.ToInt16(womanRecordsList[i].getAgeAtExp() - (womanRecordsList[i].getYear() - dbDoseRecords[k].getYear())));
+                                    buffer.Add(dbDoseRecords[k]);
+                                }
+                            }
+                            womanGroupedRecordsArray[i] = buffer;
+                        }
+
+                        /*-----Задание весовых коэффициентов для тканей (в нашем случае учитывается только влияние на лёгкие)-----*/
+                        double wLung = 0.12;
+
+                        /*-----Создание пустого списка дозовых историй мужчин; для каждого уникального ID своя дозовая история (по сути, это ячейки, которые надо заполнить)-----*/
+                        List<RiskCalculator.DoseHistoryRecord[]> manDoseHistoryList = new List<RiskCalculator.DoseHistoryRecord[]>();
+                        for (int i = 0; i < manGroupedRecordsArray.Length; i++)
+                        {
+                            manDoseHistoryList.Add(new RiskCalculator.DoseHistoryRecord[manGroupedRecordsArray[i].Count]);
+                        }
+                        foreach (RiskCalculator.DoseHistoryRecord[] note in manDoseHistoryList)
+                        {
+                            for (int i = 0; i < note.Length; i++)
+                                note[i] = new RiskCalculator.DoseHistoryRecord();
+                        }
+
+                        /*-----Создание аналогичного списка дозовых историй для женщин-----*/
+                        List<RiskCalculator.DoseHistoryRecord[]> womanDoseHistoryList = new List<RiskCalculator.DoseHistoryRecord[]>();
+                        for (int i = 0; i < womanGroupedRecordsArray.Length; i++)
+                        {
+                            womanDoseHistoryList.Add(new RiskCalculator.DoseHistoryRecord[womanGroupedRecordsArray[i].Count]);
+                        }
+                        foreach (RiskCalculator.DoseHistoryRecord[] note in womanDoseHistoryList)
+                        {
+                            for (int i = 0; i < note.Length; i++)
+                                note[i] = new RiskCalculator.DoseHistoryRecord();
+                        }
+
+                        /*-----Заполнение дозовых историй мужчин-----*/
+                        for (int i = 0; i < manGroupedRecordsArray.Length; i++)
+                            for (int k = 0; k < manGroupedRecordsArray[i].Count; k++)
+                            {
+                                manDoseHistoryList[i][k].AgeAtExposure = manGroupedRecordsArray[i][k].getAgeAtExp();
+                                manDoseHistoryList[i][k].AllSolidDoseInmGy = manGroupedRecordsArray[i][k].getDose() - manGroupedRecordsArray[i][k].getDoseInt();
+                                manDoseHistoryList[i][k].LeukaemiaDoseInmGy = manGroupedRecordsArray[i][k].getDose() - manGroupedRecordsArray[i][k].getDoseInt();
+                                manDoseHistoryList[i][k].LungDoseInmGy = manGroupedRecordsArray[i][k].getDoseInt() / wLung;
+                            }
+                        /*-----Заполнение дозовых историй женщин-----*/
+                        for (int i = 0; i < womanGroupedRecordsArray.Length; i++)
+                            for (int k = 0; k < womanGroupedRecordsArray[i].Count; k++)
+                            {
+                                womanDoseHistoryList[i][k].AgeAtExposure = womanGroupedRecordsArray[i][k].getAgeAtExp();
+                                womanDoseHistoryList[i][k].AllSolidDoseInmGy = womanGroupedRecordsArray[i][k].getDose() - womanGroupedRecordsArray[i][k].getDoseInt();
+                                womanDoseHistoryList[i][k].LeukaemiaDoseInmGy = womanGroupedRecordsArray[i][k].getDose() - womanGroupedRecordsArray[i][k].getDoseInt();
+                                womanDoseHistoryList[i][k].LungDoseInmGy = womanGroupedRecordsArray[i][k].getDoseInt() / wLung;
+                            }
+
+                        /*---Создание массива списков для п/в групп мужчин, хранящих LAR п/в группы;
+                         * каждый элемент массива - список LAR-ов п/в группы---*/
+                        List<double>[] manExtLarArray = new List<double>[ageGroups.Count];
+                        List<double>[] manIntLarArray = new List<double>[ageGroups.Count];
+                        List<double>[] manSumLarArray = new List<double>[ageGroups.Count];
+                        for (int i = 0; i < ageGroups.Count; i++)
+                        {
+                            manExtLarArray[i] = new List<double>();
+                            manIntLarArray[i] = new List<double>();
+                            manSumLarArray[i] = new List<double>();
+                        }
+
+                        /*-----Создание аналогичного массива для женщин-----*/
+                        List<double>[] womanExtLarArray = new List<double>[ageGroups.Count];
+                        List<double>[] womanIntLarArray = new List<double>[ageGroups.Count];
+                        List<double>[] womanSumLarArray = new List<double>[ageGroups.Count];
+                        for (int i = 0; i < ageGroups.Count; i++)
+                        {
+                            womanExtLarArray[i] = new List<double>();
+                            womanIntLarArray[i] = new List<double>();
+                            womanSumLarArray[i] = new List<double>();
+                        }
+
+                        /*-----Заполнение этих массивов-----*/
+                        RiskCalculator.DoseHistoryRecord[] record = null;
+                        RiskCalculatorLib.RiskCalculator calculator = null;
+                        for (int i = 0; i < ageGroups.Count; i++)
+                            for (int k = 0; k < manDoseHistoryList.Count; k++)
+                            {
+                                if (manRecordsList[k].getAgeAtExp() == manDoseHistoryList[k][manDoseHistoryList[k].Length - 1].AgeAtExposure)
+                                    if (manRecordsList[k].getAgeAtExp() >= ageLowerBound[i] && manRecordsList[k].getAgeAtExp() <= ageUpperBound[i])
+                                    {
+                                        record = manDoseHistoryList[k];
+                                        calculator = new RiskCalculatorLib.RiskCalculator(RiskCalculator.SEX_MALE, manDoseHistoryList[k][0].AgeAtExposure, ref record, true);
+                                        manExtLarArray[i].Add(calculator.getLAR(false, true).AllCancers);//Кажется, здесь считается LAR...
+                                        manIntLarArray[i].Add(calculator.getLAR(false, true).Lung);
+                                        manSumLarArray[i].Add(calculator.getLAR(false, true).AllCancers + calculator.getLAR(false, true).Lung);
+                                    }
+                            }
+
+                        for (int i = 0; i < ageGroups.Count; i++)
+                            for (int k = 0; k < womanDoseHistoryList.Count; k++)
+                            {
+                                if (womanRecordsList[k].getAgeAtExp() == womanDoseHistoryList[k][womanDoseHistoryList[k].Length - 1].AgeAtExposure)
+                                    if (womanRecordsList[k].getAgeAtExp() >= ageLowerBound[i] && womanRecordsList[k].getAgeAtExp() <= ageUpperBound[i])
+                                    {
+                                        record = womanDoseHistoryList[k];
+                                        calculator = new RiskCalculatorLib.RiskCalculator(RiskCalculator.SEX_FEMALE, womanDoseHistoryList[k][0].AgeAtExposure, ref record, true);
+                                        womanExtLarArray[i].Add(calculator.getLAR(false, true).AllCancers);
+                                        womanIntLarArray[i].Add(calculator.getLAR(false, true).Lung);
+                                        womanSumLarArray[i].Add(calculator.getLAR(false, true).AllCancers + calculator.getLAR(false, true).Lung);
+                                    }
+                            }
+
+                        double[] manExtIbpo = new double[ageGroups.Count];
+                        double[] manExtIbpo95 = new double[ageGroups.Count];
+
+                        double[] manIntIbpo = new double[ageGroups.Count];
+                        double[] manIntIbpo95 = new double[ageGroups.Count];
+
+                        double[] manSumIbpo = new double[ageGroups.Count];
+                        double[] manSumIbpo95 = new double[ageGroups.Count];
+
+                        double[] womanExtIbpo = new double[ageGroups.Count];
+                        double[] womanExtIbpo95 = new double[ageGroups.Count];
+
+                        double[] womanIntIbpo = new double[ageGroups.Count];
+                        double[] womanIntIbpo95 = new double[ageGroups.Count];
+
+                        double[] womanSumIbpo = new double[ageGroups.Count];
+                        double[] womanSumIbpo95 = new double[ageGroups.Count];
+
+
+                        for (int i = 0; i < ageGroups.Count; i++)
+                        {
+                            if (manExtLarArray[i].Count > 0)
+                            {
+                                manExtIbpo[i] = getIbpo(manExtLarArray[i], manExtOrpo[i]);
+                                manExtIbpo95[i] = getIbpo(manExtLarArray[i], manExtOrpo95[i]);
+                            }
+
+                            if (manIntLarArray[i].Count > 0)
+                            {
+                                manIntIbpo[i] = getIbpo(manIntLarArray[i], manIntOrpo[i]);
+                                manIntIbpo95[i] = getIbpo(manIntLarArray[i], manIntOrpo95[i]);
+                            }
+
+                            if (manSumLarArray[i].Count > 0)
+                            {
+                                manSumIbpo[i] = getIbpo(manSumLarArray[i], manSumOrpo[i]);
+                                manSumIbpo95[i] = getIbpo(manSumLarArray[i], manSumOrpo95[i]);
+                            }
+
+                            if (womanExtLarArray[i].Count > 0)
+                            {
+                                womanExtIbpo[i] = getIbpo(womanExtLarArray[i], womanExtOrpo[i]);
+                                womanExtIbpo95[i] = getIbpo(womanExtLarArray[i], womanExtOrpo95[i]);
+                            }
+
+                            if (womanIntLarArray[i].Count > 0)
+                            {
+                                womanIntIbpo[i] = getIbpo(womanIntLarArray[i], womanIntOrpo[i]);
+                                womanIntIbpo95[i] = getIbpo(womanIntLarArray[i], womanIntOrpo95[i]);
+                            }
+
+                            if (womanSumLarArray[i].Count > 0)
+                            {
+                                womanSumIbpo[i] = getIbpo(womanSumLarArray[i], womanSumOrpo[i]);
+                                womanSumIbpo95[i] = getIbpo(womanSumLarArray[i], womanSumOrpo95[i]);
+                            }
+                        }
+
+                        /*-----Создание списков для подсчета взвешенных величин ИБПО-----*/
+                        List<double> manWeightedExtIbpo = new List<double>();
+                        List<double> manWeightedIntIbpo = new List<double>();
+                        List<double> manWeightedSumIbpo = new List<double>();
+                        List<double> womanWeightedExtIbpo = new List<double>();
+                        List<double> womanWeightedIntIbpo = new List<double>();
+                        List<double> womanWeightedSumIbpo = new List<double>();
+
+                        List<double> manWeightedExtIbpo95 = new List<double>();
+                        List<double> manWeightedIntIbpo95 = new List<double>();
+                        List<double> manWeightedSumIbpo95 = new List<double>();
+                        List<double> womanWeightedExtIbpo95 = new List<double>();
+                        List<double> womanWeightedIntIbpo95 = new List<double>();
+                        List<double> womanWeightedSumIbpo95 = new List<double>();
+
+                        for (int i = 0; i < ageGroups.Count; i++)
+                        {
+                            manWeightedExtIbpo.Add(manExtIbpo[i] * manExtLarArray[i].Count);
+                            manWeightedIntIbpo.Add(manIntIbpo[i] * manIntLarArray[i].Count);
+                            manWeightedSumIbpo.Add(manSumIbpo[i] * manSumLarArray[i].Count);
+                            womanWeightedExtIbpo.Add(womanExtIbpo[i] * womanExtLarArray[i].Count);
+                            womanWeightedIntIbpo.Add(womanIntIbpo[i] * womanIntLarArray[i].Count);
+                            womanWeightedSumIbpo.Add(womanSumIbpo[i] * womanSumLarArray[i].Count);
+
+                            manWeightedExtIbpo95.Add(manExtIbpo95[i] * manExtLarArray[i].Count);
+                            manWeightedIntIbpo95.Add(manIntIbpo95[i] * manIntLarArray[i].Count);
+                            manWeightedSumIbpo95.Add(manSumIbpo95[i] * manSumLarArray[i].Count);
+                            womanWeightedExtIbpo95.Add(womanExtIbpo95[i] * womanExtLarArray[i].Count);
+                            womanWeightedIntIbpo95.Add(womanIntIbpo95[i] * womanIntLarArray[i].Count);
+                            womanWeightedSumIbpo95.Add(womanSumIbpo95[i] * womanSumLarArray[i].Count);
+                        }
+
+                        manIbpoTable = new DataTable();
+                        manIbpoTable.Columns.Add("Возрастные группы");
+                        manIbpoTable.Columns.Add("Внешнее облучение");
+                        manIbpoTable.Columns.Add("Внутреннее облучение");
+                        manIbpoTable.Columns.Add("Сумма");
+                        manIbpoTable.Columns.Add("Внешнее облучение (95%)");
+                        manIbpoTable.Columns.Add("Внутреннее облучение (95%)");
+                        manIbpoTable.Columns.Add("Сумма (95%)");
+
+                        for (int i = 0; i < ageGroups.Count; i++)
+                        {
+                            DataRow row = manIbpoTable.NewRow();
+                            row["Возрастные группы"] = ageGroups[i];
+                            row["Внешнее облучение"] = Math.Round(manExtIbpo[i], 2);
+                            row["Внутреннее облучение"] = Math.Round(manIntIbpo[i], 2);
+                            row["Сумма"] = Math.Round(manSumIbpo[i], 2);
+                            row["Внешнее облучение (95%)"] = Math.Round(manExtIbpo95[i], 2);
+                            row["Внутреннее облучение (95%)"] = Math.Round(manIntIbpo95[i], 2);
+                            row["Сумма (95%)"] = Math.Round(manSumIbpo95[i], 2);
+                            manIbpoTable.Rows.Add(row);
+                        }
+
+                        DataRow manIbpoRow = manIbpoTable.NewRow();
+                        manIbpoRow["Возрастные группы"] = "Взвешенные величины";
+                        if (manWeightedExtIbpo.Sum() / manRecordsList.Count < 100)
+                            manIbpoRow["Внешнее облучение"] = Math.Round(manWeightedExtIbpo.Sum() / manRecordsList.Count, 2);
+                        else
+                            manIbpoRow["Внешнее облучение"] = "Облучения нет!";
+
+                        if (manWeightedIntIbpo.Sum() / manRecordsList.Count < 100)
+                            manIbpoRow["Внутреннее облучение"] = Math.Round(manWeightedIntIbpo.Sum() / manRecordsList.Count, 2);
+                        else
+                            manIbpoRow["Внутреннее облучение"] = "Облучения нет!";
+
+                        if (manWeightedSumIbpo.Sum() / manRecordsList.Count < 100)
+                            manIbpoRow["Сумма"] = Math.Round(manWeightedSumIbpo.Sum() / manRecordsList.Count, 2);
+                        else
+                            manIbpoRow["Сумма"] = "Облучения нет!";
+
+                        if (manWeightedExtIbpo95.Sum() / manRecordsList.Count < 100)
+                            manIbpoRow["Внешнее облучение (95%)"] = Math.Round(manWeightedExtIbpo95.Sum() / manRecordsList.Count, 2);
+                        else
+                            manIbpoRow["Внешнее облучение (95%)"] = "Облучения нет!";
+
+                        if (manWeightedIntIbpo95.Sum() / manRecordsList.Count < 100)
+                            manIbpoRow["Внутреннее облучение (95%)"] = Math.Round(manWeightedIntIbpo95.Sum() / manRecordsList.Count, 2);
+                        else
+                            manIbpoRow["Внутреннее облучение (95%)"] = "Облучения нет!";
+
+                        if (manWeightedSumIbpo95.Sum() / manRecordsList.Count < 100)
+                            manIbpoRow["Сумма (95%)"] = Math.Round(manWeightedSumIbpo95.Sum() / manRecordsList.Count, 2);
+                        else
+                            manIbpoRow["Сумма (95%)"] = "Облучения нет!";
+
+                        manIbpoTable.Rows.Add(manIbpoRow);
+                        manIbpoGridView.DataSource = manIbpoTable;
+                        manIbpoGridView.AutoSizeColumnsMode = DataGridViewAutoSizeColumnsMode.Fill;
+                        manIbpoGridView.AllowUserToAddRows = false;
+
+                        womanIbpoTable = new DataTable();
+                        womanIbpoTable.Columns.Add("Возрастные группы");
+                        womanIbpoTable.Columns.Add("Внешнее облучение");
+                        womanIbpoTable.Columns.Add("Внутреннее облучение");
+                        womanIbpoTable.Columns.Add("Сумма");
+                        womanIbpoTable.Columns.Add("Внешнее облучение (95%)");
+                        womanIbpoTable.Columns.Add("Внутреннее облучение (95%)");
+                        womanIbpoTable.Columns.Add("Сумма (95%)");
+
+                        for (int i = 0; i < ageGroups.Count; i++)
+                        {
+                            DataRow row = womanIbpoTable.NewRow();
+                            row["Возрастные группы"] = ageGroups[i];
+                            row["Внешнее облучение"] = Math.Round(womanExtIbpo[i], 2);
+                            row["Внутреннее облучение"] = Math.Round(womanIntIbpo[i], 2);
+                            row["Сумма"] = Math.Round(womanSumIbpo[i], 2);
+                            row["Внешнее облучение (95%)"] = Math.Round(womanExtIbpo95[i], 2);
+                            row["Внутреннее облучение (95%)"] = Math.Round(womanIntIbpo95[i], 2);
+                            row["Сумма (95%)"] = Math.Round(womanSumIbpo95[i], 2);
+                            womanIbpoTable.Rows.Add(row);
+                        }
+
+                        DataRow womanIbpoRow = womanIbpoTable.NewRow();
+                        womanIbpoRow["Возрастные группы"] = "Взвешенные величины";
+                        if (womanWeightedExtIbpo.Sum() / womanRecordsList.Count < 100)
+                            womanIbpoRow["Внешнее облучение"] = Math.Round(womanWeightedExtIbpo.Sum() / womanRecordsList.Count, 2);
+                        else
+                            womanIbpoRow["Внешнее облучение"] = "Облучения нет!";
+
+                        if (womanWeightedIntIbpo.Sum() / womanRecordsList.Count < 100)
+                            womanIbpoRow["Внутреннее облучение"] = Math.Round(womanWeightedIntIbpo.Sum() / womanRecordsList.Count, 2);
+                        else
+                            womanIbpoRow["Внутреннее облучение"] = "Облучения нет!";
+
+                        if (womanWeightedSumIbpo.Sum() / womanRecordsList.Count < 100)
+                            womanIbpoRow["Сумма"] = Math.Round(womanWeightedSumIbpo.Sum() / womanRecordsList.Count, 2);
+                        else
+                            womanIbpoRow["Сумма"] = "Облучения нет!";
+
+                        if (womanWeightedExtIbpo95.Sum() / womanRecordsList.Count < 100)
+                            womanIbpoRow["Внешнее облучение (95%)"] = Math.Round(womanWeightedExtIbpo95.Sum() / womanRecordsList.Count, 2);
+                        else
+                            womanIbpoRow["Внешнее облучение (95%)"] = "Облучения нет!";
+
+                        if (womanWeightedIntIbpo95.Sum() / womanRecordsList.Count < 100)
+                            womanIbpoRow["Внутреннее облучение (95%)"] = Math.Round(womanWeightedIntIbpo95.Sum() / womanRecordsList.Count, 2);
+                        else
+                            womanIbpoRow["Внутреннее облучение (95%)"] = "Облучения нет!";
+
+                        if (womanWeightedSumIbpo95.Sum() / womanRecordsList.Count < 100)
+                            womanIbpoRow["Сумма (95%)"] = Math.Round(womanWeightedSumIbpo95.Sum() / womanRecordsList.Count, 2);
+                        else
+                            womanIbpoRow["Сумма (95%)"] = "Облучения нет!";
+
+                        womanIbpoTable.Rows.Add(womanIbpoRow);
+                        womanIbpoGridView.DataSource = womanIbpoTable;
+                        womanIbpoGridView.AutoSizeColumnsMode = DataGridViewAutoSizeColumnsMode.Fill;
+                        womanIbpoGridView.AllowUserToAddRows = false;
+
+                        /*-----Вывод в Excel-файл-----*/
+                        /*-----Инициализация Excel-файла-----*/
+                        Excel.Application excelApp = new Excel.Application();
+                        //excelApp.Visible = true;
+                        //excelApp.DisplayAlerts = true;
+                        excelApp.StandardFont = "Times-New-Roman";
+                        excelApp.StandardFontSize = 12;
+
+                        /*-----Создание рабочей книги с 2 страницами, в которые будет выводиться информация-----*/
+                        excelApp.SheetsInNewWorkbook = 2;
+                        excelApp.Workbooks.Add(Type.Missing);
+                        Excel.Workbook excelWorkbook = excelApp.Workbooks[1];
+                        Excel.Worksheet excelWorksheet = null;
+                        Excel.Range excelCells = null;
+
+                        /*-----Вывод в столбцы-----*/
+                        excelWorksheet = (Excel.Worksheet)excelWorkbook.Worksheets.get_Item(1);
+                        excelWorksheet.Name = "Мужчины";
+
+                        /*-----Описываем ячейку А1 на странице-----*/
+                        excelCells = excelWorksheet.get_Range("A1");
+                        excelCells.VerticalAlignment = Excel.Constants.xlCenter;
+                        excelCells.HorizontalAlignment = Excel.Constants.xlCenter;
+                        excelCells.Borders.Weight = Excel.XlBorderWeight.xlThick;
+                        excelCells.Value2 = "Возрастные группы";
+
+                        /*-----Описываем ячейку B1 на странице-----*/
+                        excelCells = excelWorksheet.get_Range("B1");
+                        excelCells.VerticalAlignment = Excel.Constants.xlCenter;
+                        excelCells.HorizontalAlignment = Excel.Constants.xlCenter;
+                        excelCells.Borders.Weight = Excel.XlBorderWeight.xlThick;
+                        excelCells.Value2 = "Внешнее облучение";
+
+                        /*-----Описываем ячейку C1 на странице-----*/
+                        excelCells = excelWorksheet.get_Range("C1");
+                        excelCells.VerticalAlignment = Excel.Constants.xlCenter;
+                        excelCells.HorizontalAlignment = Excel.Constants.xlCenter;
+                        excelCells.Borders.Weight = Excel.XlBorderWeight.xlThick;
+                        excelCells.Value2 = "Внутреннее облучение";
+
+                        /*-----Описываем ячейку B1 на странице-----*/
+                        excelCells = excelWorksheet.get_Range("D1");
+                        excelCells.VerticalAlignment = Excel.Constants.xlCenter;
+                        excelCells.HorizontalAlignment = Excel.Constants.xlCenter;
+                        excelCells.Borders.Weight = Excel.XlBorderWeight.xlThick;
+                        excelCells.Value2 = "Сумма";
+
+                        /*-----Описываем ячейку C1 на странице-----*/
+                        excelCells = excelWorksheet.get_Range("E1");
+                        excelCells.VerticalAlignment = Excel.Constants.xlCenter;
+                        excelCells.HorizontalAlignment = Excel.Constants.xlCenter;
+                        excelCells.Borders.Weight = Excel.XlBorderWeight.xlThick;
+                        excelCells.Value2 = "Внешнее облучение (95%)";
+
+                        /*-----Описываем ячейку C1 на странице-----*/
+                        excelCells = excelWorksheet.get_Range("F1");
+                        excelCells.VerticalAlignment = Excel.Constants.xlCenter;
+                        excelCells.HorizontalAlignment = Excel.Constants.xlCenter;
+                        excelCells.Borders.Weight = Excel.XlBorderWeight.xlThick;
+                        excelCells.Value2 = "Внутреннее облучение (95%)";
+
+                        /*-----Описываем ячейку C1 на странице-----*/
+                        excelCells = excelWorksheet.get_Range("G1");
+                        excelCells.VerticalAlignment = Excel.Constants.xlCenter;
+                        excelCells.HorizontalAlignment = Excel.Constants.xlCenter;
+                        excelCells.Borders.Weight = Excel.XlBorderWeight.xlThick;
+                        excelCells.Value2 = "Сумма (95%)";
+
+                        for (int i = 2; i <= manExtIbpo.Length + 1; i++)
+                        {
+                            excelCells = (Excel.Range)excelWorksheet.Cells[i, "A"];
+                            excelCells.Value2 = ageGroups[i - 2];
+                            excelCells.Borders.ColorIndex = 1;
+
+                            excelCells = (Excel.Range)excelWorksheet.Cells[i, "B"];
+                            if (manExtIbpo[i - 2] < 100)
+                                excelCells.Value2 = manExtIbpo[i - 2];
+                            else
+                                excelCells.Value2 = "Нет облучения";
+                            excelCells.Borders.ColorIndex = 1;
+
+                            excelCells = (Excel.Range)excelWorksheet.Cells[i, "C"];
+                            if (manIntIbpo[i - 2] < 100)
+                                excelCells.Value2 = manIntIbpo[i - 2];
+                            else
+                                excelCells.Value2 = "Нет облучения";
+                            excelCells.Borders.ColorIndex = 1;
+
+                            excelCells = (Excel.Range)excelWorksheet.Cells[i, "D"];
+                            if (manSumIbpo[i - 2] < 100)
+                                excelCells.Value2 = manSumIbpo[i - 2];
+                            else
+                                excelCells.Value2 = "Нет облучения";
+                            excelCells.Borders.ColorIndex = 1;
+
+                            excelCells = (Excel.Range)excelWorksheet.Cells[i, "E"];
+                            if (manExtIbpo95[i - 2] < 100)
+                                excelCells.Value2 = manExtIbpo95[i - 2];
+                            else
+                                excelCells.Value2 = "Нет облучения";
+                            excelCells.Borders.ColorIndex = 1;
+
+                            excelCells = (Excel.Range)excelWorksheet.Cells[i, "F"];
+                            if (manIntIbpo95[i - 2] < 100)
+                                excelCells.Value2 = manIntIbpo95[i - 2];
+                            else
+                                excelCells.Value2 = "Нет облучения";
+                            excelCells.Borders.ColorIndex = 1;
+
+                            excelCells = (Excel.Range)excelWorksheet.Cells[i, "G"];
+                            if (manSumIbpo95[i - 2] < 100)
+                                excelCells.Value2 = manSumIbpo95[i - 2];
+                            else
+                                excelCells.Value2 = "Нет облучения";
+                            excelCells.Borders.ColorIndex = 1;
+                        }
+
+                        /*-----Описываем ячейку А1 на странице-----*/
+                        excelCells = excelWorksheet.get_Range("A" + 13);
+                        excelCells.VerticalAlignment = Excel.Constants.xlCenter;
+                        excelCells.HorizontalAlignment = Excel.Constants.xlCenter;
+                        excelCells.Borders.Weight = Excel.XlBorderWeight.xlMedium;
+                        excelCells.Value2 = "Взвешенные величины";
+
+                        /*-----Описываем ячейку А1 на странице-----*/
+                        excelCells = excelWorksheet.get_Range("B" + 13);
+                        excelCells.VerticalAlignment = Excel.Constants.xlCenter;
+                        excelCells.HorizontalAlignment = Excel.Constants.xlCenter;
+                        excelCells.Borders.Weight = Excel.XlBorderWeight.xlMedium;
+                        if (manWeightedExtIbpo.Sum() / manRecordsList.Count < 100)
+                            excelCells.Value2 = Math.Round(manWeightedExtIbpo.Sum() / manRecordsList.Count, 8);
+                        else
+                            excelCells.Value2 = "Нет облучения";
+
+                        /*-----Описываем ячейку А1 на странице-----*/
+                        excelCells = excelWorksheet.get_Range("C" + 13);
+                        excelCells.VerticalAlignment = Excel.Constants.xlCenter;
+                        excelCells.HorizontalAlignment = Excel.Constants.xlCenter;
+                        excelCells.Borders.Weight = Excel.XlBorderWeight.xlMedium;
+                        if (manWeightedIntIbpo.Sum() / manRecordsList.Count < 100)
+                            excelCells.Value2 = Math.Round(manWeightedIntIbpo.Sum() / manRecordsList.Count, 8);
+                        else
+                            excelCells.Value2 = "Нет облучения";
+
+                        /*-----Описываем ячейку А1 на странице-----*/
+                        excelCells = excelWorksheet.get_Range("D" + 13);
+                        excelCells.VerticalAlignment = Excel.Constants.xlCenter;
+                        excelCells.HorizontalAlignment = Excel.Constants.xlCenter;
+                        excelCells.Borders.Weight = Excel.XlBorderWeight.xlMedium;
+                        if (manWeightedSumIbpo.Sum() / manRecordsList.Count < 100)
+                            excelCells.Value2 = Math.Round(manWeightedSumIbpo.Sum() / manRecordsList.Count, 8);
+                        else
+                            excelCells.Value2 = "Нет облучения";
+
+                        /*-----Описываем ячейку А1 на странице-----*/
+                        excelCells = excelWorksheet.get_Range("E" + 13);
+                        excelCells.VerticalAlignment = Excel.Constants.xlCenter;
+                        excelCells.HorizontalAlignment = Excel.Constants.xlCenter;
+                        excelCells.Borders.Weight = Excel.XlBorderWeight.xlMedium;
+                        if (manWeightedExtIbpo95.Sum() / manRecordsList.Count < 100)
+                            excelCells.Value2 = Math.Round(manWeightedExtIbpo95.Sum() / manRecordsList.Count, 8);
+                        else
+                            excelCells.Value2 = "Нет облучения";
+
+                        /*-----Описываем ячейку А1 на странице-----*/
+                        excelCells = excelWorksheet.get_Range("F" + 13);
+                        excelCells.VerticalAlignment = Excel.Constants.xlCenter;
+                        excelCells.HorizontalAlignment = Excel.Constants.xlCenter;
+                        excelCells.Borders.Weight = Excel.XlBorderWeight.xlMedium;
+                        if (manWeightedIntIbpo95.Sum() / manRecordsList.Count < 100)
+                            excelCells.Value2 = Math.Round(manWeightedIntIbpo95.Sum() / manRecordsList.Count, 8);
+                        else
+                            excelCells.Value2 = "Нет облучения";
+
+                        /*-----Описываем ячейку А1 на странице-----*/
+                        excelCells = excelWorksheet.get_Range("G" + 13);
+                        excelCells.VerticalAlignment = Excel.Constants.xlCenter;
+                        excelCells.HorizontalAlignment = Excel.Constants.xlCenter;
+                        excelCells.Borders.Weight = Excel.XlBorderWeight.xlMedium;
+                        if (manWeightedSumIbpo95.Sum() / manRecordsList.Count < 100)
+                            excelCells.Value2 = Math.Round(manWeightedSumIbpo95.Sum() / manRecordsList.Count, 8);
+                        else
+                            excelCells.Value2 = "Нет облучения";
+
+                        excelWorksheet = (Excel.Worksheet)excelWorkbook.Worksheets.get_Item(2);
+                        excelWorksheet.Name = "Женщины";
+
+                        /*-----Описываем ячейку А1 на странице-----*/
+                        excelCells = excelWorksheet.get_Range("A1");
+                        excelCells.VerticalAlignment = Excel.Constants.xlCenter;
+                        excelCells.HorizontalAlignment = Excel.Constants.xlCenter;
+                        excelCells.Borders.Weight = Excel.XlBorderWeight.xlThick;
+                        excelCells.Value2 = "Возрастные группы";
+
+                        /*-----Описываем ячейку B1 на странице-----*/
+                        excelCells = excelWorksheet.get_Range("B1");
+                        excelCells.VerticalAlignment = Excel.Constants.xlCenter;
+                        excelCells.HorizontalAlignment = Excel.Constants.xlCenter;
+                        excelCells.Borders.Weight = Excel.XlBorderWeight.xlThick;
+                        excelCells.Value2 = "Внешнее облучение";
+
+                        /*-----Описываем ячейку C1 на странице-----*/
+                        excelCells = excelWorksheet.get_Range("C1");
+                        excelCells.VerticalAlignment = Excel.Constants.xlCenter;
+                        excelCells.HorizontalAlignment = Excel.Constants.xlCenter;
+                        excelCells.Borders.Weight = Excel.XlBorderWeight.xlThick;
+                        excelCells.Value2 = "Внутреннее облучение";
+
+                        /*-----Описываем ячейку B1 на странице-----*/
+                        excelCells = excelWorksheet.get_Range("D1");
+                        excelCells.VerticalAlignment = Excel.Constants.xlCenter;
+                        excelCells.HorizontalAlignment = Excel.Constants.xlCenter;
+                        excelCells.Borders.Weight = Excel.XlBorderWeight.xlThick;
+                        excelCells.Value2 = "Сумма";
+
+                        /*-----Описываем ячейку C1 на странице-----*/
+                        excelCells = excelWorksheet.get_Range("E1");
+                        excelCells.VerticalAlignment = Excel.Constants.xlCenter;
+                        excelCells.HorizontalAlignment = Excel.Constants.xlCenter;
+                        excelCells.Borders.Weight = Excel.XlBorderWeight.xlThick;
+                        excelCells.Value2 = "Внешнее облучение (95%)";
+
+                        /*-----Описываем ячейку C1 на странице-----*/
+                        excelCells = excelWorksheet.get_Range("F1");
+                        excelCells.VerticalAlignment = Excel.Constants.xlCenter;
+                        excelCells.HorizontalAlignment = Excel.Constants.xlCenter;
+                        excelCells.Borders.Weight = Excel.XlBorderWeight.xlThick;
+                        excelCells.Value2 = "Внутреннее облучение (95%)";
+
+                        /*-----Описываем ячейку C1 на странице-----*/
+                        excelCells = excelWorksheet.get_Range("G1");
+                        excelCells.VerticalAlignment = Excel.Constants.xlCenter;
+                        excelCells.HorizontalAlignment = Excel.Constants.xlCenter;
+                        excelCells.Borders.Weight = Excel.XlBorderWeight.xlThick;
+                        excelCells.Value2 = "Сумма (95%)";
+
+                        for (int i = 2; i <= womanExtIbpo.Length + 1; i++)
+                        {
+                            excelCells = (Excel.Range)excelWorksheet.Cells[i, "A"];
+                            excelCells.Value2 = ageGroups[i - 2];
+                            excelCells.Borders.ColorIndex = 1;
+
+                            excelCells = (Excel.Range)excelWorksheet.Cells[i, "B"];
+                            if (womanExtIbpo[i - 2] < 100)
+                                excelCells.Value2 = womanExtIbpo[i - 2];
+                            else
+                                excelCells.Value2 = "Нет облучения";
+                            excelCells.Borders.ColorIndex = 1;
+
+                            excelCells = (Excel.Range)excelWorksheet.Cells[i, "C"];
+                            if (womanIntIbpo[i - 2] < 100)
+                                excelCells.Value2 = womanIntIbpo[i - 2];
+                            else
+                                excelCells.Value2 = "Нет облучения";
+                            excelCells.Borders.ColorIndex = 1;
+
+                            excelCells = (Excel.Range)excelWorksheet.Cells[i, "D"];
+                            if (womanSumIbpo[i - 2] < 100)
+                                excelCells.Value2 = womanSumIbpo[i - 2];
+                            else
+                                excelCells.Value2 = "Нет облучения";
+                            excelCells.Borders.ColorIndex = 1;
+
+                            excelCells = (Excel.Range)excelWorksheet.Cells[i, "E"];
+                            if (womanExtIbpo95[i - 2] < 100)
+                                excelCells.Value2 = womanExtIbpo95[i - 2];
+                            else
+                                excelCells.Value2 = "Нет облучения";
+                            excelCells.Borders.ColorIndex = 1;
+
+                            excelCells = (Excel.Range)excelWorksheet.Cells[i, "F"];
+                            if (womanIntIbpo95[i - 2] < 100)
+                                excelCells.Value2 = womanIntIbpo95[i - 2];
+                            else
+                                excelCells.Value2 = "Нет облучения";
+                            excelCells.Borders.ColorIndex = 1;
+
+                            excelCells = (Excel.Range)excelWorksheet.Cells[i, "G"];
+                            if (womanSumIbpo95[i - 2] < 100)
+                                excelCells.Value2 = womanSumIbpo95[i - 2];
+                            else
+                                excelCells.Value2 = "Нет облучения";
+                            excelCells.Borders.ColorIndex = 1;
+                        }
+
+                        /*-----Описываем ячейку А1 на странице-----*/
+                        excelCells = excelWorksheet.get_Range("A" + 13);
+                        excelCells.VerticalAlignment = Excel.Constants.xlCenter;
+                        excelCells.HorizontalAlignment = Excel.Constants.xlCenter;
+                        excelCells.Borders.Weight = Excel.XlBorderWeight.xlMedium;
+                        excelCells.Value2 = "Взвешенные величины";
+
+                        /*-----Описываем ячейку А1 на странице-----*/
+                        excelCells = excelWorksheet.get_Range("B" + 13);
+                        excelCells.VerticalAlignment = Excel.Constants.xlCenter;
+                        excelCells.HorizontalAlignment = Excel.Constants.xlCenter;
+                        excelCells.Borders.Weight = Excel.XlBorderWeight.xlMedium;
+                        if (womanWeightedExtIbpo.Sum() / womanRecordsList.Count < 100)
+                            excelCells.Value2 = Math.Round(womanWeightedExtIbpo.Sum() / womanRecordsList.Count, 8);
+                        else
+                            excelCells.Value2 = "Нет облучения";
+
+                        /*-----Описываем ячейку А1 на странице-----*/
+                        excelCells = excelWorksheet.get_Range("C" + 13);
+                        excelCells.VerticalAlignment = Excel.Constants.xlCenter;
+                        excelCells.HorizontalAlignment = Excel.Constants.xlCenter;
+                        excelCells.Borders.Weight = Excel.XlBorderWeight.xlMedium;
+                        if (womanWeightedIntIbpo.Sum() / womanRecordsList.Count < 100)
+                            excelCells.Value2 = Math.Round(womanWeightedIntIbpo.Sum() / womanRecordsList.Count, 8);
+                        else
+                            excelCells.Value2 = "Нет облучения";
+
+                        /*-----Описываем ячейку А1 на странице-----*/
+                        excelCells = excelWorksheet.get_Range("D" + 13);
+                        excelCells.VerticalAlignment = Excel.Constants.xlCenter;
+                        excelCells.HorizontalAlignment = Excel.Constants.xlCenter;
+                        excelCells.Borders.Weight = Excel.XlBorderWeight.xlMedium;
+                        if (womanWeightedSumIbpo.Sum() / womanRecordsList.Count < 100)
+                            excelCells.Value2 = Math.Round(womanWeightedSumIbpo.Sum() / womanRecordsList.Count, 8);
+                        else
+                            excelCells.Value2 = "Нет облучения";
+
+                        /*-----Описываем ячейку А1 на странице-----*/
+                        excelCells = excelWorksheet.get_Range("E" + 13);
+                        excelCells.VerticalAlignment = Excel.Constants.xlCenter;
+                        excelCells.HorizontalAlignment = Excel.Constants.xlCenter;
+                        excelCells.Borders.Weight = Excel.XlBorderWeight.xlMedium;
+                        if (womanWeightedExtIbpo95.Sum() / womanRecordsList.Count < 100)
+                            excelCells.Value2 = Math.Round(womanWeightedExtIbpo95.Sum() / womanRecordsList.Count, 8);
+                        else
+                            excelCells.Value2 = "Нет облучения";
+
+                        /*-----Описываем ячейку А1 на странице-----*/
+                        excelCells = excelWorksheet.get_Range("F" + 13);
+                        excelCells.VerticalAlignment = Excel.Constants.xlCenter;
+                        excelCells.HorizontalAlignment = Excel.Constants.xlCenter;
+                        excelCells.Borders.Weight = Excel.XlBorderWeight.xlMedium;
+                        if (womanWeightedIntIbpo95.Sum() / womanRecordsList.Count < 100)
+                            excelCells.Value2 = Math.Round(womanWeightedIntIbpo95.Sum() / womanRecordsList.Count, 8);
+                        else
+                            excelCells.Value2 = "Нет облучения";
+
+                        /*-----Описываем ячейку А1 на странице-----*/
+                        excelCells = excelWorksheet.get_Range("G" + 13);
+                        excelCells.VerticalAlignment = Excel.Constants.xlCenter;
+                        excelCells.HorizontalAlignment = Excel.Constants.xlCenter;
+                        excelCells.Borders.Weight = Excel.XlBorderWeight.xlMedium;
+                        if (womanWeightedSumIbpo95.Sum() / womanRecordsList.Count < 100)
+                            excelCells.Value2 = Math.Round(womanWeightedSumIbpo95.Sum() / womanRecordsList.Count, 8);
+                        else
+                            excelCells.Value2 = "Нет облучения";
+
+                        char[] timeNameBuffer = DateTime.Now.ToString().ToCharArray();
+                        for (int i = 0; i < timeNameBuffer.Length; i++)
+                        {
+                            if (timeNameBuffer[i] == ':')
+                                timeNameBuffer[i] = '-';
+                        }
+
+                        if (larRB.Checked)
+                            saveAs = " ИБПО_LAR";
+                        if (detRB.Checked)
+                            saveAs = " ИБПО_Det";
+
+                        if (aMethodRB.Checked)
+                        {
+                            bufferPath = outPath + "\\ИБПО (Средний возраст)";
+                            Directory.CreateDirectory(bufferPath);
+                            excelWorkbook.SaveAs(@bufferPath + "\\" + shopComboBox.SelectedItem + saveAs + " (Средний возраст)" + "(" + new string(timeNameBuffer) + ").xlsx",  //object Filename
+                                    Excel.XlFileFormat.xlOpenXMLWorkbook,                       //object FileFormat
+                                    Type.Missing,                       //object Password 
+                                    Type.Missing,                       //object WriteResPassword  
+                                    Type.Missing,                       //object ReadOnlyRecommended
+                                    Type.Missing,                       //object CreateBackup
+                                    Excel.XlSaveAsAccessMode.xlNoChange,//XlSaveAsAccessMode AccessMode
+                                    Type.Missing,                       //object ConflictResolution
+                                    Type.Missing,                       //object AddToMru 
+                                    Type.Missing,                       //object TextCodepage
+                                    Type.Missing,                       //object TextVisualLayout
+                                    Type.Missing);                      //object Local
+                        }
+                        if (bMethodRB.Checked)
+                        {
+                            bufferPath = outPath + "\\ИБПО (Средний LAR(Det))";
+                            Directory.CreateDirectory(bufferPath);
+                            excelWorkbook.SaveAs(@bufferPath + "\\" + shopComboBox.SelectedItem + saveAs + " (Средний LAR(Det))" + "(" + new string(timeNameBuffer) + ").xlsx",  //object Filename
+                                    Excel.XlFileFormat.xlOpenXMLWorkbook,                       //object FileFormat
+                                    Type.Missing,                       //object Password 
+                                    Type.Missing,                       //object WriteResPassword  
+                                    Type.Missing,                       //object ReadOnlyRecommended
+                                    Type.Missing,                       //object CreateBackup
+                                    Excel.XlSaveAsAccessMode.xlNoChange,//XlSaveAsAccessMode AccessMode
+                                    Type.Missing,                       //object ConflictResolution
+                                    Type.Missing,                       //object AddToMru 
+                                    Type.Missing,                       //object TextCodepage
+                                    Type.Missing,                       //object TextVisualLayout
+                                    Type.Missing);                      //object Local
+                        }
+                        excelApp.Quit();
+                    }
+                    connection.Close();
+                }
+                catch
+                {
+                    MessageBox.Show("ОРПО не посчитано!", "Внимание", MessageBoxButtons.OK, MessageBoxIcon.Exclamation, MessageBoxDefaultButton.Button1);
+                    Application.DoEvents();
                 }
             }
             catch
@@ -2108,11 +2050,27 @@ namespace TVELtest
                 MessageBox.Show("Нет связи с базой данных! Подключите базу!", "Внимание", MessageBoxButtons.OK, MessageBoxIcon.Exclamation, MessageBoxDefaultButton.Button1);
                 Application.DoEvents();
             }
+            shopComboBox.Enabled = true;
+            getIbpoButton.Enabled = false;
         }
 
-        private void textBox1_TextChanged(object sender, EventArgs e)
+        private void shopComboBox_SelectedIndexChanged(object sender, EventArgs e)
         {
+            aMethodRB.Enabled = true;
+            bMethodRB.Enabled = true;
+            shopComboBox.Enabled = false;
+        }
 
+        private void aMethodRB_CheckedChanged(object sender, EventArgs e)
+        {
+            getOrpoButton.Enabled = true;
+            bMethodRB.Enabled = false;
+        }
+
+        private void bMethodRB_CheckedChanged(object sender, EventArgs e)
+        {
+            getOrpoButton.Enabled = true;
+            aMethodRB.Enabled = false;
         }
     }
 }

@@ -16,7 +16,7 @@ namespace TVELtest
         {
             Application.EnableVisualStyles();
             Application.SetCompatibleTextRenderingDefault(false);
-            Application.Run(new Form1("Тестовый интерфейс"));
+            Application.Run(new Form1("Модуль расчета ОРПО и ИБПО для персонала Топливной компании ТВЭЛ"));
         }
     }
 }
