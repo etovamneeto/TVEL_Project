@@ -37,26 +37,26 @@
             this.shopNameLabel = new System.Windows.Forms.Label();
             this.tabControl = new System.Windows.Forms.TabControl();
             this.manOrpoPage = new System.Windows.Forms.TabPage();
+            this.manOrpoGridView = new System.Windows.Forms.DataGridView();
             this.womanOrpoPage = new System.Windows.Forms.TabPage();
+            this.womanOrpoGridView = new System.Windows.Forms.DataGridView();
+            this.manIbpoPage = new System.Windows.Forms.TabPage();
+            this.manIbpoGridView = new System.Windows.Forms.DataGridView();
+            this.womanIbpoPage = new System.Windows.Forms.TabPage();
+            this.womanIbpoGridView = new System.Windows.Forms.DataGridView();
             this.aMethodRB = new System.Windows.Forms.RadioButton();
             this.bMethodRB = new System.Windows.Forms.RadioButton();
-            this.manIbpoPage = new System.Windows.Forms.TabPage();
-            this.womanIbpoPage = new System.Windows.Forms.TabPage();
-            this.manOrpoGridView = new System.Windows.Forms.DataGridView();
-            this.womanOrpoGridView = new System.Windows.Forms.DataGridView();
-            this.manIbpoGridView = new System.Windows.Forms.DataGridView();
-            this.womanIbpoGridView = new System.Windows.Forms.DataGridView();
             this.methodGroup = new System.Windows.Forms.GroupBox();
             this.larOrDetGroup = new System.Windows.Forms.GroupBox();
-            this.button1 = new System.Windows.Forms.Button();
+            this.textBox1 = new System.Windows.Forms.TextBox();
             this.tabControl.SuspendLayout();
             this.manOrpoPage.SuspendLayout();
-            this.womanOrpoPage.SuspendLayout();
-            this.manIbpoPage.SuspendLayout();
-            this.womanIbpoPage.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.manOrpoGridView)).BeginInit();
+            this.womanOrpoPage.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.womanOrpoGridView)).BeginInit();
+            this.manIbpoPage.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.manIbpoGridView)).BeginInit();
+            this.womanIbpoPage.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.womanIbpoGridView)).BeginInit();
             this.methodGroup.SuspendLayout();
             this.larOrDetGroup.SuspendLayout();
@@ -162,6 +162,14 @@
             this.manOrpoPage.Text = "ОРПО, Мужчины";
             this.manOrpoPage.UseVisualStyleBackColor = true;
             // 
+            // manOrpoGridView
+            // 
+            this.manOrpoGridView.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
+            this.manOrpoGridView.Location = new System.Drawing.Point(0, 0);
+            this.manOrpoGridView.Name = "manOrpoGridView";
+            this.manOrpoGridView.Size = new System.Drawing.Size(710, 276);
+            this.manOrpoGridView.TabIndex = 0;
+            // 
             // womanOrpoPage
             // 
             this.womanOrpoPage.Controls.Add(this.womanOrpoGridView);
@@ -172,6 +180,52 @@
             this.womanOrpoPage.TabIndex = 1;
             this.womanOrpoPage.Text = "ОРПО, Женщины";
             this.womanOrpoPage.UseVisualStyleBackColor = true;
+            // 
+            // womanOrpoGridView
+            // 
+            this.womanOrpoGridView.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
+            this.womanOrpoGridView.Location = new System.Drawing.Point(0, 0);
+            this.womanOrpoGridView.Name = "womanOrpoGridView";
+            this.womanOrpoGridView.Size = new System.Drawing.Size(710, 276);
+            this.womanOrpoGridView.TabIndex = 0;
+            // 
+            // manIbpoPage
+            // 
+            this.manIbpoPage.Controls.Add(this.manIbpoGridView);
+            this.manIbpoPage.Location = new System.Drawing.Point(4, 22);
+            this.manIbpoPage.Name = "manIbpoPage";
+            this.manIbpoPage.Padding = new System.Windows.Forms.Padding(3);
+            this.manIbpoPage.Size = new System.Drawing.Size(710, 276);
+            this.manIbpoPage.TabIndex = 2;
+            this.manIbpoPage.Text = "ИБПО, Мужчины";
+            this.manIbpoPage.UseVisualStyleBackColor = true;
+            // 
+            // manIbpoGridView
+            // 
+            this.manIbpoGridView.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
+            this.manIbpoGridView.Location = new System.Drawing.Point(0, 0);
+            this.manIbpoGridView.Name = "manIbpoGridView";
+            this.manIbpoGridView.Size = new System.Drawing.Size(710, 276);
+            this.manIbpoGridView.TabIndex = 0;
+            // 
+            // womanIbpoPage
+            // 
+            this.womanIbpoPage.Controls.Add(this.womanIbpoGridView);
+            this.womanIbpoPage.Location = new System.Drawing.Point(4, 22);
+            this.womanIbpoPage.Name = "womanIbpoPage";
+            this.womanIbpoPage.Padding = new System.Windows.Forms.Padding(3);
+            this.womanIbpoPage.Size = new System.Drawing.Size(710, 276);
+            this.womanIbpoPage.TabIndex = 3;
+            this.womanIbpoPage.Text = "ИБПО, Женщины";
+            this.womanIbpoPage.UseVisualStyleBackColor = true;
+            // 
+            // womanIbpoGridView
+            // 
+            this.womanIbpoGridView.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
+            this.womanIbpoGridView.Location = new System.Drawing.Point(0, 0);
+            this.womanIbpoGridView.Name = "womanIbpoGridView";
+            this.womanIbpoGridView.Size = new System.Drawing.Size(710, 276);
+            this.womanIbpoGridView.TabIndex = 0;
             // 
             // aMethodRB
             // 
@@ -195,60 +249,6 @@
             this.bMethodRB.Text = "Метод Б";
             this.bMethodRB.UseVisualStyleBackColor = true;
             // 
-            // manIbpoPage
-            // 
-            this.manIbpoPage.Controls.Add(this.manIbpoGridView);
-            this.manIbpoPage.Location = new System.Drawing.Point(4, 22);
-            this.manIbpoPage.Name = "manIbpoPage";
-            this.manIbpoPage.Padding = new System.Windows.Forms.Padding(3);
-            this.manIbpoPage.Size = new System.Drawing.Size(710, 276);
-            this.manIbpoPage.TabIndex = 2;
-            this.manIbpoPage.Text = "ИБПО, Мужчины";
-            this.manIbpoPage.UseVisualStyleBackColor = true;
-            // 
-            // womanIbpoPage
-            // 
-            this.womanIbpoPage.Controls.Add(this.womanIbpoGridView);
-            this.womanIbpoPage.Location = new System.Drawing.Point(4, 22);
-            this.womanIbpoPage.Name = "womanIbpoPage";
-            this.womanIbpoPage.Padding = new System.Windows.Forms.Padding(3);
-            this.womanIbpoPage.Size = new System.Drawing.Size(710, 276);
-            this.womanIbpoPage.TabIndex = 3;
-            this.womanIbpoPage.Text = "ИБПО, Женщины";
-            this.womanIbpoPage.UseVisualStyleBackColor = true;
-            // 
-            // manOrpoGridView
-            // 
-            this.manOrpoGridView.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
-            this.manOrpoGridView.Location = new System.Drawing.Point(0, 0);
-            this.manOrpoGridView.Name = "manOrpoGridView";
-            this.manOrpoGridView.Size = new System.Drawing.Size(710, 276);
-            this.manOrpoGridView.TabIndex = 0;
-            // 
-            // womanOrpoGridView
-            // 
-            this.womanOrpoGridView.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
-            this.womanOrpoGridView.Location = new System.Drawing.Point(0, 0);
-            this.womanOrpoGridView.Name = "womanOrpoGridView";
-            this.womanOrpoGridView.Size = new System.Drawing.Size(710, 276);
-            this.womanOrpoGridView.TabIndex = 0;
-            // 
-            // manIbpoGridView
-            // 
-            this.manIbpoGridView.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
-            this.manIbpoGridView.Location = new System.Drawing.Point(0, 0);
-            this.manIbpoGridView.Name = "manIbpoGridView";
-            this.manIbpoGridView.Size = new System.Drawing.Size(710, 276);
-            this.manIbpoGridView.TabIndex = 0;
-            // 
-            // womanIbpoGridView
-            // 
-            this.womanIbpoGridView.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
-            this.womanIbpoGridView.Location = new System.Drawing.Point(0, 0);
-            this.womanIbpoGridView.Name = "womanIbpoGridView";
-            this.womanIbpoGridView.Size = new System.Drawing.Size(710, 276);
-            this.womanIbpoGridView.TabIndex = 0;
-            // 
             // methodGroup
             // 
             this.methodGroup.Controls.Add(this.aMethodRB);
@@ -271,22 +271,20 @@
             this.larOrDetGroup.TabStop = false;
             this.larOrDetGroup.Text = "LAR (Det)";
             // 
-            // button1
+            // textBox1
             // 
-            this.button1.Location = new System.Drawing.Point(492, 130);
-            this.button1.Name = "button1";
-            this.button1.Size = new System.Drawing.Size(198, 23);
-            this.button1.TabIndex = 25;
-            this.button1.Text = "Тест-кнопка";
-            this.button1.UseVisualStyleBackColor = true;
-            this.button1.Click += new System.EventHandler(this.button1_Click);
+            this.textBox1.Location = new System.Drawing.Point(630, 8);
+            this.textBox1.Name = "textBox1";
+            this.textBox1.Size = new System.Drawing.Size(100, 20);
+            this.textBox1.TabIndex = 1;
+            this.textBox1.TextChanged += new System.EventHandler(this.textBox1_TextChanged);
             // 
             // Form1
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(742, 473);
-            this.Controls.Add(this.button1);
+            this.Controls.Add(this.textBox1);
             this.Controls.Add(this.larOrDetGroup);
             this.Controls.Add(this.methodGroup);
             this.Controls.Add(this.shopNameLabel);
@@ -301,12 +299,12 @@
             this.Load += new System.EventHandler(this.Form1_Load);
             this.tabControl.ResumeLayout(false);
             this.manOrpoPage.ResumeLayout(false);
-            this.womanOrpoPage.ResumeLayout(false);
-            this.manIbpoPage.ResumeLayout(false);
-            this.womanIbpoPage.ResumeLayout(false);
             ((System.ComponentModel.ISupportInitialize)(this.manOrpoGridView)).EndInit();
+            this.womanOrpoPage.ResumeLayout(false);
             ((System.ComponentModel.ISupportInitialize)(this.womanOrpoGridView)).EndInit();
+            this.manIbpoPage.ResumeLayout(false);
             ((System.ComponentModel.ISupportInitialize)(this.manIbpoGridView)).EndInit();
+            this.womanIbpoPage.ResumeLayout(false);
             ((System.ComponentModel.ISupportInitialize)(this.womanIbpoGridView)).EndInit();
             this.methodGroup.ResumeLayout(false);
             this.methodGroup.PerformLayout();
@@ -339,7 +337,7 @@
         private System.Windows.Forms.DataGridView womanIbpoGridView;
         private System.Windows.Forms.GroupBox methodGroup;
         private System.Windows.Forms.GroupBox larOrDetGroup;
-        private System.Windows.Forms.Button button1;
+        private System.Windows.Forms.TextBox textBox1;
 
 
     }
