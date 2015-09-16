@@ -31,8 +31,6 @@
             this.openFileButton = new System.Windows.Forms.Button();
             this.getOrpoButton = new System.Windows.Forms.Button();
             this.getIbpoButton = new System.Windows.Forms.Button();
-            this.larRB = new System.Windows.Forms.RadioButton();
-            this.detRB = new System.Windows.Forms.RadioButton();
             this.shopComboBox = new System.Windows.Forms.ComboBox();
             this.shopNameLabel = new System.Windows.Forms.Label();
             this.tabControl = new System.Windows.Forms.TabControl();
@@ -43,11 +41,13 @@
             this.manIbpoPage = new System.Windows.Forms.TabPage();
             this.manIbpoGridView = new System.Windows.Forms.DataGridView();
             this.womanIbpoPage = new System.Windows.Forms.TabPage();
+            this.larOrDetGroup = new System.Windows.Forms.GroupBox();
+            this.larRB = new System.Windows.Forms.RadioButton();
+            this.detRB = new System.Windows.Forms.RadioButton();
             this.womanIbpoGridView = new System.Windows.Forms.DataGridView();
             this.aMethodRB = new System.Windows.Forms.RadioButton();
             this.bMethodRB = new System.Windows.Forms.RadioButton();
             this.methodGroup = new System.Windows.Forms.GroupBox();
-            this.larOrDetGroup = new System.Windows.Forms.GroupBox();
             this.tabControl.SuspendLayout();
             this.manOrpoPage.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.manOrpoGridView)).BeginInit();
@@ -56,9 +56,9 @@
             this.manIbpoPage.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.manIbpoGridView)).BeginInit();
             this.womanIbpoPage.SuspendLayout();
+            this.larOrDetGroup.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.womanIbpoGridView)).BeginInit();
             this.methodGroup.SuspendLayout();
-            this.larOrDetGroup.SuspendLayout();
             this.SuspendLayout();
             // 
             // openFileButton
@@ -67,7 +67,7 @@
             this.openFileButton.Name = "openFileButton";
             this.openFileButton.Size = new System.Drawing.Size(468, 43);
             this.openFileButton.TabIndex = 12;
-            this.openFileButton.Text = "Выберите базу данных";
+            this.openFileButton.Text = "Обновление базы данных";
             this.openFileButton.UseVisualStyleBackColor = true;
             this.openFileButton.Click += new System.EventHandler(this.openFileButton_Click);
             // 
@@ -91,28 +91,6 @@
             this.getIbpoButton.UseVisualStyleBackColor = true;
             this.getIbpoButton.Click += new System.EventHandler(this.getIbpoButton_Click);
             // 
-            // larRB
-            // 
-            this.larRB.AutoSize = true;
-            this.larRB.Location = new System.Drawing.Point(6, 19);
-            this.larRB.Name = "larRB";
-            this.larRB.Size = new System.Drawing.Size(46, 17);
-            this.larRB.TabIndex = 16;
-            this.larRB.TabStop = true;
-            this.larRB.Text = "LAR";
-            this.larRB.UseVisualStyleBackColor = true;
-            // 
-            // detRB
-            // 
-            this.detRB.AutoSize = true;
-            this.detRB.Location = new System.Drawing.Point(6, 42);
-            this.detRB.Name = "detRB";
-            this.detRB.Size = new System.Drawing.Size(42, 17);
-            this.detRB.TabIndex = 17;
-            this.detRB.TabStop = true;
-            this.detRB.Text = "Det";
-            this.detRB.UseVisualStyleBackColor = true;
-            // 
             // shopComboBox
             // 
             this.shopComboBox.FormattingEnabled = true;
@@ -135,9 +113,9 @@
             this.shopNameLabel.AutoSize = true;
             this.shopNameLabel.Location = new System.Drawing.Point(486, 18);
             this.shopNameLabel.Name = "shopNameLabel";
-            this.shopNameLabel.Size = new System.Drawing.Size(128, 13);
+            this.shopNameLabel.Size = new System.Drawing.Size(147, 13);
             this.shopNameLabel.TabIndex = 19;
-            this.shopNameLabel.Text = "Выберите предприятие:";
+            this.shopNameLabel.Text = "Топливная компания ТВЭЛ";
             // 
             // tabControl
             // 
@@ -219,6 +197,39 @@
             this.womanIbpoPage.Text = "ИБПО, Женщины";
             this.womanIbpoPage.UseVisualStyleBackColor = true;
             // 
+            // larOrDetGroup
+            // 
+            this.larOrDetGroup.Controls.Add(this.larRB);
+            this.larOrDetGroup.Controls.Add(this.detRB);
+            this.larOrDetGroup.Location = new System.Drawing.Point(651, 61);
+            this.larOrDetGroup.Name = "larOrDetGroup";
+            this.larOrDetGroup.Size = new System.Drawing.Size(86, 67);
+            this.larOrDetGroup.TabIndex = 25;
+            this.larOrDetGroup.TabStop = false;
+            this.larOrDetGroup.Text = "LAR (Det)";
+            // 
+            // larRB
+            // 
+            this.larRB.AutoSize = true;
+            this.larRB.Location = new System.Drawing.Point(6, 19);
+            this.larRB.Name = "larRB";
+            this.larRB.Size = new System.Drawing.Size(46, 17);
+            this.larRB.TabIndex = 16;
+            this.larRB.TabStop = true;
+            this.larRB.Text = "LAR";
+            this.larRB.UseVisualStyleBackColor = true;
+            // 
+            // detRB
+            // 
+            this.detRB.AutoSize = true;
+            this.detRB.Location = new System.Drawing.Point(6, 42);
+            this.detRB.Name = "detRB";
+            this.detRB.Size = new System.Drawing.Size(42, 17);
+            this.detRB.TabIndex = 17;
+            this.detRB.TabStop = true;
+            this.detRB.Text = "Det";
+            this.detRB.UseVisualStyleBackColor = true;
+            // 
             // womanIbpoGridView
             // 
             this.womanIbpoGridView.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
@@ -232,10 +243,10 @@
             this.aMethodRB.AutoSize = true;
             this.aMethodRB.Location = new System.Drawing.Point(6, 19);
             this.aMethodRB.Name = "aMethodRB";
-            this.aMethodRB.Size = new System.Drawing.Size(67, 17);
+            this.aMethodRB.Size = new System.Drawing.Size(140, 17);
             this.aMethodRB.TabIndex = 21;
             this.aMethodRB.TabStop = true;
-            this.aMethodRB.Text = "Метод А";
+            this.aMethodRB.Text = "Метод А (упрощенный)";
             this.aMethodRB.UseVisualStyleBackColor = true;
             this.aMethodRB.CheckedChanged += new System.EventHandler(this.aMethodRB_CheckedChanged);
             // 
@@ -244,10 +255,10 @@
             this.bMethodRB.AutoSize = true;
             this.bMethodRB.Location = new System.Drawing.Point(6, 42);
             this.bMethodRB.Name = "bMethodRB";
-            this.bMethodRB.Size = new System.Drawing.Size(67, 17);
+            this.bMethodRB.Size = new System.Drawing.Size(149, 17);
             this.bMethodRB.TabIndex = 22;
             this.bMethodRB.TabStop = true;
-            this.bMethodRB.Text = "Метод Б";
+            this.bMethodRB.Text = "Метод Б (точная оценка)";
             this.bMethodRB.UseVisualStyleBackColor = true;
             this.bMethodRB.CheckedChanged += new System.EventHandler(this.bMethodRB_CheckedChanged);
             // 
@@ -257,21 +268,10 @@
             this.methodGroup.Controls.Add(this.bMethodRB);
             this.methodGroup.Location = new System.Drawing.Point(486, 61);
             this.methodGroup.Name = "methodGroup";
-            this.methodGroup.Size = new System.Drawing.Size(99, 67);
+            this.methodGroup.Size = new System.Drawing.Size(159, 67);
             this.methodGroup.TabIndex = 23;
             this.methodGroup.TabStop = false;
             this.methodGroup.Text = "Методы";
-            // 
-            // larOrDetGroup
-            // 
-            this.larOrDetGroup.Controls.Add(this.larRB);
-            this.larOrDetGroup.Controls.Add(this.detRB);
-            this.larOrDetGroup.Location = new System.Drawing.Point(591, 61);
-            this.larOrDetGroup.Name = "larOrDetGroup";
-            this.larOrDetGroup.Size = new System.Drawing.Size(99, 67);
-            this.larOrDetGroup.TabIndex = 24;
-            this.larOrDetGroup.TabStop = false;
-            this.larOrDetGroup.Text = "LAR (Det)";
             // 
             // Form1
             // 
@@ -298,11 +298,11 @@
             this.manIbpoPage.ResumeLayout(false);
             ((System.ComponentModel.ISupportInitialize)(this.manIbpoGridView)).EndInit();
             this.womanIbpoPage.ResumeLayout(false);
+            this.larOrDetGroup.ResumeLayout(false);
+            this.larOrDetGroup.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)(this.womanIbpoGridView)).EndInit();
             this.methodGroup.ResumeLayout(false);
             this.methodGroup.PerformLayout();
-            this.larOrDetGroup.ResumeLayout(false);
-            this.larOrDetGroup.PerformLayout();
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -313,8 +313,6 @@
         private System.Windows.Forms.Button openFileButton;
         private System.Windows.Forms.Button getOrpoButton;
         private System.Windows.Forms.Button getIbpoButton;
-        private System.Windows.Forms.RadioButton larRB;
-        private System.Windows.Forms.RadioButton detRB;
         private System.Windows.Forms.ComboBox shopComboBox;
         private System.Windows.Forms.Label shopNameLabel;
         private System.Windows.Forms.TabControl tabControl;
@@ -330,6 +328,8 @@
         private System.Windows.Forms.DataGridView womanIbpoGridView;
         private System.Windows.Forms.GroupBox methodGroup;
         private System.Windows.Forms.GroupBox larOrDetGroup;
+        private System.Windows.Forms.RadioButton larRB;
+        private System.Windows.Forms.RadioButton detRB;
 
 
     }
