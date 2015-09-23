@@ -380,7 +380,7 @@ namespace TVELtest
                 request = "SELECT [ID], [Dose], [Year], [DoseInt], [Gender], [AgeAtExp] FROM [Final] WHERE [Shop]='" + shopName + "'";
 
                 if (shopComboBox.SelectedItem == "ВСЕ ПРЕДПРИЯТИЯ")
-                    request = "SELECT [ID], [Dose], [Year], [DoseInt], [Gender], [AgeAtExp] FROM [Final]";
+                    request = "SELECT [ID], [Dose], [Year], [DoseInt], [Gender], [AgeAtExp] FROM [Final] WHERE ([Shop]= 'r1' OR [Shop]= 'r2' OR [Shop]= 'r3' OR [Shop]= 'r4' OR [Shop]= 'r5')";
 
                 connection.Open();
 
